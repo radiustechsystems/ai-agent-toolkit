@@ -1,0 +1,24 @@
+{
+  "name": "@radiustechsystems/core",
+  "version": "0.1.0",
+  "sideEffects": false,
+  "files": ["dist/**/*", "README.md", "package.json"],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "clean": "rimraf dist",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "reflect-metadata": "0.2.1"
+  },
+  "devDependencies": {
+    "zod": "catalog:"
+  },
+  "peerDependencies": {
+    "zod": "^3.0.0"
+  },
+  "license": "MIT"
+}

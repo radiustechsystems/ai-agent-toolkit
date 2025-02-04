@@ -1,0 +1,8 @@
+packages:
+  - "examples/**/*"
+  - "packages/**/*"
+  - "!**/dist/**"
+
+catalog:
+  zod: 3.23.8
+  viem: 2.21.49
