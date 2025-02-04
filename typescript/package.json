@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "name": "@radiustechsystems/ai-agent-toolkit",
+  "version": "0.1.0",
+  "license": "MIT",
+  "scripts": {
+      "build": "pnpm turbo build",
+      "build:libs": "pnpm turbo --filter \"./packages/**\" build",
+      "clean": "pnpm rimraf \"**/dist\" --glob",
+      "lint": "eslint .",
+      "lint:fix": "eslint . --fix",
+      "test": "pnpm turbo test"
+  },
+  "devDependencies": {
+      "@types/node": "20.11.16",
+      "@typescript-eslint/eslint-plugin": "^6.21.0",
+      "@typescript-eslint/parser": "^6.21.0",
+      "eslint": "^8.56.0",
+      "rimraf": "6.0.1",
+      "tsup": "8.3.5",
+      "turbo": "2.3.1",
+      "typescript": "5.6.3",
+      "vitest": "2.1.5"
+  },
+  "engines": {
+      "node": ">=18",
+      "pnpm": ">=8"
+  },
+  "packageManager": "pnpm@8.15.1"
+}

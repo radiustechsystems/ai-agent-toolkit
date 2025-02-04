@@ -1,0 +1,28 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "env": {
+    "node": true,
+    "es2022": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "ignorePatterns": [
+    "dist/**/*",
+    "node_modules/**/*",
+    ".turbo/**/*"
+  ],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "warn",
+    "quotes": ["error", "double"],
+    "max-len": ["error", { "code": 120 }],
+    "indent": ["error", 2]
+  }
+}
