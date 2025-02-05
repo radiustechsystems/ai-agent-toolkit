@@ -1,0 +1,11 @@
+# Build directories
+**/dist/**
+dist/
+
+# Dependencies
+**/node_modules/**
+node_modules/
+
+# Turbo
+**/.turbo/**
+.turbo/
