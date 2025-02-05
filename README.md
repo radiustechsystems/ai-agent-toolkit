@@ -14,5 +14,4 @@
 ## Getting Started
 
 See the README files in the respective language directories for detailed setup and usage instructions:
-- [Python Implementation](./python/README.md)
 - [TypeScript Implementation](./typescript/README.md)
