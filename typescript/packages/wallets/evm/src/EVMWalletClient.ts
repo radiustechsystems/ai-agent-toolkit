@@ -1,4 +1,5 @@
 import { type EvmChain, type Signature, WalletClientBase } from "@radiustechsystems/core";
+import { isRadiusChain } from "./radius-chains";
 import type { EVMReadRequest, EVMReadResult, EVMTransaction, EVMTypedData } from "./types";
 
 export abstract class EVMWalletClient extends WalletClientBase {
@@ -7,4 +8,12 @@ export abstract class EVMWalletClient extends WalletClientBase {
     abstract read(request: EVMReadRequest): Promise<EVMReadResult>;
     abstract resolveAddress(address: string): Promise<`0x${string}`>;
     abstract signTypedData(data: EVMTypedData): Promise<Signature>;
+
+    protected validateChain(chainId: number) {
+      if (!isRadiusChain(chainId)) {
+        throw new Error(
+          `Chain ${chainId} is not supported. This toolkit only supports the Radius testnet.`
+        );
+      }
+    }
 }
