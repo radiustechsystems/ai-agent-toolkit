@@ -1,0 +1,19 @@
+{
+  "name": "radius-examples-vercel-ai-viem",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+      "test": "vitest run --passWithNoTests"
+  },
+  "license": "MIT",
+  "dependencies": {
+      "@ai-sdk/openai": "^1.1.9",
+      "@radiustechsystems/adapter-vercel-ai": "workspace:*",
+      "@radiustechsystems/core": "workspace:*",
+      "@radiustechsystems/wallet-evm": "workspace:*",
+      "@radiustechsystems/wallet-viem": "workspace:*",
+      "ai": "catalog:",
+      "dotenv": "^16.4.5",
+      "viem": "2.21.49"
+  }
+}
