@@ -59,16 +59,16 @@ importers:
       '@ai-sdk/openai':
         specifier: ^1.1.9
         version: 1.1.9(zod@3.23.8)
-      '@radiustechsystems/adapter-vercel-ai':
+      '@radiustechsystems/ai-agent-adapter-vercel-ai':
         specifier: workspace:*
         version: link:../../../packages/adapters/vercel-ai
-      '@radiustechsystems/core':
+      '@radiustechsystems/ai-agent-core':
         specifier: workspace:*
         version: link:../../../packages/core
-      '@radiustechsystems/wallet-evm':
+      '@radiustechsystems/ai-agent-wallet-evm':
         specifier: workspace:*
         version: link:../../../packages/wallets/evm
-      '@radiustechsystems/wallet-viem':
+      '@radiustechsystems/ai-agent-wallet-viem':
         specifier: workspace:*
         version: link:../../../packages/wallets/viem
       ai:
@@ -83,7 +83,7 @@ importers:
 
   packages/adapters/vercel-ai:
     dependencies:
-      '@radiustechsystems/core':
+      '@radiustechsystems/ai-agent-core':
         specifier: workspace:*
         version: link:../../core
       ai:
@@ -106,7 +106,7 @@ importers:
 
   packages/wallets/evm:
     dependencies:
-      '@radiustechsystems/core':
+      '@radiustechsystems/ai-agent-core':
         specifier: workspace:*
         version: link:../../core
       abitype:
@@ -121,7 +121,7 @@ importers:
 
   packages/wallets/viem:
     dependencies:
-      '@radiustechsystems/wallet-evm':
+      '@radiustechsystems/ai-agent-wallet-evm':
         specifier: workspace:*
         version: link:../evm
       viem:

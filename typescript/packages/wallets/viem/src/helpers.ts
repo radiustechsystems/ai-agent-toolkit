@@ -5,7 +5,7 @@ import {
   type RadiusWalletConfig,
   type RadiusWalletCreator,
   validateWalletConfig 
-} from "@radiustechsystems/wallet-evm";
+} from "@radiustechsystems/ai-agent-wallet-evm";
 import { viem } from "./index";
 
 /**

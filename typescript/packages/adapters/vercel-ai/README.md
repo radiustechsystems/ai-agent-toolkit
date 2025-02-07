@@ -2,5 +2,5 @@
 
 ## Installation
 ```
-npm install @radiustechsystems/adapter-vercel-ai
+npm install @radiustechsystems/ai-agent-adapter-vercel-ai
 ```

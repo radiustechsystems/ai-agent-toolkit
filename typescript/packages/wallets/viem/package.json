@@ -1,5 +1,5 @@
 {
-  "name": "@radiustechsystems/wallet-viem",
+  "name": "@radiustechsystems/ai-agent-wallet-viem",
   "version": "0.1.0",
   "sideEffects": false,
   "files": ["dist/**/*", "README.md", "package.json"],
@@ -12,11 +12,11 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "dependencies": {
-      "@radiustechsystems/wallet-evm": "workspace:*",
+      "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
       "viem": "catalog:"
   },
   "peerDependencies": {
-      "@radiustechsystems/wallet-evm": "workspace:*",
+      "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
       "viem": "catalog:"
   },
   "license": "MIT"

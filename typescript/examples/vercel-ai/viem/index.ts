@@ -1,8 +1,8 @@
 import readline from "node:readline";
 import { openai } from "@ai-sdk/openai";
 import { generateText, LanguageModelV1 } from "ai";
-import { getOnChainTools } from "@radiustechsystems/adapter-vercel-ai";
-import { createRadiusViemWallet } from "@radiustechsystems/wallet-viem";
+import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai";
+import { createRadiusViemWallet } from "@radiustechsystems/ai-agent-wallet-viem";
 import * as dotenv from "dotenv";
 
 dotenv.config();

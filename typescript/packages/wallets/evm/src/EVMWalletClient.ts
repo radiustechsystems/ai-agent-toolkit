@@ -1,4 +1,4 @@
-import { type EvmChain, type Signature, WalletClientBase } from "@radiustechsystems/core";
+import { type EvmChain, type Signature, WalletClientBase } from "@radiustechsystems/ai-agent-core";
 import { isRadiusChain } from "./radius-chains";
 import type { EVMReadRequest, EVMReadResult, EVMTransaction, EVMTypedData } from "./types";
 

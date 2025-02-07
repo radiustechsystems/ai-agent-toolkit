@@ -3,7 +3,7 @@ import {
   type EVMTransaction,
   type EVMTypedData,
   EVMWalletClient
-} from "@radiustechsystems/wallet-evm";
+} from "@radiustechsystems/ai-agent-wallet-evm";
 import { type WalletClient as ViemWalletClient, encodeFunctionData, formatUnits, publicActions } from "viem";
 import { mainnet } from "viem/chains";
 import { normalize } from "viem/ens";

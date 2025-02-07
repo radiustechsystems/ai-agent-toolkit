@@ -1,5 +1,5 @@
 {
-  "name": "@radiustechsystems/core",
+  "name": "@radiustechsystems/ai-agent-core",
   "version": "0.1.0",
   "sideEffects": false,
   "files": ["dist/**/*", "README.md", "package.json"],
