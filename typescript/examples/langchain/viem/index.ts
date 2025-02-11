@@ -39,7 +39,7 @@ const llm = new ChatOpenAI({
   });
 
   const response = await agentExecutor.invoke({
-    input: "Get my balance in USDC",
+    input: "Get my balance in ETH",
   });
 
   console.log(response);
