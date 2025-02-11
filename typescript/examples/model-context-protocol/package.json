@@ -1,0 +1,28 @@
+{
+  "name": "radius-examples-model-context-protocol-viem",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "bin": {
+      "goat": "./build/index.js"
+  },
+  "scripts": {
+      "test": "vitest run --passWithNoTests",
+      "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\""
+  },
+  "files": ["build"],
+  "license": "MIT",
+  "dependencies": {
+      "@ai-sdk/openai": "^1.0.4",
+      "@radiustechsystems/ai-agent-adapter-model-context-protocol": "workspace:*",
+      "@radiustechsystems/ai-agent-core": "workspace:*",
+      "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
+      "@radiustechsystems/ai-agent-wallet-viem": "workspace:*",
+      "@modelcontextprotocol/sdk": "1.0.4",
+      "dotenv": "^16.4.5",
+      "viem": "2.21.49"
+  },
+  "devDependencies": {
+      "@types/node": "22.7.4"
+  }
+}
