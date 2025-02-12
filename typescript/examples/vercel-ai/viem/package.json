@@ -11,6 +11,7 @@
       "@radiustechsystems/ai-agent-adapter-vercel-ai": "workspace:*",
       "@radiustechsystems/ai-agent-core": "workspace:*",
       "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
+      "@radiustechsystems/ai-agent-plugin-uniswap": "workspace:*",
       "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
       "@radiustechsystems/ai-agent-wallet-viem": "workspace:*",
       "ai": "catalog:",

@@ -6,6 +6,7 @@ import { createRadiusViemWallet } from "@radiustechsystems/ai-agent-wallet-viem"
 import * as dotenv from "dotenv";
 import { sendETH } from "@radiustechsystems/ai-agent-wallet-evm";
 import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20";
+import { uniswap } from "@radiustechsystems/ai-agent-plugin-uniswap";
 
 dotenv.config();
 
@@ -21,10 +22,10 @@ const wallet = createRadiusViemWallet({
     plugins: [
       sendETH(), // Enable ETH transfers
       erc20({ tokens: [USDC] }), // Enable ERC20 token operations
-      // uniswap({
-      //   baseUrl: process.env.UNISWAP_BASE_URL as string,
-      //   apiKey: process.env.UNISWAP_API_KEY as string,
-      // }), // Enable Uniswap trading
+      uniswap({
+        baseUrl: process.env.UNISWAP_BASE_URL as string,
+        apiKey: process.env.UNISWAP_API_KEY as string,
+      }), // Enable Uniswap trading
     ]
   });
 
