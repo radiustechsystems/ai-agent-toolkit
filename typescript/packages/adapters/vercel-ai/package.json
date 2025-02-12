@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-adapter-vercel-ai",
-  "version": "0.2.8",
+  "version": "0.1.0",
   "sideEffects": false,
   "files": ["dist/**/*", "README.md", "package.json"],
   "scripts": {
