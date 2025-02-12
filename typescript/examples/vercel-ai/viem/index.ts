@@ -15,7 +15,15 @@ const wallet = createRadiusViemWallet({
 
 (async () => {
   const tools = await getOnChainTools({
-    wallet: wallet
+    wallet,
+    // plugins: [
+    //   sendETH(), // Enable ETH transfers
+    //   erc20({ tokens: [USDC] }), // Enable ERC20 token operations
+    //   uniswap({
+    //     baseUrl: process.env.UNISWAP_BASE_URL as string,
+    //     apiKey: process.env.UNISWAP_API_KEY as string,
+    //   }), // Enable Uniswap trading
+    // ]
   });
 
   const rl = readline.createInterface({

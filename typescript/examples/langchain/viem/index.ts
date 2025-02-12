@@ -24,7 +24,8 @@ const llm = new ChatOpenAI({
   const prompt = await pull<ChatPromptTemplate>("hwchase17/structured-chat-agent");
 
   const tools = await getOnChainTools({
-    wallet
+    wallet,
+    // plugins: [sendETH(), erc20({ tokens: [USDC] })]
   });
 
   const agent = await createStructuredChatAgent({

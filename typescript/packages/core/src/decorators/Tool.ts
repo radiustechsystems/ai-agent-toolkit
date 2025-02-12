@@ -37,6 +37,7 @@ export const toolMetadataKey = Symbol("radius:tool");
 /**
  * Decorator that marks a class method as a tool accessible to the LLM
  * @param params - Configuration parameters for the tool
+ * @returns A decorator function that can be applied to class methods
  * 
  * @example
  * class MyToolService {
@@ -72,7 +73,7 @@ export function Tool(params: ToolDecoratorParams) {
       target: originalMethod,
       name: params.name ?? snakeCase(context.name.toString()),
       description: params.description,
-      parameters: parameters,
+      parameters,
       ...(walletClient ? { walletClient } : {})
     });
 

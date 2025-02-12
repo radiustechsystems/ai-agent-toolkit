@@ -1,17 +1,16 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
-
-import { http, createWalletClient } from "viem";
-import { privateKeyToAccount } from "viem/accounts";
-import { mode } from "viem/chains";
+import * as dotenv from "dotenv";
 
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-model-context-protocol";
-import { viem } from "@radiustechsystems/ai-agent-wallet-viem";
+import { createRadiusViemWallet } from "@radiustechsystems/ai-agent-wallet-viem";
+
+dotenv.config();
 
 const server = new Server(
   {
-    name: "goat",
+    name: "radius",
     version: "1.0.0",
   },
   {
@@ -21,17 +20,16 @@ const server = new Server(
   },
 );
 
-const account = privateKeyToAccount(process.env.WALLET_PRIVATE_KEY as `0x${string}`);
-
-const walletClient = createWalletClient({
-  account: account,
-  transport: http(process.env.RPC_PROVIDER_URL),
-  chain: mode,
+// Create a Radius Viem wallet using our helper
+const wallet = createRadiusViemWallet({
+  rpcUrl: process.env.RPC_PROVIDER_URL!,
+  privateKey: process.env.WALLET_PRIVATE_KEY!
 });
 
 // Initialize tools once
 const toolsPromise = getOnChainTools({
-  wallet: viem(walletClient)
+  wallet,
+  // plugins: [sendETH(), erc20({ tokens: [USDC] })],
 });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {
@@ -53,7 +51,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request: typeof CallToolR
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("GOAT MCP Server running on stdio");
+  console.error("RADIUS MCP Server running on stdio");
 }
 
 main().catch((error) => {

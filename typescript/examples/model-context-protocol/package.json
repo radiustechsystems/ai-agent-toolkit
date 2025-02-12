@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "bin": {
-      "goat": "./build/index.js"
+      "radius": "./build/index.js"
   },
   "scripts": {
       "test": "vitest run --passWithNoTests",

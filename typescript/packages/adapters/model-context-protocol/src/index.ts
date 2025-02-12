@@ -4,10 +4,12 @@ import { zodToJsonSchema } from "zod-to-json-schema";
 export type GetOnChainToolsParams<TWalletClient extends WalletClientBase> = GetToolsParams<TWalletClient>;
 
 export async function getOnChainTools<TWalletClient extends WalletClientBase>({
-  wallet
+  wallet,
+  plugins
 }: GetOnChainToolsParams<TWalletClient>) {
   const tools: ToolBase[] = await getTools<TWalletClient>({
-    wallet
+    wallet,
+    plugins
   });
 
   return {

@@ -7,8 +7,9 @@ export type GetOnChainToolsParams<TWalletClient extends WalletClientBase> = GetT
 
 export async function getOnChainTools<TWalletClient extends WalletClientBase>({
   wallet,
+  plugins
 }: GetOnChainToolsParams<TWalletClient>) {
-  const tools: ToolBase[] = await getTools({ wallet });
+  const tools: ToolBase[] = await getTools({ wallet, plugins });
 
   return tools.map((t) =>
     tool(
