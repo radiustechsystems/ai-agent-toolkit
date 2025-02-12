@@ -77,6 +77,9 @@ importers:
       '@radiustechsystems/ai-agent-core':
         specifier: workspace:*
         version: link:../../../packages/core
+      '@radiustechsystems/ai-agent-plugin-erc20':
+        specifier: workspace:*
+        version: link:../../../packages/plugins/erc20
       '@radiustechsystems/ai-agent-wallet-evm':
         specifier: workspace:*
         version: link:../../../packages/wallets/evm
@@ -107,6 +110,9 @@ importers:
       '@radiustechsystems/ai-agent-core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@radiustechsystems/ai-agent-plugin-erc20':
+        specifier: workspace:*
+        version: link:../../packages/plugins/erc20
       '@radiustechsystems/ai-agent-wallet-evm':
         specifier: workspace:*
         version: link:../../packages/wallets/evm
@@ -162,6 +168,9 @@ importers:
       '@radiustechsystems/ai-agent-core':
         specifier: workspace:*
         version: link:../../../packages/core
+      '@radiustechsystems/ai-agent-plugin-erc20':
+        specifier: workspace:*
+        version: link:../../../packages/plugins/erc20
       '@radiustechsystems/ai-agent-wallet-evm':
         specifier: workspace:*
         version: link:../../../packages/wallets/evm
@@ -271,6 +280,21 @@ importers:
       vitest:
         specifier: ^1.6.1
         version: 1.6.1(@types/node@18.19.75)
+
+  packages/plugins/erc20:
+    dependencies:
+      '@radiustechsystems/ai-agent-core':
+        specifier: workspace:*
+        version: link:../../core
+      '@radiustechsystems/ai-agent-wallet-evm':
+        specifier: workspace:*
+        version: link:../../wallets/evm
+      viem:
+        specifier: 'catalog:'
+        version: 2.21.49(typescript@5.6.3)(zod@3.23.8)
+      zod:
+        specifier: 'catalog:'
+        version: 3.23.8
 
   packages/wallets/evm:
     dependencies:

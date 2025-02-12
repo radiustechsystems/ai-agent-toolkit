@@ -5,6 +5,8 @@ import * as dotenv from "dotenv";
 
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-model-context-protocol";
 import { createRadiusViemWallet } from "@radiustechsystems/ai-agent-wallet-viem";
+import { sendETH } from "@radiustechsystems/ai-agent-wallet-evm";
+import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20";
 
 dotenv.config();
 
@@ -29,7 +31,7 @@ const wallet = createRadiusViemWallet({
 // Initialize tools once
 const toolsPromise = getOnChainTools({
   wallet,
-  // plugins: [sendETH(), erc20({ tokens: [USDC] })],
+  plugins: [sendETH(), erc20({ tokens: [USDC] })],
 });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => {

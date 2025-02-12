@@ -9,6 +9,7 @@
   "dependencies": {
       "@radiustechsystems/ai-agent-adapter-langchain": "workspace:*",
       "@radiustechsystems/ai-agent-core": "workspace:*",
+      "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
       "@radiustechsystems/ai-agent-wallet-viem": "workspace:*",
       "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
       "@langchain/core": "catalog:",

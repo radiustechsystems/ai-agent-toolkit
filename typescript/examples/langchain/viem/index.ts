@@ -5,7 +5,8 @@ import { pull } from "langchain/hub";
 import * as dotenv from "dotenv";
 
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-langchain";
-
+import { USDC, erc20 } from "@radiustechsystems/ai-agent-plugin-erc20";
+import { sendETH } from "@radiustechsystems/ai-agent-wallet-evm";
 import { createRadiusViemWallet } from "@radiustechsystems/ai-agent-wallet-viem";
 
 dotenv.config();
@@ -25,7 +26,7 @@ const llm = new ChatOpenAI({
 
   const tools = await getOnChainTools({
     wallet,
-    // plugins: [sendETH(), erc20({ tokens: [USDC] })]
+    plugins: [sendETH(), erc20({ tokens: [USDC] })]
   });
 
   const agent = await createStructuredChatAgent({

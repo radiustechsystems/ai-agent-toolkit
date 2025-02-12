@@ -16,6 +16,7 @@
       "@ai-sdk/openai": "^1.0.4",
       "@radiustechsystems/ai-agent-adapter-model-context-protocol": "workspace:*",
       "@radiustechsystems/ai-agent-core": "workspace:*",
+      "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
       "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
       "@radiustechsystems/ai-agent-wallet-viem": "workspace:*",
       "@modelcontextprotocol/sdk": "1.0.4",
