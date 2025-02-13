@@ -3,16 +3,8 @@ import { WalletClientBase } from "../classes";
 import { snakeCase } from "../utils/snakeCase";
 import "reflect-metadata";
 
-/**
- * Parameters for the Tool decorator
- */
 export type ToolDecoratorParams = {
-    /** 
-     * The name of the tool
-     * @default snakeCase(methodName)
-     */
     name?: string;
-    /** A description of what the tool does */
     description: string;
 };
 
@@ -34,129 +26,84 @@ export type StoredToolMetadataMap = Map<string, StoredToolMetadata>;
 
 export const toolMetadataKey = Symbol("radius:tool");
 
-/**
- * Decorator that marks a class method as a tool accessible to the LLM
- * @param params - Configuration parameters for the tool
- * @returns A decorator function that can be applied to class methods
- * 
- * @example
- * class MyToolService {
- *     @Tool({
- *         description: "Adds two numbers",
- *     })
- *     add({a, b}: AddParameters) {
- *         return a + b;
- *     }
- * }
- */
 export function Tool(params: ToolDecoratorParams) {
   return function(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     target: any,
-    context: ClassMethodDecoratorContext
+    propertyKey: string | symbol,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    descriptor: TypedPropertyDescriptor<any>
   ) {
     // Store the original method
-    const originalMethod = target;
+    const originalMethod = descriptor.value;
         
-    // Validate method parameters
-    const { parameters, walletClient } = validateMethodParameters(
-      target, 
-      context.name.toString()
-    );
+    // Get the parameter types using the design:paramtypes metadata
+    const paramTypes = Reflect.getMetadata("design:paramtypes", target, propertyKey);
+        
+    if (!paramTypes) {
+      throw new Error(
+        `No parameter type metadata found for ${String(propertyKey)}. ` +
+                "Ensure TypeScript is configured with emitDecoratorMetadata: true"
+      );
+    }
 
-    // Get or create the tools metadata map
-    const existingTools: StoredToolMetadataMap =
-            Reflect.getMetadata(toolMetadataKey, context.constructor) || new Map();
+    // Find the wallet client and parameters in the method signature
+    const walletClientIndex = paramTypes.findIndex(isWalletClientParameter);
+    const parametersIndex = paramTypes.findIndex(isParametersParameter);
 
-    // Add this tool's metadata
-    existingTools.set(context.name.toString(), {
-      target: originalMethod,
-      name: params.name ?? snakeCase(context.name.toString()),
+    if (parametersIndex === -1) {
+      throw new Error(
+        `Method ${String(propertyKey)} must have a parameters argument ` +
+                "created with createToolParameters"
+      );
+    }
+
+    // Get the parameters schema from the parameters class
+    const parametersType = paramTypes[parametersIndex];
+    const schema = parametersType.prototype.constructor.schema;
+
+    if (!schema) {
+      throw new Error(
+        `Parameters type for ${String(propertyKey)} must have a schema property`
+      );
+    }
+
+    // Get or create the tools metadata map on the constructor
+    const existingTools: StoredToolMetadataMap = 
+            Reflect.getMetadata(toolMetadataKey, target.constructor) || new Map();
+
+    // Store the tool metadata
+    existingTools.set(propertyKey.toString(), {
+      name: params.name ?? snakeCase(propertyKey.toString()),
       description: params.description,
-      parameters,
-      ...(walletClient ? { walletClient } : {})
+      parameters: {
+        index: parametersIndex,
+        schema: schema
+      },
+      ...(walletClientIndex !== -1 ? {
+        walletClient: {
+          index: walletClientIndex
+        }
+      } : {}),
+      target: originalMethod
     });
 
-    // Store the metadata
-    Reflect.defineMetadata(
-      toolMetadataKey, 
-      existingTools, 
-      context.constructor
-    );
+    // Update the metadata on the constructor
+    Reflect.defineMetadata(toolMetadataKey, existingTools, target.constructor);
 
     // Return the original method
-    return originalMethod;
-  };
-}
-
-function validateMethodParameters(
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  target: Function,
-  methodName: string,
-): {
-    parameters: {
-        index: number;
-        schema: z.ZodSchema;
-    };
-    walletClient?: {
-        index: number;
-    };
-} {
-  const className = target.constructor?.name;
-  const logPrefix = `Method '${methodName}'${className ? ` on class '${className}'` : ""}`;
-  const explainer = `
-        Tool methods must have at least one parameter that is a Zod 
-        schema class created with the createToolParameters function.
-    `;
-
-  const methodParameters = Reflect.getMetadata(
-    "design:paramtypes", 
-    target.constructor, 
-    methodName
-  );
-
-  if (methodParameters == null) {
-    throw new Error(`Failed to get parameters for ${logPrefix}.`);
-  }
-  if (methodParameters.length === 0) {
-    throw new Error(`${logPrefix} has no parameters. ${explainer}`);
-  }
-  if (methodParameters.length > 2) {
-    throw new Error(
-      `${logPrefix} has ${methodParameters.length} parameters. ${explainer}`
-    );
-  }
-
-  const parametersParameter = methodParameters.find(isParametersParameter);
-  if (parametersParameter == null) {
-    throw new Error(`
-            ${logPrefix} has no parameters parameter.\n\n
-            1.) ${explainer}\n\n
-            2.) Ensure that you are not using 'import type' for the parameters.
-        `);
-  }
-
-  const walletClientParameter = methodParameters.find(isWalletClientParameter);
-
-  return {
-    parameters: {
-      index: methodParameters.indexOf(parametersParameter),
-      schema: parametersParameter.prototype.constructor.schema,
-    },
-    ...(walletClientParameter
-      ? { walletClient: { index: methodParameters.indexOf(walletClientParameter) } }
-      : {}),
+    return descriptor;
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isWalletClientParameter(param: any) {
+function isWalletClientParameter(param: any): boolean {
   if (!param || !param.prototype) return false;
   if (param === WalletClientBase) return true;
   return param.prototype instanceof WalletClientBase;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isParametersParameter(param: any) {
-  return param.prototype?.constructor?.schema != null;
+function isParametersParameter(param: any): boolean {
+  return param?.prototype?.constructor?.schema != null;
 }
