@@ -1,0 +1,25 @@
+{
+  "name": "@radiustechsystems/ai-agent-plugin-uniswap",
+  "version": "0.1.0",
+  "files": ["dist/**/*", "README.md", "package.json"],
+  "scripts": {
+      "build": "tsup",
+      "clean": "rm -rf dist",
+      "test": "vitest run --passWithNoTests"
+  },
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+      "@radiustechsystems/ai-agent-core": "workspace:*",
+      "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
+      "viem": "catalog:",
+      "zod": "catalog:"
+  },
+  "peerDependencies": {
+      "@radiustechsystems/ai-agent-core": "workspace:*",
+      "viem": "catalog:"
+  },
+  "license": "MIT"
+}

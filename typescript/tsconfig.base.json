@@ -15,7 +15,9 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2022"],
     "noErrorTruncation": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "exclude": ["node_modules", "dist"]
 }

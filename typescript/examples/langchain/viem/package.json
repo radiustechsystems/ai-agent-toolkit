@@ -1,5 +1,5 @@
 {
-  "name": "radius-examples-vercel-ai-viem",
+  "name": "radius-examples-langchain-viem",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,15 +7,15 @@
   },
   "license": "MIT",
   "dependencies": {
-      "@ai-sdk/openai": "^1.1.9",
-      "@radiustechsystems/ai-agent-adapter-vercel-ai": "workspace:*",
+      "@radiustechsystems/ai-agent-adapter-langchain": "workspace:*",
       "@radiustechsystems/ai-agent-core": "workspace:*",
       "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
-      "@radiustechsystems/ai-agent-plugin-uniswap": "workspace:*",
-      "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
       "@radiustechsystems/ai-agent-wallet-viem": "workspace:*",
-      "ai": "catalog:",
+      "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
+      "@langchain/core": "catalog:",
+      "@langchain/openai": "^0.3.5",
       "dotenv": "^16.4.5",
-      "viem": "2.21.49"
+      "viem": "2.21.49",
+      "langchain": "^0.3.2"
   }
 }
