@@ -1,0 +1,27 @@
+{
+  "name": "@radiustechsystems/ai-agent-adapter-langchain",
+  "version": "0.1.0",
+  "sideEffects": false,
+  "files": ["dist/**/*", "README.md", "package.json"],
+  "scripts": {
+      "build": "tsup",
+      "clean": "rm -rf dist",
+      "test": "vitest run --passWithNoTests"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+      "@radiustechsystems/ai-agent-core": "workspace:*",
+      "@langchain/core": "catalog:"
+  },
+  "peerDependencies": {
+      "@radiustechsystems/ai-agent-core": "workspace:*",
+      "@langchain/core": "catalog:",
+      "zod": "^3.0.0"
+  },
+  "devDependencies": {
+      "zod": "catalog:"
+  },
+  "license": "MIT"
+}

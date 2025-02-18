@@ -2,10 +2,10 @@ import {
   type EVMReadRequest,
   type EVMTransaction,
   type EVMTypedData,
-  EVMWalletClient
+  EVMWalletClient,
+  radiusTestnetBase
 } from "@radiustechsystems/ai-agent-wallet-evm";
 import { type WalletClient as ViemWalletClient, encodeFunctionData, formatUnits, publicActions } from "viem";
-import { mainnet } from "viem/chains";
 import { normalize } from "viem/ens";
 import { eip712WalletActions, getGeneralPaymasterInput } from "viem/zksync";
 
@@ -180,7 +180,7 @@ export class ViemEVMWalletClient extends EVMWalletClient {
       address: resolvedAddress,
     });
 
-    const chain = this.#client.chain ?? mainnet;
+    const chain = this.#client.chain ?? radiusTestnetBase;
 
     return {
       value: formatUnits(BigInt(balance), chain.nativeCurrency.decimals),
