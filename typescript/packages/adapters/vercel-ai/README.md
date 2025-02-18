@@ -1,4 +1,4 @@
-# Radius Adapter Vercel AI - TypeScript
+# AI Agent Toolkit for Radius - Vercel AI Adapter (TypeScript)
 
 ## Installation
 ```
