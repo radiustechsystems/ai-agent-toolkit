@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "radius-ai-agent-sdk-monorepo"
+version = "0.1.0"
+description = "Radius AI Agent SDK is an open-source framework for connecting AI agents to the Radius network"
+authors = ["Matt Dionis <matt.dionis@radiustechnologysystems.com>"]
+readme = "README.md"
+keywords = ["radius", "sdk", "web3", "agents", "ai"]
+homepage = "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python"
+repository = "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+# Core
+radius-ai-agent-sdk = { path = "src/radius_ai_agent_sdk/" }
+
+# Plugins
+radius-ai-agent-sdk-plugin-erc20 = { path = "src/plugins/erc20/" }
+radius-ai-agent-sdk-plugin-jsonrpc = { path = "src/plugins/jsonrpc/" }
+radius-ai-agent-sdk-plugin-uniswap = { path = "src/plugins/uniswap/" }
+
+# Wallets
+radius-ai-agent-sdk-wallet-evm = { path = "src/wallets/evm/" }
+radius-ai-agent-sdk-wallet-web3 = { path = "src/wallets/web3/" }
+
+# Adapters
+radius-ai-agent-sdk-adapter-langchain = { path = "src/adapters/langchain/" }
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+
+[tool.pytest.ini_options]
+addopts = [
+  "--import-mode=importlib",
+]
+pythonpath = "src"
+asyncio_default_fixture_loop_scope = "function"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"

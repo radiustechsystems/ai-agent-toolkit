@@ -1,6 +1,6 @@
-# AI Agent Toolkit for Radius
+# Radius AI Agent Toolkit
 
-`ai-agent-toolkit` is a comprehensive toolkit for integrating Radius capabilities into AI agent workflows. Radius is EVM-compatible and this toolkit provides seamless integration with major AI agent frameworks.
+Radius AI Agent Toolkit is a comprehensive toolkit for integrating Radius capabilities into AI agent workflows. Radius is EVM-compatible and this toolkit provides seamless integration with major AI agent frameworks.
 
 ## Features
 
@@ -14,4 +14,5 @@
 ## Getting Started
 
 See the README files in the respective language directories for detailed setup and usage instructions:
+- [Python Implementation](./python/README.md)
 - [TypeScript Implementation](./typescript/README.md)

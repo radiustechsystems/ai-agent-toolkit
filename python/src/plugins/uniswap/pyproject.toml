@@ -1,0 +1,49 @@
+[tool.poetry]
+name = "radius-ai-agent-sdk-plugin-uniswap"
+version = "0.1.0"
+description = "Radius plugin for Uniswap"
+authors = ["Matt Dionis <matt.dionis@radiustechnologysystems.com>"]
+readme = "README.md"
+keywords = ["radius", "sdk", "agents", "ai", "uniswap"]
+homepage = "https://github.com/radiustechsystems/ai-agent-toolkit"
+repository = "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python"
+packages = [
+    { include = "radius_plugins/uniswap" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+radius-ai-agent-sdk = "^0.1.0"
+radius-ai-agent-sdk-wallet-evm = "^0.1.0"
+radius-ai-agent-sdk-wallet-web3 = "^0.1.0"
+radius-ai-agent-sdk-plugin-erc20 = "^0.1.0"
+aiohttp = "^3.0"  # For async HTTP requests
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.4"
+pytest-asyncio = "^0.25.0"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+
+[tool.pytest.ini_options]
+addopts = [
+  "--import-mode=importlib",
+]
+pythonpath = "src"
+asyncio_default_fixture_loop_scope = "function"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.8.6"
+radius-ai-agent-sdk = { path = "../../radius_ai_agent_sdk", develop = true }
+radius-ai-agent-sdk-plugin-erc20 = { path = "../../../src/plugins/erc20", develop = true }
+radius-ai-agent-sdk-wallet-evm = { path = "../../wallets/evm", develop = true }
+radius-ai-agent-sdk-wallet-web3 = { path = "../../../src/wallets/web3", develop = true }
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"

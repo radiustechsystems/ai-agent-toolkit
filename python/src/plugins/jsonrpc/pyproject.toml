@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "radius-ai-agent-sdk-plugin-jsonrpc"
+version = "0.1.0"
+description = "Radius plugin for JSON-RPC"
+authors = ["Matt Dionis <matt.dionis@radiustechnologysystems.com>"]
+readme = "README.md"
+keywords = ["radius", "sdk", "web3", "agents", "ai"]
+homepage = "https://github.com/radiustechsystems/ai-agent-toolkit"
+repository = "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python"
+packages = [
+    { include = "radius_plugins" },
+] 
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiohttp = "^3.8.6"
+radius-ai-agent-sdk = "^0.1.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.3.4"
+pytest-asyncio = "^0.25.0"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+
+[tool.pytest.ini_options]
+addopts = [
+  "--import-mode=importlib",
+]
+pythonpath = "src"
+asyncio_default_fixture_loop_scope = "function"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.8.6"
+radius-ai-agent-sdk = { path = "../../radius_ai_agent_sdk", develop = true }
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
