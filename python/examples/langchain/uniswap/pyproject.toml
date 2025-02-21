@@ -1,35 +1,45 @@
-[tool.poetry]
+[build-system]
+requires = ["setuptools>=65", "setuptools_scm[toml]>=8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
 name = "radius-ai-agent-sdk-example-langchain-uniswap"
 version = "0.1.0"
 description = "Radius example for Langchain with Uniswap"
-authors = ["Matt Dionis <matt.dionis@radiustechnologysystems.com>"]
+authors = [{name = "Matt Dionis", email = "matt.dionis@radiustechnologysystems.com"}]
 readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
 keywords = ["radius", "sdk", "web3", "agents", "ai"]
-homepage = "https://github.com/radiustechsystems/ai-agent-toolkit"
-repository = "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python"
-packages = [
-    { include = "example.py" },
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "langchain>=0.3.2",
+    "langchain-openai>=0.2.14",
+    "python-dotenv>=1.0.1",
+    "web3>=6.20.3",
+    "radius-ai-agent-sdk>=0.1.0",
+    "radius-ai-agent-sdk-wallet-evm>=0.1.0",
+    "radius-ai-agent-sdk-wallet-web3>=0.1.0",
+    "radius-ai-agent-sdk-plugin-erc20>=0.1.0",
+    "radius-ai-agent-sdk-adapter-langchain>=0.1.0",
+    "radius-ai-agent-sdk-plugin-uniswap>=0.1.0",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-langchain = "^0.3.2"
-langchain-openai = "^0.2.14"
-python-dotenv = "^1.0.1"
-web3 = "^6.20.3"
-radius-ai-agent-sdk = "^0.1.0"
-radius-ai-agent-sdk-wallet-evm = "^0.1.0"
-radius-ai-agent-sdk-wallet-web3 = "0.1.0"
-radius-ai-agent-sdk-plugin-erc20 = "^0.1.0"
-radius-ai-agent-sdk-adapter-langchain = "^0.1.0"
-radius-ai-agent-sdk-plugin-uniswap = "^0.1.0"
+[project.urls]
+Homepage = "https://github.com/radiustechsystems/ai-agent-toolkit"
+Documentation = "https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/examples/langchain/uniswap/README.md"
+Repository = "https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/examples/langchain/uniswap"
+Issues = "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+Changelog = "https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md"
 
-[tool.poetry.group.test.dependencies]
-pytest = "^8.3.4"
-pytest-asyncio = "^0.25.0"
-
-[tool.poetry.urls]
-"Bug Tracker" = "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+[tool.setuptools]
+py-modules = ["example"]
 
 [tool.pytest.ini_options]
 addopts = [
@@ -38,19 +48,13 @@ addopts = [
 pythonpath = "src"
 asyncio_default_fixture_loop_scope = "function"
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.8.6"
-radius-ai-agent-sdk = { path = "../../../src/radius_ai_agent_sdk", develop = true }
-radius-ai-agent-sdk-wallet-evm = { path = "../../../src/wallets/evm", develop = true }
-radius-ai-agent-sdk-wallet-web3 = { path = "../../../src/wallets/web3", develop = true }
-radius-ai-agent-sdk-plugin-erc20 = { path = "../../../src/plugins/erc20", develop = true }
-radius-ai-agent-sdk-adapter-langchain = { path = "../../../src/adapters/langchain", develop = true }
-radius-ai-agent-sdk-plugin-uniswap = { path = "../../../src/plugins/uniswap", develop = true }
-
 [tool.ruff]
 line-length = 120
 target-version = "py312"
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.8.6",
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.0",
+]

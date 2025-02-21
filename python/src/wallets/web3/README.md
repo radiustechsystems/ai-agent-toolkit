@@ -1,73 +1,66 @@
-# Web3 Wallet for Radius AI Agent SDK
+# Radius AI Agent SDK - Web3 Wallet
 
-A Python implementation of a Web3 wallet for the Radius AI Agent SDK, providing enhanced Radius support through web3.py integration.
+Web3.py wallet implementation for the Radius AI Agent SDK.
 
 ## Installation
 
 ```bash
-poetry add radius-ai-agent-sdk-wallet-web3
-
-# Required dependency
-poetry add radius-ai-agent-sdk-wallet-evm
+pip install radius-ai-agent-sdk-wallet-web3
 ```
 
-## Usage
+## Prerequisites
 
-```python
-from radius_wallets.web3 import web3_wallet
-
-# Initialize wallet with private key
-wallet = web3_wallet(
-    private_key="${WALLET_PRIVATE_KEY}",  # Your EVM wallet private key
-    rpc_url="${RPC_PROVIDER_URL}"  # Your Radius RPC endpoint
-)
-
-# Get wallet address
-address = wallet.get_address()
-
-# Get native token balance
-balance = await wallet.get_balance()
-
-# Send transaction
-tx_hash = await wallet.send_transaction({
-    "to": "recipient_address",
-    "value": "1000000000000000000",  # 1 ETH in wei
-    "data": "0x",  # Optional contract data
-    "gas": 21000,  # Optional gas limit
-    "maxFeePerGas": "50000000000"  # Optional max fee per gas (50 gwei)
-})
-
-# Call contract method
-result = await wallet.call_contract(
-    contract_address="contract_address",
-    function_name="balanceOf",
-    args=["token_holder_address"]
-)
-```
+- Python >=3.10
+- radius-ai-agent-sdk >=0.1.0
+- web3 >=6.20.3
+- radius-ai-agent-sdk-wallet-evm >=0.1.0
 
 ## Features
 
-- Web3.py Integration:
-  - Full web3.py functionality
-  - Enhanced contract interactions
-  - ABI handling
-  - Gas estimation
-  
-- Transaction Management:
-  - EIP-1559 support
-  - Legacy transaction support
-  - Contract deployment
-  - Method encoding/decoding
-  
-- Smart Contract Features:
-  - Contract interaction
-  - Event listening
-  - Function calling
-  - State queries
-  
-- Network Support:
-  - Radius
+- Web3.py integration for Radius AI Agent SDK
+- Built on top of the EVM wallet implementation
+- Full Web3.py functionality and API support
+- Type-safe implementations
+- Async support for concurrent operations
+
+## Development Setup
+
+### 1. Clone the Repository
+```bash
+git clone git@github.com:radiustechsystems/ai-agent-toolkit.git
+cd ai-agent-toolkit/python/src/wallets/web3
+```
+
+### 2. Install Development Dependencies
+```bash
+pip install -e ".[dev]"
+```
+
+### 3. Build the Package
+```bash
+pip install build
+python -m build
+```
+
+## Testing
+
+Run tests with pytest:
+
+```bash
+pytest
+```
+
+## Documentation
+
+For detailed documentation:
+- [API Documentation](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/src/wallets/web3/README.md)
+- [Examples](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python/examples)
+- [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md)
+
+## Support
+
+For issues and feature requests, please use our [issue tracker](https://github.com/radiustechsystems/ai-agent-toolkit/issues).
 
 ## License
 
-This project is licensed under the terms of the MIT license.
+This project is licensed under the MIT License.

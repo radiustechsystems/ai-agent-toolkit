@@ -16,9 +16,9 @@ This guide will help you set up and run the AI Agent Toolkit project.
 
 - Node.js >=20.12.2 <23
 - pnpm >=9 (specifically tested with 9.14.2)
-- Git
+- git
 
-## Step-by-Step Setup
+## Development Setup
 
 ### 1. Clone the Repository
 ```bash

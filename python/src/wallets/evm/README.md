@@ -1,62 +1,65 @@
-# EVM Wallet for Radius AI Agent SDK
+# Radius AI Agent SDK - EVM Wallet
 
-A Python implementation of an EVM wallet for the Radius AI Agent SDK, providing secure key management and transaction signing capabilities for the Radius network.
+EVM (Ethereum Virtual Machine) wallet implementation for the Radius AI Agent SDK.
 
 ## Installation
 
 ```bash
-poetry add radius-ai-agent-sdk-wallet-evm
+pip install radius-ai-agent-sdk-wallet-evm
 ```
 
-## Usage
+## Prerequisites
 
-```python
-from radius_wallets.evm import evm_wallet
-
-# Initialize wallet with private key
-wallet = evm_wallet(
-    private_key="${WALLET_PRIVATE_KEY}",  # Your EVM wallet private key
-    rpc_url="${RPC_PROVIDER_URL}"  # Your Radius RPC endpoint
-)
-
-# Get wallet address
-address = wallet.get_address()
-
-# Get ETH balance
-balance = await wallet.get_balance()
-
-# Sign and send transaction
-tx_hash = await wallet.sign_and_send_transaction({
-    "to": "recipient_address",
-    "value": "1000000000000000000",  # 1 ETH in wei
-    "data": "0x",  # Optional contract data
-})
-
-# Get transaction receipt
-receipt = await wallet.get_transaction_receipt(tx_hash)
-```
+- Python >=3.10
+- radius-ai-agent-sdk >=0.1.0
+- evmchains >=0.1.3
+- typing-extensions >=4.12.2
 
 ## Features
 
-- Secure Key Management:
-  - Private key support
-  - Public address derivation
-  - Message signing
-  
-- Transaction Operations:
-  - Transaction signing
-  - Transaction sending
-  - Gas estimation
-  - Receipt tracking
-  
-- Balance Management:
-  - Native token balance
-  - ERC20 token balance
-  - Contract interactions
-  
-- Network Support:
-  - Radius
+- EVM wallet implementation for Radius AI Agent SDK
+- Radius network support 
+- Type-safe implementations using typing-extensions
+- Async support for concurrent operations
+
+## Development Setup
+
+### 1. Clone the Repository
+```bash
+git clone git@github.com:radiustechsystems/ai-agent-toolkit.git
+cd ai-agent-toolkit/python/src/wallets/evm
+```
+
+### 2. Install Development Dependencies
+```bash
+pip install -e ".[dev]"
+```
+
+### 3. Build the Package
+```bash
+pip install build
+python -m build
+```
+
+## Testing
+
+Run tests with pytest:
+
+```bash
+pytest
+```
+
+## Documentation
+
+For detailed documentation:
+- [API Documentation](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/src/wallets/evm/README.md)
+- [Examples](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python/examples)
+- [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md)
+
+## Support
+
+For issues and feature requests, please use our [issue tracker](https://github.com/radiustechsystems/ai-agent-toolkit/issues).
 
 ## License
 
-This project is licensed under the terms of the MIT license.
+This project is licensed under the MIT License.

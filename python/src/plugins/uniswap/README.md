@@ -1,56 +1,70 @@
-# Uniswap Plugin for Radius AI Agent SDK
+# Radius AI Agent SDK - Uniswap Plugin
 
-A plugin for the Radius AI Agent SDK that provides Uniswap DEX functionality for token swaps and liquidity operations.
+Plugin for interacting with Uniswap protocols through the Radius AI Agent SDK.
 
 ## Installation
 
 ```bash
-# Install the plugin
-poetry add radius-ai-agent-sdk-plugin-uniswap
-
-# Install required dependencies
-poetry add radius-ai-agent-sdk-wallet-evm
-poetry add radius-ai-agent-sdk-plugin-erc20
+pip install radius-ai-agent-sdk-plugin-uniswap
 ```
 
-## Usage
+## Prerequisites
 
-```python
-from radius_plugins.uniswap import uniswap, UniswapPluginOptions
-
-# Initialize the plugin
-options = UniswapPluginOptions(
-    api_key="${UNISWAP_API_KEY}",  # Optional: API key for higher rate limits
-    rpc_url="${RPC_PROVIDER_URL}"   # Your Radius RPC provider URL
-)
-plugin = uniswap(options)
-
-# Get token price
-price = await plugin.get_token_price(
-    token_address="0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E",  # RadToken
-    chain_id=1223953  # Radius testnet
-)
-
-# Get swap quote
-quote = await plugin.get_swap_quote(
-    chain_id=1223953,
-    token_in="0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",   # WETH
-    token_out="0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E",  # RadToken
-    amount="1000000000000000000",  # 1 WETH in wei
-    slippage=50  # 0.5% slippage tolerance
-)
-```
+- Python >=3.10
+- radius-ai-agent-sdk >=0.1.0
+- radius-ai-agent-sdk-wallet-evm >=0.1.0
+- radius-ai-agent-sdk-wallet-web3 >=0.1.0
+- radius-ai-agent-sdk-plugin-erc20 >=0.1.0
+- aiohttp >=3.0
 
 ## Features
 
-- Token price discovery
-- Swap quote generation
-- Token swap execution
-- Liquidity pool information
+- Uniswap protocol integration
+- Token swaps and liquidity operations
+- Price quotes and routing
+- Pool interactions
 - Position management
-- Supported chains:
-  - Radius
+- Async support for concurrent operations
+- Type-safe implementations
+
+## Development Setup
+
+### 1. Clone the Repository
+```bash
+git clone git@github.com:radiustechsystems/ai-agent-toolkit.git
+cd ai-agent-toolkit/python/src/plugins/uniswap
+```
+
+### 2. Install Development Dependencies
+```bash
+pip install -e ".[dev]"
+```
+
+### 3. Build the Package
+```bash
+pip install build
+python -m build
+```
+
+## Testing
+
+Run tests with pytest:
+
+```bash
+pytest
+```
+
+## Documentation
+
+For detailed documentation:
+- [API Documentation](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/src/plugins/uniswap/README.md)
+- [Examples](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python/examples)
+- [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md)
+
+## Support
+
+For issues and feature requests, please use our [issue tracker](https://github.com/radiustechsystems/ai-agent-toolkit/issues).
 
 ## License
 
-This project is licensed under the terms of the MIT license.
+This project is licensed under the MIT License.

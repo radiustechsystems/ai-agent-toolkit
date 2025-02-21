@@ -7,7 +7,7 @@ npm install @radiustechsystems/ai-agent-adapter-model-context-protocol
 
 ## Usage
 
-Check out the [example](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/examples/model-context-protocol) for a full MCP server example.
+Check out the [example](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/typescript/examples/model-context-protocol) for a full MCP server example.
 
 ```ts
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-model-context-protocol"

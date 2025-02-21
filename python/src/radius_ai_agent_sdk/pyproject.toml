@@ -1,24 +1,40 @@
-[tool.poetry]
+[build-system]
+requires = ["setuptools>=65", "setuptools_scm[toml]>=8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
 name = "radius-ai-agent-sdk"
 version = "0.1.0"
 description = "Radius AI Agent SDK is an open-source framework for connecting AI agents to the Radius network"
-authors = ["Matt Dionis <matt.dionis@radiustechnologysystems.com>"]
+authors = [{name = "Matt Dionis", email = "matt.dionis@radiustechnologysystems.com"}]
 readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
 keywords = ["radius", "sdk", "web3", "agents", "ai"]
-homepage = "https://github.com/radiustechsystems/ai-agent-toolkit"
-repository = "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python"
-packages = [
-    { include = "radius" },
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License", 
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "pydantic>=2.0.0",
+    "asyncio>=3.4.1",
+    "typing-extensions>=4.12.2",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-pydantic = "^2.0.0"
-asyncio = "^3.4.1"
-typing-extensions = "^4.12.2"
+[project.urls]
+Homepage = "https://github.com/radiustechsystems/ai-agent-toolkit"
+Documentation = "https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/src/radius_ai_agent_sdk/README.md"
+Repository = "https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/src/radius_ai_agent_sdk"
+Issues = "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+Changelog = "https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md"
 
-[tool.poetry.urls]
-"Bug Tracker" = "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+[tool.setuptools]
+packages = ["radius"]
 
 [tool.pytest.ini_options]
 addopts = [
@@ -26,13 +42,6 @@ addopts = [
 ]
 pythonpath = "src"
 asyncio_default_fixture_loop_scope = "function"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.8.6"
 
 [tool.ruff]
 line-length = 120
