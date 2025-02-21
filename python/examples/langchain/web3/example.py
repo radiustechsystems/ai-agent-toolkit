@@ -8,7 +8,7 @@ from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate
 from web3 import Web3
-from web3.middleware.signing import construct_sign_and_send_raw_middleware
+from web3.middleware import construct_sign_and_send_raw_middleware, geth_poa_middleware
 from eth_account.signers.local import LocalAccount
 from eth_account import Account
 
@@ -24,11 +24,12 @@ private_key = os.getenv("WALLET_PRIVATE_KEY")
 assert private_key is not None, "You must set WALLET_PRIVATE_KEY environment variable"
 assert private_key.startswith("0x"), "Private key must start with 0x hex prefix"
 
+w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+
+w3.middleware_onion.add(construct_sign_and_send_raw_middleware(private_key))
+
 account: LocalAccount = Account.from_key(private_key)
 w3.eth.default_account = account.address  # Set the default account
-w3.middleware_onion.add(
-    construct_sign_and_send_raw_middleware(account)
-)  # Add middleware
 
 # Initialize LLM
 llm = ChatOpenAI(model="gpt-4o-mini")

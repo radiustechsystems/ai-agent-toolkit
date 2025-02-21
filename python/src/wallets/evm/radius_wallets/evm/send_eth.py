@@ -1,8 +1,7 @@
 from decimal import Decimal
-from typing import Dict, List, cast
+from typing import Dict, List, cast, TypedDict
 
 from pydantic import BaseModel, Field
-from evmchains.chains import PUBLIC_CHAIN_META
 
 from radius.classes.plugin_base import PluginBase
 from radius.classes.tool_base import ToolBase, create_tool
@@ -10,6 +9,22 @@ from radius.types.chain import Chain
 
 from .evm_smart_wallet_client import EVMWalletClient
 
+class NativeCurrency(TypedDict):
+    name: str       # Name of the native token
+    symbol: str     # Symbol of the native token
+    decimals: int   # Number of decimal places
+
+class ChainInfo(TypedDict):
+    chainId: int                    # The unique identifier for the chain
+    nativeCurrency: NativeCurrency  # Information about the chain's native token
+
+# Radius configuration
+RADIUS_CHAIN_ID = 1223953
+RADIUS_NATIVE_CURRENCY = {
+    "name": "ETH",
+    "symbol": "ETH",
+    "decimals": 18,
+}
 
 class SendETHParameters(BaseModel):
     to: str = Field(description="The address to send ETH to")
@@ -21,7 +36,8 @@ class SendETHPlugin(PluginBase[EVMWalletClient]):
         super().__init__("sendETH", [])
 
     def supports_chain(self, chain: Chain) -> bool:
-        return chain["type"] == "evm"
+        # We only support Radius
+        return chain["type"] == "evm" and chain["id"] == RADIUS_CHAIN_ID
 
     def get_tools(self, wallet_client: EVMWalletClient) -> List[ToolBase]:
         chain_token = get_chain_token(wallet_client.get_chain()["id"])
@@ -57,16 +73,25 @@ def send_eth_method(wallet_client: EVMWalletClient, parameters: Dict[str, str]) 
         chain_token = get_chain_token(wallet_client.get_chain()["id"])
         raise Exception(f"Failed to send {chain_token['symbol']}: {str(error)}")
 
-
 def get_chain_token(chain_id: int) -> Dict[str, str | int]:
-    # Get chain info from evmchains library
-    for chain_networks in PUBLIC_CHAIN_META.values():
-        for network_info in chain_networks.values():
-            if network_info["chainId"] == chain_id:
-                native_currency = network_info["nativeCurrency"]
-                return {
-                    "symbol": native_currency["symbol"],
-                    "name": native_currency["name"],
-                    "decimals": native_currency["decimals"],
-                }
-    raise Exception(f"Unsupported EVM chain ID: {chain_id}")
+    """
+    Get information about the Radius chain's native token.
+    
+    Args:
+        chain_id: The numeric ID of the blockchain
+        
+    Returns:
+        Dictionary with symbol, name, and decimals of the native token
+        
+    Raises:
+        Exception: If the chain ID is not Radius
+    """
+    if chain_id == RADIUS_CHAIN_ID:
+        return {
+            "symbol": RADIUS_NATIVE_CURRENCY["symbol"],
+            "name": RADIUS_NATIVE_CURRENCY["name"],
+            "decimals": RADIUS_NATIVE_CURRENCY["decimals"],
+        }
+    
+    # If we get here, the chain ID is not Radius
+    raise Exception(f"Unsupported EVM chain ID: {chain_id}. Only Radius chain (ID: {RADIUS_CHAIN_ID}) is supported.")
