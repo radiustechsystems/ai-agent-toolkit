@@ -25,12 +25,12 @@ Each example project may require additional environment variables specific to th
 
 ## Langchain
 
-- [Viem](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/examples/langchain)
+- [Viem](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/typescript/examples/langchain)
 
 ## Model Context Protocol
 
-- [Viem](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/examples/model-context-protocol)
+- [Viem](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/typescript/examples/model-context-protocol)
 
 ## Vercel AI SDK
 
-- [Viem](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/examples/vercel-ai/viem)
+- [Viem](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/typescript/examples/vercel-ai/viem)
