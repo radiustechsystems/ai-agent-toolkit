@@ -1,0 +1,6 @@
+@echo off
+
+echo Running linting and formatting for TypeScript AI Agent Toolkit...
+echo Running linting with fixes...
+call pnpm lint:fix
+echo TypeScript AI Agent Toolkit checks completed successfully!

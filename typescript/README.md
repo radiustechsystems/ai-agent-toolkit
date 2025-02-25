@@ -1,59 +1,85 @@
-# AI Agent Toolkit for Radius (TypeScript)
+# Radius TypeScript AI Agent Toolkit
 
-TypeScript implementation of the AI Agent Toolkit for Radius integration.
+A TypeScript implementation for integrating [Radius](https://radiustech.xyz/) capabilities into AI agent workflows, providing a simple and type-safe way to incorporate Radius functionality into AI agents.
+
+## Quick Links
+
+- [Radius Docs](https://docs.radiustech.xyz/)
+- [Testnet Access](https://docs.radiustech.xyz/radius-testnet-access)
+- [GitHub Issues](https://github.com/radiustechsystems/ai-agent-toolkit/issues)
+
+## Features
+
+- Seamless integration with Radius
+- Support for major AI agent frameworks:
+  - Vercel AI SDK
+- Wallet management and transaction capabilities
+- Clean, idiomatic TypeScript implementation
+- Type-safe contract interactions
+- EVM compatibility
+
+## Requirements
+
+- Node.js >= 20.12.2 < 23
+- pnpm >= 9
 
 ## Installation
+
+```bash
+pnpm add @radiustechsystems/ai-agent-toolkit
+```
+
+Or using npm:
 
 ```bash
 npm install @radiustechsystems/ai-agent-toolkit
 ```
 
-## Getting Started
+### Basic Usage
 
-This guide will help you set up and run the AI Agent Toolkit project.
-
-## Prerequisites
-
-- Node.js >=20.12.2 <23
-- pnpm >=9 (specifically tested with 9.14.2)
-- git
-
-## Development Setup
+Here's a guide to spinning up an example that demonstrates how to integrate Radius tools into a Vercel AI SDK agent backed by calls to the OpenAI API:
 
 ### 1. Clone the Repository
+
 ```bash
 git clone git@github.com:radiustechsystems/ai-agent-toolkit.git
-cd ai-agent-toolkit/typescript
+cd ai-agent-toolkit
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 pnpm install
 ```
 
 ### 3. Build the Packages
+
 ```bash
 pnpm build
 ```
 
-### 4. Configure Environment Variables
+### 4. Navigate to the Vercel AI SDK Example
+
 ```bash
 cd examples/vercel-ai/viem
+```
+
+### 5. Configure Environment Variables
+
+Copy the `.env.template` file and populate it with your values:
+
+```bash
 cp .env.template .env
 ```
 
-Open `.env` and set the following variables:
+```
+OPENAI_API_KEY=your_openai_api_key_here
+WALLET_PRIVATE_KEY=your_wallet_private_key_here
+RPC_PROVIDER_URL=your_rpc_provider_url_here
+```
 
-- OPENAI_API_KEY=your_openai_api_key_here
-- WALLET_PRIVATE_KEY=your_wallet_private_key_here
-- RPC_PROVIDER_URL=your_rpc_provider_url_here
+### 6. Run the example
 
-Note:
-- Get an OpenAI API key from: https://platform.openai.com/api-keys
-- The wallet private key should be from an EVM-compatible wallet
-- RPC provider URL from Radius testnet: https://testnet.tryradi.us/dashboard/rpc-endpoints
-
-### 5. Run the Example
 ```bash
 # First install ts-node if you don't have it globally
 npm install -g ts-node
@@ -64,9 +90,10 @@ npx ts-node index.ts
 
 ## Troubleshooting
 
-If you encounter any issues:
+If you encounter issues during setup or execution:
 
 ### Clean and Rebuild
+
 ```bash
 pnpm clean:dist
 pnpm clean:node_modules
@@ -76,19 +103,21 @@ pnpm build
 
 ### Verify Versions
 
-#### Verify your Node.js version:
+Ensure your environment meets the requirements:
+
 ```bash
 node --version  # Should be >=20.12.2 <23
-```
-
-#### Verify your pnpm version:
-```bash
 pnpm --version  # Should be >=9
 ```
 
-## Additional Notes
+## Changelog
 
-- The project uses a monorepo structure managed by Turborepo
-- All packages are built using tsup
-- The example uses Vercel AI SDK with OpenAI integration
-- Make sure all environment variables are properly set before running the example
+See the [CHANGELOG](CHANGELOG.md) for a list of changes.
+
+## Contributing
+
+Please see the [TypeScript Contributing Guide](CONTRIBUTING.md) for detailed information about contributing to this toolkit. For repository-wide guidelines and principles, see the [General Contributing Guide](../CONTRIBUTING.md).
+
+## License
+
+This project is licensed under the [MIT License](../LICENSE).
