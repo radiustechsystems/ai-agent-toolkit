@@ -9,8 +9,7 @@
   "scripts": {
     "build": "tsup",
     "clean": "rimraf dist",
-    "test": "vitest run --passWithNoTests",
-    "test:sdk-integration": "ts-node src/test-sdk-integration.ts"
+    "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
     "@radiustechsystems/ai-agent-core": "workspace:*",
