@@ -10,13 +10,13 @@ import { uniswap } from "@radiustechsystems/ai-agent-plugin-uniswap";
 
 dotenv.config();
 
-// Create a Radius SDK wallet using our helper
-const wallet = createRadiusSDKWallet{
-  rpcUrl: process.env.RPC_PROVIDER_URL!,
-  privateKey: process.env.WALLET_PRIVATE_KEY!
-});
-
 (async () => {
+  // Create a Radius SDK wallet using our helper
+  const wallet = await createRadiusSDKWallet({
+    rpcUrl: process.env.RPC_PROVIDER_URL!,
+    privateKey: process.env.WALLET_PRIVATE_KEY!
+  });
+
   const tools = await getOnChainTools({
     wallet,
     plugins: [

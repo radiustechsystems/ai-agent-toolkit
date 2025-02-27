@@ -11,17 +11,17 @@ import { createRadiusSDKWallet } from "@radiustechsystems/ai-agent-wallet-evm";
 
 dotenv.config();
 
-// Create a Radius SDK wallet using our helper
-const wallet = createRadiusSDKWallet({
-  rpcUrl: process.env.RPC_PROVIDER_URL!,
-  privateKey: process.env.WALLET_PRIVATE_KEY!
-});
-
 const llm = new ChatOpenAI({
   model: "gpt-4o-mini",
 });
 
 (async (): Promise<void> => {
+  // Create a Radius SDK wallet using our helper
+  const wallet = await createRadiusSDKWallet({
+    rpcUrl: process.env.RPC_PROVIDER_URL!,
+    privateKey: process.env.WALLET_PRIVATE_KEY!
+  });
+
   const prompt = await pull<ChatPromptTemplate>("hwchase17/structured-chat-agent");
 
   const tools = await getOnChainTools({

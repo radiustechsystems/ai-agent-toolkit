@@ -17,7 +17,7 @@ import { sendETH } from "@radiustechsystems/ai-agent-wallet-evm"
 import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20"
 
 // Create a Radius SDK wallet using our helper
-const wallet = createRadiusSDKWallet{
+const wallet = await createRadiusSDKWallet({
   rpcUrl: process.env.RPC_PROVIDER_URL,
   privateKey: process.env.WALLET_PRIVATE_KEY
 })

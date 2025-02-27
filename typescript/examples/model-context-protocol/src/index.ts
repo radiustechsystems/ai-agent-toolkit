@@ -23,7 +23,7 @@ const server = new Server(
 );
 
 // Create a Radius SDK wallet using our helper
-const wallet = createRadiusSDKWallet{
+const wallet = await createRadiusSDKWallet({
   rpcUrl: process.env.RPC_PROVIDER_URL!,
   privateKey: process.env.WALLET_PRIVATE_KEY!
 });

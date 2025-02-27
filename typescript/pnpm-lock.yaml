@@ -83,9 +83,6 @@ importers:
       '@radiustechsystems/ai-agent-wallet-evm':
         specifier: workspace:*
         version: link:../../../packages/wallets/evm
-      '@radiustechsystems/ai-agent-wallet-viem':
-        specifier: workspace:*
-        version: link:../../../packages/wallets/viem
       dotenv:
         specifier: ^16.4.5
         version: 16.4.7
@@ -116,9 +113,6 @@ importers:
       '@radiustechsystems/ai-agent-wallet-evm':
         specifier: workspace:*
         version: link:../../packages/wallets/evm
-      '@radiustechsystems/ai-agent-wallet-viem':
-        specifier: workspace:*
-        version: link:../../packages/wallets/viem
       dotenv:
         specifier: ^16.4.5
         version: 16.4.7
@@ -150,9 +144,6 @@ importers:
       '@radiustechsystems/ai-agent-wallet-evm':
         specifier: workspace:*
         version: link:../../../packages/wallets/evm
-      '@radiustechsystems/ai-agent-wallet-viem':
-        specifier: workspace:*
-        version: link:../../../packages/wallets/viem
       ai:
         specifier: 'catalog:'
         version: 4.0.3(react@19.0.0)(zod@3.23.8)
@@ -264,24 +255,9 @@ importers:
       '@radiustechsystems/ai-agent-core':
         specifier: workspace:*
         version: link:../../core
-      abitype:
-        specifier: ^1.0.6
-        version: 1.0.8(typescript@5.6.3)(zod@3.23.8)
-      viem:
-        specifier: 'catalog:'
-        version: 2.21.49(typescript@5.6.3)(zod@3.23.8)
       zod:
         specifier: 'catalog:'
         version: 3.23.8
-
-  packages/wallets/viem:
-    dependencies:
-      '@radiustechsystems/ai-agent-wallet-evm':
-        specifier: workspace:*
-        version: link:../evm
-      viem:
-        specifier: 'catalog:'
-        version: 2.21.49(typescript@5.6.3)(zod@3.23.8)
 
 packages:
 

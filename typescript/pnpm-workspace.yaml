@@ -1,0 +1,12 @@
+packages:
+  - "examples/**/*"
+  - "packages/**/*"
+  - "!**/dist/**"
+
+catalog:
+  zod: 3.23.8
+  viem: 2.21.49
+  zod-to-json-schema: 3.23.5
+  ai: 4.0.3
+  "@langchain/core": 0.3.6
+  "@modelcontextprotocol/sdk": "1.0.4"
