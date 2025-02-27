@@ -1,4 +1,4 @@
-import { EVMWalletClient } from "./EVMWalletClient";
+import { EVMWalletClient } from "./evm-wallet-client";
 import type { EVMTransaction } from "./types";
 
 export abstract class EVMSmartWalletClient extends EVMWalletClient {

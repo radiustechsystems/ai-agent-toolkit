@@ -1,5 +1,3 @@
-import { type Chain } from "viem"
-
 // Base configuration for Radius testnet
 export const radiusTestnetBase = {
   id: 1223953,
@@ -18,8 +16,25 @@ export type RadiusChainConfig = {
   rpcUrl: string
 }
 
+// Type definition to replace Viem Chain type
+export type RadiusChain = {
+  id: number;
+  name: string;
+  network: string;
+  nativeCurrency: {
+    decimals: number;
+    name: string;
+    symbol: string;
+  };
+  testnet: boolean;
+  rpcUrls?: {
+    default: { http: string[] };
+    public: { http: string[] };
+  };
+}
+
 // Helper to get chain configuration with user's RPC URL
-export function getRadiusChainConfig(config: RadiusChainConfig): Chain {
+export function getRadiusChainConfig(config: RadiusChainConfig): RadiusChain {
   return {
     ...radiusTestnetBase,
     rpcUrls: {

@@ -1,5 +1,5 @@
 import { type EvmChain, type Signature, WalletClientBase } from "@radiustechsystems/ai-agent-core";
-import { isRadiusChain } from "./radius-chains";
+import { isRadiusChain } from "./radius-chain";
 import type { EVMReadRequest, EVMReadResult, EVMTransaction, EVMTypedData } from "./types";
 
 export abstract class EVMWalletClient extends WalletClientBase {
