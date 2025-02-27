@@ -4,6 +4,7 @@ Thank you for your interest in contributing to the Radius AI Agent Toolkit! This
 contributing.
 
 ## Table of Contents
+
 - [Code of Conduct](#code-of-conduct)
 - [Repository Structure](#repository-structure)
 - [Core Design Principles](#core-design-principles)
@@ -23,7 +24,7 @@ uphold this code. Please report unacceptable behavior to: [opensource@radiustech
 
 The Radius AI Agent Toolkit is organized in a monorepo structure:
 
-```
+```bash
 ai-agent-toolkit/
 ├── CONTRIBUTING.md          # This file
 ├── README.md                # Repository overview
@@ -36,6 +37,7 @@ ai-agent-toolkit/
 ```
 
 Each package maintains its own:
+
 - Build configuration
 - Tests
 - Documentation
@@ -62,11 +64,13 @@ const client = await Client.New(url, withLogger(console.log))
 ### 2. Clear Error Handling
 
 Each package follows language-specific best practices for error handling:
+
 - TypeScript: Promise rejections and Error objects
 
 ### 4. Interface-Based Design
 
 The packages use interfaces to define contracts between components, enabling:
+
 - Easier testing through mocks
 - Flexible implementations
 - Clear API boundaries
@@ -74,10 +78,11 @@ The packages use interfaces to define contracts between components, enabling:
 ### 5. Consistent Directory Structure
 
 Both packages follow similar package/module organization:
+
 - `core` / `radius_ai_agent_sdk`: Core functionality, client implementation, and foundational interfaces
 - `adapters/`: Adapters for the most popular agentic AI frameworks (e.g. Vercel AI SDK, LangChain, etc.)
 - `plugins/`: Modular extensions that add EVM-compatible functionality to agents (e.g. ERC20 token transfers, Uniswap swaps, etc.)
-- `wallets/`: Integrations for popular EVM-compatible wallets (e.g. EVM, Viem, etc.)
+- `wallets/`: Integrations for popular EVM-compatible wallets
 
 ## Development Workflow
 
@@ -92,7 +97,7 @@ Both packages follow similar package/module organization:
 
 We use [Conventional Commits](https://www.conventionalcommits.org/):
 
-```
+```plaintext
 <type>(<scope>): <description>
 
 [optional body]
@@ -101,6 +106,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 Types:
+
 - `feat:` New features
 - `fix:` Bug fixes
 - `docs:` Documentation only
@@ -130,9 +136,11 @@ Types:
 ## Language-Specific Guidelines
 
 Please refer to the language-specific CONTRIBUTING.md files:
+
 - [TypeScript Contributing Guide](typescript/CONTRIBUTING.md)
 
 These guides contain:
+
 - Setup instructions
 - Testing requirements
 - Style guidelines
@@ -142,6 +150,7 @@ These guides contain:
 ## Questions?
 
 If you have questions:
+
 1. Check existing issues
 2. Create a new issue with `question` label
 3. Ask in your PR if you're working on code

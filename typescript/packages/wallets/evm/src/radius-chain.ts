@@ -16,7 +16,7 @@ export type RadiusChainConfig = {
   rpcUrl: string
 }
 
-// Type definition to replace Viem Chain type
+// Radius Chain type definition
 export type RadiusChain = {
   id: number;
   name: string;

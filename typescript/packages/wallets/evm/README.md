@@ -1,11 +1,13 @@
 # AI Agent Toolkit for Radius - EVM Wallet (TypeScript)
 
 ## Installation
-```
+
+```bash
 npm install @radiustechsystems/ai-agent-wallet-evm
 ```
 
 ## Usage
+
 ```typescript
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai"
 import { createWallet } from "@radiustechsystems/ai-agent-wallet-evm"

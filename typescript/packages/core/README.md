@@ -2,37 +2,47 @@
 # AI Agent Toolkit for Radius - Core (TypeScript)
 
 ## Installation
+
 1. Install the core package
+
 ```bash
 npm install @radiustechsystems/ai-agent-core
 ```
-2. Depending on the type of wallet you want to use, install the corresponding wallet:
+
+2. Install the wallet:
+
 ```bash
-npm install @radiustechsystems/ai-agent-wallet-viem
+npm install @radiustechsystems/ai-agent-wallet-evm
 ```
+
 3. Install the plugins for the protocols you need:
 
 ```bash
 npm install @radiustechsystems/ai-agent-plugin-erc20
 ```
+
 4. Install the adapter for the agent framework you want to use
+
 ```bash
 npm install @radiustechsystems/ai-agent-adapter-vercel-ai
 ```
 
 ## Usage
-1. Configure your wallet
-```typescript
-import { createRadiusViemWallet } from "@radiustechsystems/ai-agent-wallet-viem"
 
-// Create a Radius Viem wallet using our helper
-const wallet = createRadiusViemWallet({
+1. Configure your wallet
+
+```typescript
+import { createRadiusSDKWallet } from "@radiustechsystems/ai-agent-wallet-evm"
+
+// Create a Radius SDK wallet using our helper
+const wallet = createRadiusSDKWallet{
   rpcUrl: process.env.RPC_PROVIDER_URL,
   privateKey: process.env.WALLET_PRIVATE_KEY
 })
 ```
 
 2. Configure your tools for the framework you want to use
+
 ```typescript
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai"
 import { sendETH } from "@radiustechsystems/ai-agent-wallet-evm"
@@ -53,6 +63,7 @@ const tools = await getOnChainTools({
 ```
 
 3. Plug into your agent framework
+
 ```typescript
 const result = await generateText({
   model: openai("gpt-4o-mini") as LanguageModelV1,

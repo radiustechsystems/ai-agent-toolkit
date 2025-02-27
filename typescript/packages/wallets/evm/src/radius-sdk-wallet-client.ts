@@ -20,7 +20,7 @@ import { radiusTestnetBase } from "./radius-chain"
 import { Signature } from "@radiustechsystems/ai-agent-core";
 
 /**
- * Wallet client implementation using the Radius SDK instead of Viem
+ * Wallet client implementation using the Radius SDK
  */
 export class RadiusSDKWalletClient extends EVMWalletClient {
   #account: Account;

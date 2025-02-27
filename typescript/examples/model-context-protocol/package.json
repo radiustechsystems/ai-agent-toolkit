@@ -18,7 +18,6 @@
       "@radiustechsystems/ai-agent-core": "workspace:*",
       "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
       "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
-      "@radiustechsystems/ai-agent-wallet-viem": "workspace:*",
       "@modelcontextprotocol/sdk": "1.0.4",
       "dotenv": "^16.4.5",
       "viem": "2.21.49"

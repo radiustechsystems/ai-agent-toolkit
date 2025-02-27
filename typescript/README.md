@@ -72,7 +72,7 @@ Copy the `.env.template` file and populate it with your values:
 cp .env.template .env
 ```
 
-```
+```bash
 OPENAI_API_KEY=your_openai_api_key_here
 WALLET_PRIVATE_KEY=your_wallet_private_key_here
 RPC_PROVIDER_URL=your_rpc_provider_url_here
