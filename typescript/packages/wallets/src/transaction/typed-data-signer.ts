@@ -1,6 +1,6 @@
 import { Account } from "@radiustechsystems/sdk";
-import { RadiusTypedData } from "./types";
-import { SigningError } from "./errors";
+import { RadiusTypedData } from "../core/types";
+import { SigningError } from "../utils/errors";
 
 // Simple implementation of a structured data encoder/signer
 // Note: A production implementation would use a specialized library for this

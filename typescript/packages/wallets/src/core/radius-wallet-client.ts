@@ -22,10 +22,10 @@ import {
 } from "./types";
 
 import { RadiusWalletInterface } from "./radius-wallet-interface";
-import { radiusTestnetBase } from "./radius-chain";
+import { radiusTestnetBase } from "../chain/radius-chain";
 import { Signature } from "@radiustechsystems/ai-agent-core";
-import { validateChain } from "./utilities";
-import { validateWalletConfig } from "./helpers";
+import { validateChain } from "../utils/utilities";
+import { validateWalletConfig } from "../utils/helpers";
 
 /**
  * Unified wallet client implementation using the Radius SDK.
@@ -35,37 +35,37 @@ import { validateWalletConfig } from "./helpers";
 import { 
   createCache, 
   WalletCache 
-} from "./cache";
+} from "../utils/cache";
 import { 
   createTransactionMonitor, 
   TransactionMonitor 
-} from "./transaction-monitor";
+} from "../transaction/transaction-monitor";
 import { 
   createGasEstimator, 
   GasEstimator 
-} from "./gas-estimator";
+} from "../transaction/gas-estimator";
 import { 
   createEnsResolver, 
   EnsResolver 
-} from "./ens-resolver";
+} from "../transaction/ens-resolver";
 import { 
   createTypedDataSigner, 
   TypedDataSigner 
-} from "./typed-data-signer";
+} from "../transaction/typed-data-signer";
 import { 
   createBatchHandler, 
   BatchTransactionHandler 
-} from "./batch-handler";
+} from "../transaction/batch-handler";
 import {
   TransactionError,
   BatchTransactionError,
   AddressResolutionError,
   ChainValidationError,
   SigningError
-} from "./errors";
+} from "../utils/errors";
 import {
   formatUnits
-} from "./helpers";
+} from "../utils/helpers";
 
 export class RadiusWalletClient implements RadiusWalletInterface {
   #account: Account;

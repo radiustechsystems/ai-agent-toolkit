@@ -1,29 +1,24 @@
-// Core wallet client exports
-export * from "./radius-wallet-client";
-
-// Abstract interfaces and utilities
-export * from "./radius-wallet-interface";
-export * from "./utilities";
-
-// Helper functions
-export * from "./helpers";
+// Core wallet interfaces and types
+export * from "./core/radius-wallet-interface";
+export * from "./core/radius-wallet-client";
+export * from "./core/types";
 
 // Chain information
-export * from "./radius-chain";
+export * from "./chain/radius-chain";
+export * from "./chain/evm-wallet-client";
 
-// Error handling
-export * from "./errors";
+// Utility and helpers
+export * from "./utils/utilities";
+export * from "./utils/helpers";
+export * from "./utils/errors";
+export * from "./utils/cache";
 
-// Advanced features
-export * from "./cache";
-export * from "./transaction-monitor";
-export * from "./gas-estimator";
-export * from "./ens-resolver";
-export * from "./typed-data-signer";
-export * from "./batch-handler";
+// Transaction handling
+export * from "./transaction/transaction-monitor";
+export * from "./transaction/gas-estimator";
+export * from "./transaction/ens-resolver";
+export * from "./transaction/typed-data-signer";
+export * from "./transaction/batch-handler";
 
 // Plugin exports
-export * from "./send-eth.plugin";
-
-// Core types
-export * from "./types";
+export * from "./plugins/send-eth.plugin";

@@ -1,7 +1,7 @@
-import { TransactionDetails } from "./types";
+import { TransactionDetails } from "../core/types";
 import { Client } from "@radiustechsystems/sdk";
 import { EventEmitter } from "events";
-import { TransactionError } from "./errors";
+import { TransactionError } from "../utils/errors";
 
 interface TransactionMonitorOptions {
   /** Polling interval in milliseconds */

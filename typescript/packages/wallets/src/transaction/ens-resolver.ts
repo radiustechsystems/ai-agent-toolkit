@@ -1,6 +1,6 @@
 import { Client, Contract, ABI, Address } from "@radiustechsystems/sdk";
-import { AddressResolutionError } from "./errors";
-import { WalletCache } from "./cache";
+import { AddressResolutionError } from "../utils/errors";
+import { WalletCache } from "../utils/cache";
 
 // ENS Registry ABI (minimal for name resolution)
 const ENS_REGISTRY_ABI = [

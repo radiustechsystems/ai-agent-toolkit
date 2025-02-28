@@ -1,6 +1,6 @@
 import { Account, Client, Contract, ABI, Address } from "@radiustechsystems/sdk";
-import { RadiusTransaction } from "./types";
-import { BatchTransactionError } from "./errors";
+import { RadiusTransaction } from "../core/types";
+import { BatchTransactionError } from "../utils/errors";
 
 /**
  * Handlers for batch transaction processing

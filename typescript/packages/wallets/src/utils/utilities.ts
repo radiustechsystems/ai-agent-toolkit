@@ -1,4 +1,4 @@
-import { isRadiusChain, radiusTestnetBase } from "./radius-chain";
+import { isRadiusChain, radiusTestnetBase } from "../chain/radius-chain";
 
 /**
  * Validates that the provided chain ID is supported
