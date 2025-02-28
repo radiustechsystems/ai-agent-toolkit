@@ -46,7 +46,7 @@ describe("GasEstimator", () => {
       value: BigInt(100000000000000000) // 0.1 ETH
     };
     
-    const result = await estimator.estimateGas(transaction, mockAccount);
+    const result = await estimator.estimateGas(transaction);
     
     // Should apply 1.2x multiplier to the 21000 gas limit
     expect(result).toBe(BigInt(25200)); // 21000 * 1.2 = 25200
@@ -71,7 +71,7 @@ describe("GasEstimator", () => {
       }]
     };
     
-    const result = await estimator.estimateGas(transaction, mockAccount);
+    const result = await estimator.estimateGas(transaction);
     
     // Should apply 1.5x multiplier to the 50000 gas limit
     expect(result).toBe(BigInt(75000)); // 50000 * 1.5 = 75000
@@ -85,7 +85,7 @@ describe("GasEstimator", () => {
       value: BigInt(100000000000000000) // 0.1 ETH
     };
     
-    const result = await estimator.simulateTransaction(transaction, mockAccount);
+    const result = await estimator.simulateTransaction(transaction);
     
     expect(result.success).toBe(true);
     expect(result.gasUsed).toBe(BigInt(25200)); // 21000 * 1.2 = 25200
