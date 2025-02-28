@@ -12,7 +12,7 @@ npm install @radiustechsystems/ai-agent-core
 2. Install the wallet:
 
 ```bash
-npm install @radiustechsystems/ai-agent-wallet-evm
+npm install @radiustechsystems/ai-agent-wallet
 ```
 
 3. Install the plugins for the protocols you need:
@@ -32,7 +32,7 @@ npm install @radiustechsystems/ai-agent-adapter-vercel-ai
 1. Configure your wallet
 
 ```typescript
-import { createRadiusWallet } from "@radiustechsystems/ai-agent-wallet-evm"
+import { createRadiusWallet } from "@radiustechsystems/ai-agent-wallet"
 
 // Create a Radius wallet using our helper
 const wallet = await createRadiusWallet({
@@ -45,7 +45,7 @@ const wallet = await createRadiusWallet({
 
 ```typescript
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai"
-import { sendETH } from "@radiustechsystems/ai-agent-wallet-evm"
+import { sendETH } from "@radiustechsystems/ai-agent-wallet"
 import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20"
 import { uniswap } from "@radiustechsystems/ai-agent-plugin-uniswap"
 

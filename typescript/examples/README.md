@@ -15,7 +15,7 @@ Each example project requires specific environment variables to run. Copy the `.
 
 - `WALLET_PRIVATE_KEY`: Your wallet's private key
   - ⚠️ Never share or commit your private key
-  - Fomrat: EVM: 64-character hex with '0x' prefix
+  - Format: EVM: 64-character hex with '0x' prefix
 
 ### Project-Specific Variables
 
