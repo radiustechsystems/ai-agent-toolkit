@@ -24,8 +24,13 @@ export class TypedDataSigner {
       // For now, this is a simplified approach
       const encodedData = this.#encodeTypedData(data);
       
-      // Sign the encoded message
-      const signature = await account.signMessage(encodedData);
+      // Sign the encoded message - this returns a Uint8Array
+      const signatureBytes = await account.signMessage(encodedData);
+      
+      // Convert the Uint8Array to a hex string with 0x prefix
+      const signature = "0x" + Array.from(signatureBytes)
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
       
       return signature;
     } catch (error) {
@@ -43,31 +48,6 @@ export class TypedDataSigner {
   #encodeTypedData(data: RadiusTypedData): string {
     // This is a simplified implementation
     // A full implementation should follow the EIP-712 encoding rules
-    
-    // Function to stringify domain
-    const stringifyDomain = (domain: typeof data.domain): string => {
-      let result = "EIP712Domain(";
-      const fields: string[] = [];
-      
-      if (domain.name) fields.push("string name");
-      if (domain.version) fields.push("string version");
-      if (domain.chainId) fields.push("uint256 chainId");
-      if (domain.verifyingContract) fields.push("address verifyingContract");
-      if (domain.salt) fields.push("bytes32 salt");
-      
-      result += fields.join(",") + ")";
-      return result;
-    };
-    
-    // Function to stringify the primary type
-    const stringifyType = (typeName: string, types: Record<string, unknown>): string => {
-      const type = types[typeName] as Array<{ name: string; type: string }>;
-      if (!type || !Array.isArray(type)) {
-        throw new SigningError(`Type ${typeName} not found in types definition`);
-      }
-      
-      return `${typeName}(${type.map(f => `${f.type} ${f.name}`).join(",")})`;
-    };
     
     // Create a simple string representation
     const encoded = JSON.stringify({
