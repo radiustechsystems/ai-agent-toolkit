@@ -1,6 +1,9 @@
 // Core wallet client exports
-export * from "./radius-sdk-wallet-client"
-export * from "./radius-smart-wallet-client"
+export * from "./radius-wallet-client"
+
+// Abstract interfaces and utilities
+export * from "./evm-wallet-client"
+export * from "./utilities"
 
 // Helper functions
 export * from "./helpers"
@@ -11,6 +14,5 @@ export * from "./radius-chain"
 // Plugin exports
 export * from "./send-eth.plugin"
 
+// Core types
 export * from "./types"
-export * from "./evm-wallet-client"
-export * from "./evm-smart-wallet-client"

@@ -12,8 +12,7 @@ Check out the [example](https://github.com/radiustechsystems/ai-agent-toolkit/bl
 
 ```ts
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-model-context-protocol"
-import { createRadiusSDKWallet } from "@radiustechsystems/ai-agent-wallet-evm"
-import { sendETH } from "@radiustechsystems/ai-agent-wallet-evm"
+import { createRadiusSDKWallet, sendETH } from "@radiustechsystems/ai-agent-wallet-evm"
 import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20"
 
 // Create a Radius SDK wallet using our helper

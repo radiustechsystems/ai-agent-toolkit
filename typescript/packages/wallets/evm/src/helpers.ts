@@ -1,23 +1,4 @@
-import { EVMWalletClient } from "./evm-wallet-client";
-import { Account, Client, withPrivateKey, withLogger } from "@radiustechsystems/sdk";
-import { radiusSdk, RadiusSDKWalletClient } from "./radius-sdk-wallet-client";
-import { radiusSmartWallet, RadiusSmartWalletClient } from "./radius-smart-wallet-client";
-
-/**
- * Configuration for creating a Radius wallet
- */
-export type RadiusWalletConfig = {
-  rpcUrl: string;
-  privateKey: string;
-};
-
-/**
- * Base interface for creating Radius wallets
- * Each implementation will implement this interface
- */
-export interface RadiusWalletCreator {
-  createWallet(config: RadiusWalletConfig): Promise<EVMWalletClient>;
-}
+import { RadiusWalletConfig } from "./types";
 
 /**
  * Validates wallet configuration
@@ -34,90 +15,6 @@ export function validateWalletConfig(config: RadiusWalletConfig): void {
     throw new Error("Private key must be a hex string starting with 0x");
   }
 }
-
-/**
- * Creates a Radius wallet client using the native Radius SDK
- * @param config Configuration including RPC URL and private key
- * @returns A configured RadiusSDKWalletClient ready for use
- */
-export async function createRadiusSDKWallet(config: RadiusWalletConfig): Promise<RadiusSDKWalletClient> {
-  // Validate configuration
-  validateWalletConfig(config);
-
-  try {
-    // Create SDK client
-    const client = await Client.New(
-      config.rpcUrl,
-      withLogger((message, data) => {
-        // Optional console logging for debugging
-        if (process.env.DEBUG === "true") {
-          console.log(`[Radius] ${message}`, data);
-        }
-      })
-    );
-    
-    // Create account with private key
-    const account = await Account.New(
-      withPrivateKey(config.privateKey, client)
-    );
-    
-    // Return the RadiusSDKWalletClient
-    return radiusSdk(account, client);
-  } catch (error) {
-    throw new Error(`Failed to create Radius SDK wallet: ${error instanceof Error ? error.message : String(error)}`);
-  }
-}
-
-/**
- * Implementation of the RadiusWalletCreator interface for SDK-based wallets
- */
-export const radiusSdkWalletCreator: RadiusWalletCreator = {
-  createWallet: async (config: RadiusWalletConfig): Promise<RadiusSDKWalletClient> => {
-    return await createRadiusSDKWallet(config);
-  }
-};
-
-/**
- * Creates a Radius smart wallet client using the SDK
- * @param config Configuration with RPC URL and private key
- * @returns Smart wallet client
- */
-export async function createRadiusSmartWallet(config: RadiusWalletConfig): Promise<RadiusSmartWalletClient> {
-  // Validate configuration
-  validateWalletConfig(config);
-
-  try {
-    // Create SDK client
-    const client = await Client.New(
-      config.rpcUrl,
-      withLogger((message, data) => {
-        // Optional console logging for debugging
-        if (process.env.DEBUG === "true") {
-          console.log(`[Radius] ${message}`, data);
-        }
-      })
-    );
-    
-    // Create account with private key
-    const account = await Account.New(
-      withPrivateKey(config.privateKey, client)
-    );
-    
-    // Return the smart wallet client
-    return radiusSmartWallet(account, client);
-  } catch (error) {
-    throw new Error(`Failed to create Radius smart wallet: ${error instanceof Error ? error.message : String(error)}`);
-  }
-}
-
-/**
- * Implementation of the RadiusWalletCreator interface for smart wallets
- */
-export const radiusSmartWalletCreator: RadiusWalletCreator = {
-  createWallet: async (config: RadiusWalletConfig): Promise<RadiusSmartWalletClient> => {
-    return await createRadiusSmartWallet(config);
-  }
-};
 
 /**
  * Parse a string amount to wei (BigInt)

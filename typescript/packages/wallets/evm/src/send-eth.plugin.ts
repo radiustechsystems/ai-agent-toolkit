@@ -1,7 +1,8 @@
 import { Chain, PluginBase, createTool } from "@radiustechsystems/ai-agent-core";
 import { z } from "zod";
 import { EVMWalletClient } from "./evm-wallet-client";
-import { radiusTestnetBase } from "./radius-chain";
+import { parseEther } from "./helpers";
+import { getChainToken } from "./utilities";
 
 export class SendETHPlugin extends PluginBase<EVMWalletClient> {
   constructor() {
@@ -47,52 +48,4 @@ async function sendETHMethod(
   } catch (error) {
     throw new Error(`Failed to send ${getChainToken(walletClient.getChain().id).symbol}: ${error}`);
   }
-}
-
-/**
- * Parse a string amount to wei (BigInt)
- * @param value Amount as string (e.g. "1.0")
- * @returns Amount in wei as BigInt
- */
-function parseEther(value: string): bigint {
-  // Convert a decimal string like "1.0" to wei (1 ETH = 10^18 wei)
-  const [whole, fraction] = value.split(".");
-
-  let wei = BigInt(whole) * BigInt(10**18);
-  
-  if (fraction) {
-    // Handle decimal portion
-    const padding = 18 - fraction.length;
-    if (padding >= 0) {
-      wei += BigInt(fraction) * BigInt(10**padding);
-    } else {
-      // Truncate if too many decimal places
-      wei += BigInt(fraction.slice(0, 18)) * BigInt(10**(18 - fraction.length));
-    }
-  }
-  
-  return wei;
-}
-
-/**
- * Get token information for a chain
- * @param chainId Chain ID
- * @returns Token info (symbol, name, decimals)
- */
-function getChainToken(chainId: number) {
-  // Currently only supporting Radius testnet
-  if (chainId === radiusTestnetBase.id) {
-    return {
-      symbol: radiusTestnetBase.nativeCurrency.symbol,
-      name: radiusTestnetBase.nativeCurrency.name,
-      decimals: radiusTestnetBase.nativeCurrency.decimals,
-    };
-  }
-
-  // Default to ETH if unknown
-  return {
-    symbol: "ETH",
-    name: "ETH",
-    decimals: 18,
-  };
 }
