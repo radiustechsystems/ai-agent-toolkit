@@ -12,11 +12,11 @@ Check out the [example](https://github.com/radiustechsystems/ai-agent-toolkit/bl
 
 ```ts
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-model-context-protocol"
-import { createRadiusSDKWallet, sendETH } from "@radiustechsystems/ai-agent-wallet-evm"
+import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet-evm"
 import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20"
 
-// Create a Radius SDK wallet using our helper
-const wallet = await createRadiusSDKWallet({
+// Create a Radius wallet using our helper
+const wallet = await createRadiusWallet({
   rpcUrl: process.env.RPC_PROVIDER_URL,
   privateKey: process.env.WALLET_PRIVATE_KEY
 })

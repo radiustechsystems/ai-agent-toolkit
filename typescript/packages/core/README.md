@@ -32,10 +32,10 @@ npm install @radiustechsystems/ai-agent-adapter-vercel-ai
 1. Configure your wallet
 
 ```typescript
-import { createRadiusSDKWallet } from "@radiustechsystems/ai-agent-wallet-evm"
+import { createRadiusWallet } from "@radiustechsystems/ai-agent-wallet-evm"
 
-// Create a Radius SDK wallet using our helper
-const wallet = await createRadiusSDKWallet({
+// Create a Radius wallet using our helper
+const wallet = await createRadiusWallet({
   rpcUrl: process.env.RPC_PROVIDER_URL,
   privateKey: process.env.WALLET_PRIVATE_KEY
 })

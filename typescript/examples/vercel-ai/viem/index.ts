@@ -2,7 +2,7 @@ import readline from "node:readline";
 import { openai } from "@ai-sdk/openai";
 import { generateText, LanguageModelV1 } from "ai";
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai";
-import { createRadiusSDKWallet, sendETH } from "@radiustechsystems/ai-agent-wallet-evm";
+import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet-evm";
 import * as dotenv from "dotenv";
 import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20";
 import { uniswap } from "@radiustechsystems/ai-agent-plugin-uniswap";
@@ -10,8 +10,8 @@ import { uniswap } from "@radiustechsystems/ai-agent-plugin-uniswap";
 dotenv.config();
 
 (async () => {
-  // Create a Radius SDK wallet using our helper
-  const wallet = await createRadiusSDKWallet({
+  // Create a Radius wallet using our helper
+  const wallet = await createRadiusWallet({
     rpcUrl: process.env.RPC_PROVIDER_URL!,
     privateKey: process.env.WALLET_PRIVATE_KEY!
   });
