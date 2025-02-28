@@ -12,16 +12,16 @@ import { z } from "zod";
 import { ToolBase, createTool } from "@radiustechsystems/ai-agent-core";
 
 import {
-  type EVMReadRequest,
-  type EVMReadResult,
-  type EVMTransaction,
-  type EVMTypedData,
+  type RadiusReadRequest,
+  type RadiusReadResult,
+  type RadiusTransaction,
+  type RadiusTypedData,
   type RadiusWalletOptions,
   type BalanceInfo,
   type RadiusWalletConfig
 } from "./types";
 
-import { EVMWalletClient } from "./evm-wallet-client";
+import { RadiusWalletInterface } from "./radius-wallet-interface";
 import { radiusTestnetBase } from "./radius-chain";
 import { Signature } from "@radiustechsystems/ai-agent-core";
 import { validateChain } from "./utilities";
@@ -67,7 +67,7 @@ import {
   formatUnits
 } from "./helpers";
 
-export class RadiusWalletClient implements EVMWalletClient {
+export class RadiusWalletClient implements RadiusWalletInterface {
   #account: Account;
   #client: Client;
   #address: Address;
@@ -196,7 +196,7 @@ export class RadiusWalletClient implements EVMWalletClient {
    * @param data Typed data to sign
    * @returns Signature object
    */
-  async signTypedData(data: EVMTypedData): Promise<Signature> {
+  async signTypedData(data: RadiusTypedData): Promise<Signature> {
     try {
       this.#log("Signing typed data", { domain: data.domain });
       
@@ -218,7 +218,7 @@ export class RadiusWalletClient implements EVMWalletClient {
    * @param transaction Transaction to send
    * @returns Transaction hash
    */
-  async sendTransaction(transaction: EVMTransaction): Promise<{ hash: string }> {
+  async sendTransaction(transaction: RadiusTransaction): Promise<{ hash: string }> {
     try {
       // If transaction has the simulate flag, only simulate without sending
       if (transaction.simulate) {
@@ -273,7 +273,7 @@ export class RadiusWalletClient implements EVMWalletClient {
    * @param transactions Array of transactions to execute
    * @returns Hash of the last transaction in the batch
    */
-  async sendBatchOfTransactions(transactions: EVMTransaction[]): Promise<{ hash: string }> {
+  async sendBatchOfTransactions(transactions: RadiusTransaction[]): Promise<{ hash: string }> {
     if (transactions.length === 0) {
       throw new BatchTransactionError("Cannot send an empty batch of transactions", 0, []);
     }
@@ -423,7 +423,7 @@ export class RadiusWalletClient implements EVMWalletClient {
    * @param transaction Transaction to send
    * @returns Transaction hash
    */
-  async #sendSingleTransaction(transaction: EVMTransaction): Promise<{ hash: string }> {
+  async #sendSingleTransaction(transaction: RadiusTransaction): Promise<{ hash: string }> {
     const { to, abi, functionName, args, value, data, gasLimit, gasPrice, maxFeePerGas, maxPriorityFeePerGas, nonce } = transaction;
     
     try {
@@ -490,7 +490,7 @@ export class RadiusWalletClient implements EVMWalletClient {
    * @param request Contract read request
    * @returns Result from the contract call
    */
-  async read(request: EVMReadRequest): Promise<EVMReadResult> {
+  async read(request: RadiusReadRequest): Promise<RadiusReadResult> {
     const { address, functionName, args, abi } = request;
     
     try {
@@ -543,7 +543,7 @@ export class RadiusWalletClient implements EVMWalletClient {
    * @param transaction Transaction to simulate
    * @returns Simulation result
    */
-  async simulateTransaction(transaction: EVMTransaction): Promise<TransactionSimulationResult> {
+  async simulateTransaction(transaction: RadiusTransaction): Promise<TransactionSimulationResult> {
     try {
       this.#log("Simulating transaction", { transaction });
       
@@ -711,7 +711,7 @@ export async function createRadiusWallet(
   config: RadiusWalletConfig,
   enableBatchTransactions: boolean = false,
   logger?: (message: string, data?: Record<string, unknown>) => void
-): Promise<EVMWalletClient> {
+): Promise<RadiusWalletInterface> {
   // Validate configuration
   validateWalletConfig(config);
 

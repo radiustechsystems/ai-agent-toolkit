@@ -1,5 +1,5 @@
 import { Client, Account, Contract, ABI, Address } from "@radiustechsystems/sdk";
-import { EVMTransaction, TransactionSimulationResult } from "./types";
+import { RadiusTransaction, TransactionSimulationResult } from "./types";
 import { GasEstimationError } from "./errors";
 import { WalletCache } from "./cache";
 
@@ -34,7 +34,7 @@ export class GasEstimator {
    * @returns Estimated gas limit with buffer
    */
   async estimateGas(
-    transaction: EVMTransaction,
+    transaction: RadiusTransaction,
     account: Account
   ): Promise<bigint> {
     const { to, functionName, args, value, abi, data } = transaction;
@@ -95,7 +95,7 @@ export class GasEstimator {
    * @returns Simulation result
    */
   async simulateTransaction(
-    transaction: EVMTransaction,
+    transaction: RadiusTransaction,
     account: Account
   ): Promise<TransactionSimulationResult> {
     try {

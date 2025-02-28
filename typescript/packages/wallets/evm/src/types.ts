@@ -1,4 +1,4 @@
-// Core types for EVM transactions and contracts
+// Core types for Radius transactions and contracts
 
 /**
  * Represents a single item in a contract's ABI (Application Binary Interface)
@@ -55,10 +55,10 @@ export type TypedDataDomain = {
 };
 
 /**
- * Represents an EVM transaction request
- * @interface EVMTransaction
+ * Represents a Radius transaction request
+ * @interface RadiusTransaction
  */
-export type EVMTransaction = {
+export type RadiusTransaction = {
   /** Recipient address */
   to: string;
   /** Name of the function to call */
@@ -103,10 +103,10 @@ export type EVMTransaction = {
 };
 
 /**
- * Represents additional options for EVM transactions
- * @interface EVMTransactionOptions
+ * Represents additional options for Radius transactions
+ * @interface RadiusTransactionOptions
  */
-export type EVMTransactionOptions = {
+export type RadiusTransactionOptions = {
   /** Paymaster configuration for gasless transactions */
   paymaster?: {
     /** Paymaster contract address */
@@ -118,9 +118,9 @@ export type EVMTransactionOptions = {
 
 /**
  * Represents typed data for EIP-712 signing
- * @interface EVMTypedData
+ * @interface RadiusTypedData
  */
-export type EVMTypedData = {
+export type RadiusTypedData = {
   /** Domain separator data */
   domain: TypedDataDomain;
   /** Type definitions */
@@ -132,10 +132,10 @@ export type EVMTypedData = {
 };
 
 /**
- * Represents a request to read from an EVM contract
- * @interface EVMReadRequest
+ * Represents a request to read from a Radius contract
+ * @interface RadiusReadRequest
  */
-export type EVMReadRequest = {
+export type RadiusReadRequest = {
   /** Contract address */
   address: string;
   /** Function name to call */
@@ -147,10 +147,10 @@ export type EVMReadRequest = {
 };
 
 /**
- * Represents the result of reading from an EVM contract
- * @interface EVMReadResult
+ * Represents the result of reading from a Radius contract
+ * @interface RadiusReadResult
  */
-export type EVMReadResult = {
+export type RadiusReadResult = {
   /** Returned value from the contract */
   value: unknown;
   /** Success status of the read operation */

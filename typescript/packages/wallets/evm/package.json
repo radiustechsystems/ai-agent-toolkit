@@ -1,5 +1,5 @@
 {
-  "name": "@radiustechsystems/ai-agent-wallet-evm",
+  "name": "@radiustechsystems/ai-agent-wallet-radius",
   "version": "0.1.0",
   "sideEffects": false,
   "files": ["dist/**/*", "README.md", "package.json"],

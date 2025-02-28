@@ -1,5 +1,5 @@
 import { Account } from "@radiustechsystems/sdk";
-import { EVMTypedData } from "./types";
+import { RadiusTypedData } from "./types";
 import { SigningError } from "./errors";
 
 // Simple implementation of a structured data encoder/signer
@@ -17,7 +17,7 @@ export class TypedDataSigner {
    */
   async signTypedData(
     account: Account,
-    data: EVMTypedData
+    data: RadiusTypedData
   ): Promise<string> {
     try {
       // Encode typed data to a string message
@@ -40,7 +40,7 @@ export class TypedDataSigner {
    * @param data The typed data to encode
    * @returns Encoded string representation
    */
-  #encodeTypedData(data: EVMTypedData): string {
+  #encodeTypedData(data: RadiusTypedData): string {
     // This is a simplified implementation
     // A full implementation should follow the EIP-712 encoding rules
     
@@ -88,7 +88,7 @@ export class TypedDataSigner {
    * @param domain The domain object
    * @returns Array of domain fields
    */
-  #getDomainFields(domain: EVMTypedData["domain"]): Array<{ name: string; type: string }> {
+  #getDomainFields(domain: RadiusTypedData["domain"]): Array<{ name: string; type: string }> {
     const fields: Array<{ name: string; type: string }> = [];
     
     if (domain.name !== undefined) fields.push({ name: "name", type: "string" });

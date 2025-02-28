@@ -2,7 +2,7 @@
 export * from "./radius-wallet-client";
 
 // Abstract interfaces and utilities
-export * from "./evm-wallet-client";
+export * from "./radius-wallet-interface";
 export * from "./utilities";
 
 // Helper functions

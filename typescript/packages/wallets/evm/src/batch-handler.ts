@@ -1,5 +1,5 @@
 import { Account, Client, Contract, ABI, Address } from "@radiustechsystems/sdk";
-import { EVMTransaction } from "./types";
+import { RadiusTransaction } from "./types";
 import { BatchTransactionError } from "./errors";
 
 /**
@@ -24,7 +24,7 @@ export class BatchTransactionHandler {
    * @param transactions Array of transactions to execute
    * @returns Hash of the last transaction
    */
-  async executeSequentialBatch(transactions: EVMTransaction[]): Promise<{ hash: string }> {
+  async executeSequentialBatch(transactions: RadiusTransaction[]): Promise<{ hash: string }> {
     const results: string[] = [];
     
     try {
@@ -53,7 +53,7 @@ export class BatchTransactionHandler {
    * @param transactions Array of transactions to execute
    * @returns Transaction hash
    */
-  async executeTrueBatch(transactions: EVMTransaction[]): Promise<{ hash: string }> {
+  async executeTrueBatch(transactions: RadiusTransaction[]): Promise<{ hash: string }> {
     // First check if the chain supports multicall/batching
     // The SDK doesn't have direct support for this yet
     // This is a placeholder for future implementation
@@ -67,7 +67,7 @@ export class BatchTransactionHandler {
    * @param transaction Transaction to execute
    * @returns Transaction hash
    */
-  async #executeSingleTransaction(transaction: EVMTransaction): Promise<{ hash: string }> {
+  async #executeSingleTransaction(transaction: RadiusTransaction): Promise<{ hash: string }> {
     const { to, functionName, args, value, abi, data } = transaction;
     
     // Simple ETH transfer (no contract interaction)
