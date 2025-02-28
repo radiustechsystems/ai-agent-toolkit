@@ -5,7 +5,8 @@ import { SigningError } from "../../utils/errors";
 // Mock SDK Account class
 vi.mock("@radiustechsystems/sdk", () => ({
   Account: vi.fn().mockImplementation(() => ({
-    signMessage: vi.fn().mockResolvedValue("0xmocksignature")
+    // Return a Uint8Array that would convert to "0xmocksignature"
+    signMessage: vi.fn().mockResolvedValue(new Uint8Array([0x6d, 0x6f, 0x63, 0x6b, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65]))
   }))
 }));
 
@@ -16,8 +17,9 @@ describe("TypedDataSigner", () => {
   
   beforeEach(() => {
     signer = createTypedDataSigner();
+    // Mock signMessage to return a Uint8Array as the real implementation would
     mockAccount = {
-      signMessage: vi.fn().mockResolvedValue("0xmocksignature")
+      signMessage: vi.fn().mockResolvedValue(new Uint8Array([0x6d, 0x6f, 0x63, 0x6b, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65]))
     };
   });
   
@@ -44,12 +46,15 @@ describe("TypedDataSigner", () => {
     
     const signature = await signer.signTypedData(mockAccount, typedData);
     
-    expect(signature).toBe("0xmocksignature");
+    // The expected signature should now be a hex string with 0x prefix,
+    // representing the bytes in mockAccount.signMessage's return value
+    expect(signature).toBe("0x6d6f636b7369676e6174757265");
     expect(mockAccount.signMessage).toHaveBeenCalled();
   });
   
   test("should throw SigningError when signing fails", async () => {
     const mockFailingAccount = {
+      // Mock the failing signMessage with same return type (Uint8Array)
       signMessage: vi.fn().mockRejectedValue(new Error("Signing failed"))
     };
     
@@ -65,9 +70,8 @@ describe("TypedDataSigner", () => {
   });
   
   test("should encode domain fields correctly", async () => {
-    // Test the private method indirectly through the sign method
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const encodeDataSpy = vi.spyOn(signer as any, "#encodeTypedData");
+    // Instead of spying on the private method, we'll test its behavior indirectly
+    // by checking what gets passed to signMessage
     
     const typedData = {
       domain: {
@@ -84,9 +88,13 @@ describe("TypedDataSigner", () => {
     
     await signer.signTypedData(mockAccount, typedData);
     
-    expect(encodeDataSpy).toHaveBeenCalled();
-    // The encoded string should contain the domain fields
-    const encodedData = encodeDataSpy.mock.results[0].value;
+    // Check that signMessage was called
+    expect(mockAccount.signMessage).toHaveBeenCalled();
+    
+    // Get what was passed to signMessage
+    const encodedData = mockAccount.signMessage.mock.calls[0][0];
+    
+    // Verify the encoded data contains the expected fields
     expect(encodedData).toContain("Test Domain");
     expect(encodedData).toContain("verifyingContract");
     expect(encodedData).toContain("salt");
