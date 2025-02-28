@@ -110,7 +110,7 @@ describe("BatchTransactionHandler", () => {
       ];
       
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await expect(batchHandler.executeSequentialBatch(invalidTx as any)).rejects.toThrow(/Invalid transaction/);
+      await expect(batchHandler.executeSequentialBatch(invalidTx)).rejects.toThrow(/Invalid transaction/);
     });
   });
   

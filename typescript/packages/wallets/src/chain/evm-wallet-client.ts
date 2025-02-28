@@ -1,13 +1,13 @@
 import { type EvmChain, type Signature, WalletClientBase } from "@radiustechsystems/ai-agent-core";
 import type { 
-  EVMReadRequest, 
-  EVMReadResult, 
-  EVMTransaction, 
-  EVMTypedData, 
   BalanceInfo,
   TransactionDetails,
-  TransactionSimulationResult
-} from "./types";
+  TransactionSimulationResult,
+  RadiusReadRequest as EVMReadRequest,
+  RadiusReadResult as EVMReadResult,
+  RadiusTransaction as EVMTransaction,
+  RadiusTypedData as EVMTypedData
+} from "../core/types";
 
 /**
  * Interface defining the contract for all wallet clients

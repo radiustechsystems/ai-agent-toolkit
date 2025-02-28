@@ -1,4 +1,6 @@
 import { Client, Contract, ABI, Address } from "@radiustechsystems/sdk";
+import { keccak256 } from "@radiustechsystems/sdk/src/crypto";
+import { eth } from "@radiustechsystems/sdk/src/providers/eth";
 import { AddressResolutionError } from "../utils/errors";
 import { WalletCache } from "../utils/cache";
 
@@ -101,25 +103,29 @@ export class EnsResolver {
       
       // Create registry contract
       const registryAbi = new ABI(JSON.stringify(ENS_REGISTRY_ABI));
-      const registry = await Contract.NewDeployed(registryAbi, this.#registryAddress);
+      const registryAddress = new Address(this.#registryAddress);
+      const registry = new Contract(registryAddress, registryAbi);
       
       // Get resolver address
       const resolverAddress = await registry.call(this.#client, "resolver", nameHash);
-      if (!resolverAddress || resolverAddress === "0x0000000000000000000000000000000000000000") {
+      // eslint-disable-next-line max-len
+      if (!resolverAddress || (typeof resolverAddress === "string" && resolverAddress === "0x0000000000000000000000000000000000000000")) {
         throw new AddressResolutionError(`No resolver found for ENS name: ${name}`, name);
       }
       
       // Create resolver contract
       const resolverAbi = new ABI(JSON.stringify(ENS_RESOLVER_ABI));
-      const resolver = await Contract.NewDeployed(resolverAbi, resolverAddress as string);
+      const resolverAddressString = String(resolverAddress);
+      const resolverAddressObj = new Address(resolverAddressString);
+      const resolver = new Contract(resolverAddressObj, resolverAbi);
       
       // Resolve address
       const address = await resolver.call(this.#client, "addr", nameHash);
-      if (!address || address === "0x0000000000000000000000000000000000000000") {
+      if (!address || (typeof address === "string" && address === "0x0000000000000000000000000000000000000000")) {
         throw new AddressResolutionError(`No address found for ENS name: ${name}`, name);
       }
       
-      const result = (address as string).toLowerCase() as `0x${string}`;
+      const result = String(address).toLowerCase() as `0x${string}`;
       
       // Cache the result
       if (this.#cache) {
@@ -153,13 +159,11 @@ export class EnsResolver {
   }
   
   /**
-   * Computes the ENS namehash for a name
+   * Computes the ENS namehash for a name using the Radius SDK
    * @param name ENS name
    * @returns Namehash as bytes32 hex string
    */
   #namehash(name: string): string {
-    // Simple implementation of ENS namehash algorithm
-    // For production use, consider a specialized library
     if (!name) {
       return "0x0000000000000000000000000000000000000000000000000000000000000000";
     }
@@ -168,44 +172,22 @@ export class EnsResolver {
     const labels = name.split(".");
     
     // Start with zero hash
-    let node = "0x0000000000000000000000000000000000000000000000000000000000000000";
+    let node = eth.hexlify(new Uint8Array(32)); // 32 bytes of zeros
     
     // Process each label from right to left
     for (let i = labels.length - 1; i >= 0; i--) {
-      const labelHash = this.#keccak256(labels[i]);
-      node = this.#keccak256(node + labelHash.slice(2));
+      const labelHashBytes = keccak256(eth.toUtf8Bytes(labels[i]));
+      const nodeBytes = eth.getBytes(node);
+      
+      // Concatenate and hash
+      const concatenated = eth.concat([nodeBytes, labelHashBytes]);
+      const hashed = keccak256(concatenated);
+      
+      // Convert back to hex for the next iteration
+      node = eth.hexlify(hashed);
     }
     
     return node;
-  }
-  
-  /**
-   * Computes the keccak256 hash of a string
-   * @param input Input string
-   * @returns Hex string of the hash
-   */
-  #keccak256(input: string): string {
-    // This is a placeholder for the actual keccak256 implementation
-    // For production use, use a specialized library
-    // The SDK doesn't expose a keccak256 function directly
-    
-    // For now, we'll use a simple hash function for demonstration
-    // This is NOT cryptographically secure and should be replaced
-    let hash = 0;
-    
-    for (let i = 0; i < input.length; i++) {
-      const char = input.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    
-    // Convert to hex and pad to 32 bytes
-    let hexHash = (hash >>> 0).toString(16);
-    while (hexHash.length < 64) {
-      hexHash = "0" + hexHash;
-    }
-    
-    return "0x" + hexHash;
   }
 }
 

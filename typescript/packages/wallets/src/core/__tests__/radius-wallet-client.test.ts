@@ -83,7 +83,7 @@ describe("RadiusWalletClient", () => {
     expect(wallet).toBeDefined();
     // Cast to RadiusWalletClient to access getAddress method
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((wallet as any).getAddress()).toBe("0xmockaddress");
+    expect(wallet.getAddress()).toBe("0xmockaddress");
     expect(wallet.getChain()).toEqual({
       type: "evm",
       id: radiusTestnetBase.id,
@@ -126,7 +126,7 @@ describe("RadiusWalletClient", () => {
     
     // Cast to specific implementation to access signMessage
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const signature = await (wallet as any).signMessage("Hello, world!");
+    const signature = await wallet.signMessage("Hello, world!");
     expect(signature).toEqual({ signature: "0xmocksignature" });
   });
   
@@ -183,7 +183,7 @@ describe("RadiusWalletClient", () => {
     
     // Cast to specific implementation to access getCoreTools
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const tools = (wallet as any).getCoreTools();
+    const tools = wallet.getCoreTools();
     expect(Array.isArray(tools)).toBe(true);
     expect(tools.length).toBeGreaterThan(0);
     

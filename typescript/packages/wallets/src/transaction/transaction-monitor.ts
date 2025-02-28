@@ -114,6 +114,7 @@ export class TransactionMonitor {
     event: E, 
     listener: TransactionMonitorEvents[E]
   ): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.#emitter.on(event, listener as (...args: any[]) => void);
   }
   
@@ -126,6 +127,7 @@ export class TransactionMonitor {
     event: E, 
     listener: TransactionMonitorEvents[E]
   ): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.#emitter.off(event, listener as (...args: any[]) => void);
   }
   
@@ -138,6 +140,7 @@ export class TransactionMonitor {
     event: E, 
     listener: TransactionMonitorEvents[E]
   ): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.#emitter.once(event, listener as (...args: any[]) => void);
   }
   
@@ -204,7 +207,12 @@ export class TransactionMonitor {
    */
   async getTransactionDetails(hash: string): Promise<TransactionDetails> {
     try {
-      const receipt = await this.#client.getTransactionReceipt(hash);
+      // Access the underlying ethers provider from the client's private field
+      // @ts-expect-error - we need to access private ethClient property
+      const provider = this.#client.ethClient;
+      
+      // Use the provider to get the transaction receipt
+      const receipt = provider ? await provider.getTransactionReceipt(hash) : null;
       
       // Check if transaction exists
       if (!receipt) {
@@ -218,7 +226,7 @@ export class TransactionMonitor {
         status: receipt.status,
         gasUsed: receipt.gasUsed,
         effectiveGasPrice: receipt.effectiveGasPrice,
-        fee: receipt.gasUsed * receipt.effectiveGasPrice,
+        fee: BigInt(Number(receipt.gasUsed) * Number(receipt.effectiveGasPrice)),
       };
     } catch (error) {
       // Return minimal details if transaction not found
@@ -248,8 +256,12 @@ export class TransactionMonitor {
     if (!this.#isPolling) return;
     
     try {
-      // Get current block number
-      const blockNumber = await this.#client.getBlockNumber();
+      // Access the underlying ethers provider from the client's private field
+      // @ts-expect-error - we need to access private ethClient property
+      const provider = this.#client.ethClient;
+      
+      // Use the provider to get the current block number
+      const blockNumber = provider ? await provider.getBlockNumber() : 0;
       
       // Check each transaction
       for (const [hash, tx] of this.#transactions.entries()) {
@@ -271,7 +283,7 @@ export class TransactionMonitor {
             clearTimeout(tx.timer);
             this.#transactions.delete(hash);
             this.#emitter.emit("failed", new TransactionError(
-              `Transaction failed on-chain`,
+              "Transaction failed on-chain",
               { hash }
             ));
             continue;
@@ -325,6 +337,7 @@ export class TransactionMonitor {
     this.#stopPolling();
     
     // Clear all timeout timers
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [hash, tx] of this.#transactions.entries()) {
       if (tx.timer) {
         clearTimeout(tx.timer);

@@ -1,5 +1,8 @@
 import { describe, test, expect, vi } from "vitest";
 import { sendETH, SendETHPlugin } from "../send-eth.plugin";
+import { RadiusWalletInterface } from "../../core/radius-wallet-interface";
+import { EvmChain } from "@radiustechsystems/ai-agent-core";
+
 // Mock zod
 vi.mock("zod", () => ({
   object: vi.fn(() => ({
@@ -19,10 +22,13 @@ vi.mock("@radiustechsystems/ai-agent-core", () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       supportsChain: any;
     },
+    // Mock the createTool function to return an object matching the ToolBase interface
     createTool: vi.fn((config, handler) => {
       return {
-        config,
-        handler
+        name: config.name,
+        description: config.description,
+        parameters: config.parameters,
+        execute: handler
       };
     })
   };
@@ -41,9 +47,35 @@ vi.mock("../../utils/helpers", () => ({
 }));
 
 describe("SendETHPlugin", () => {
-  const mockWalletClient = {
-    getChain: vi.fn(() => ({ id: 1223953, type: "evm" })),
-    sendTransaction: vi.fn().mockResolvedValue({ hash: "0xmocktxhash" })
+  // Create a more complete mock that matches the RadiusWalletInterface
+  const mockWalletClient: Partial<RadiusWalletInterface> = {
+    getChain: vi.fn(() => ({ id: 1223953, type: "evm" } as EvmChain)),
+    sendTransaction: vi.fn().mockResolvedValue({ hash: "0xmocktxhash" }),
+    getAddress: vi.fn(() => "0xmockaddress"),
+    signMessage: vi.fn().mockResolvedValue({ signature: "0xmocksignature" }),
+    sendBatchOfTransactions: vi.fn().mockResolvedValue({ hash: "0xmockbatchhash" }),
+    read: vi.fn().mockResolvedValue({ value: "mockValue", success: true }),
+    resolveAddress: vi.fn().mockResolvedValue("0xresolvedaddress"),
+    signTypedData: vi.fn().mockResolvedValue({ signature: "0xmocktypedsignature" }),
+    balanceOf: vi.fn().mockResolvedValue({ 
+      value: "1.0", 
+      decimals: 18, 
+      symbol: "RAD", 
+      name: "Radius Token", 
+      inBaseUnits: "1000000000000000000" 
+    }),
+    simulateTransaction: vi.fn().mockResolvedValue({ success: true, gasUsed: BigInt(21000) }),
+    getTransactionDetails: vi.fn().mockResolvedValue({ 
+      hash: "0xmocktxhash", 
+      status: "confirmed", 
+      confirmations: 1 
+    }),
+    waitForTransaction: vi.fn().mockResolvedValue({ 
+      hash: "0xmocktxhash", 
+      status: "confirmed", 
+      confirmations: 1 
+    }),
+    dispose: vi.fn()
   };
   
   test("should create a plugin instance", () => {
@@ -54,26 +86,26 @@ describe("SendETHPlugin", () => {
   test("should support EVM chains", () => {
     const plugin = sendETH();
     expect(plugin.supportsChain({ type: "evm", id: 1 })).toBe(true);
-    expect(plugin.supportsChain({ type: "other", id: 1 })).toBe(false);
+    // Need to cast as any to test non-EVM chains since the interface expects "evm" only
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect(plugin.supportsChain({ type: "other", id: 1 } as any)).toBe(false);
   });
   
   test("should provide tools with correct configurations", () => {
     const plugin = sendETH();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const tools = plugin.getTools(mockWalletClient as any);
+    const tools = plugin.getTools(mockWalletClient as RadiusWalletInterface);
     
     expect(tools).toHaveLength(1);
-    expect(tools[0].config.name).toBe("send_RAD");
-    expect(tools[0].config.parameters).toBeDefined();
+    expect(tools[0].name).toBe("send_RAD");
+    expect(tools[0].parameters).toBeDefined();
   });
   
   test("sendETHMethod should convert amount and call sendTransaction", async () => {
     const plugin = sendETH();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const tools = plugin.getTools(mockWalletClient as any);
+    const tools = plugin.getTools(mockWalletClient as RadiusWalletInterface);
     const sendTool = tools[0];
     
-    const result = await sendTool.handler({
+    const result = await sendTool.execute({
       to: "0xrecipient",
       amount: "1.5"
     });
@@ -83,21 +115,22 @@ describe("SendETHPlugin", () => {
       value: BigInt("1500000000000000000") // 1.5 ETH
     });
     
+    // Make sure we're properly extracting the hash property from the returned object
     expect(result).toBe("0xmocktxhash");
   });
   
   test("sendETHMethod should throw error when transaction fails", async () => {
-    const mockFailingWalletClient = {
-      getChain: vi.fn(() => ({ id: 1223953, type: "evm" })),
+    const mockFailingWalletClient: Partial<RadiusWalletInterface> = {
+      ...mockWalletClient,
+      getChain: vi.fn(() => ({ id: 1223953, type: "evm" } as EvmChain)),
       sendTransaction: vi.fn().mockRejectedValue(new Error("Transaction failed"))
     };
     
     const plugin = sendETH();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const tools = plugin.getTools(mockFailingWalletClient as any);
+    const tools = plugin.getTools(mockFailingWalletClient as RadiusWalletInterface);
     const sendTool = tools[0];
     
-    await expect(sendTool.handler({
+    await expect(sendTool.execute({
       to: "0xrecipient",
       amount: "1.0"
     })).rejects.toThrow("Failed to send RAD: Error: Transaction failed");

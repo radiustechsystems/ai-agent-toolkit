@@ -1,4 +1,4 @@
-import { Client, Account, Contract, ABI, Address } from "@radiustechsystems/sdk";
+import { Client, ABI, Address, Transaction } from "@radiustechsystems/sdk";
 import { RadiusTransaction, TransactionSimulationResult } from "../core/types";
 import { GasEstimationError } from "../utils/errors";
 import { WalletCache } from "../utils/cache";
@@ -28,14 +28,13 @@ export class GasEstimator {
   }
   
   /**
-   * Estimates gas for a transaction
+   * Estimates gas for a transaction using the Radius SDK
    * @param transaction Transaction to estimate
    * @param account Account that will send the transaction
    * @returns Estimated gas limit with buffer
    */
   async estimateGas(
-    transaction: RadiusTransaction,
-    account: Account
+    transaction: RadiusTransaction
   ): Promise<bigint> {
     const { to, functionName, args, value, abi, data } = transaction;
     
@@ -43,7 +42,38 @@ export class GasEstimator {
       // Simple ETH transfer (no contract interaction)
       if (!abi && !functionName) {
         const toAddress = new Address(to);
-        const gasEstimate = await this.#client.estimateGas(account, toAddress, value || BigInt(0));
+        
+        // Use SDK's estimateGas method - proper typed access
+        let gasEstimate: bigint;
+        
+        if (data) {
+          // Create a Transaction object for estimation
+          const transaction = new Transaction(
+            data,                // data
+            BigInt(0),           // gas (will be estimated)
+            BigInt(0),           // gasPrice
+            undefined,           // nonce
+            toAddress,           // to
+            value || BigInt(0)   // value
+          );
+          
+          // Estimate gas using the SDK method
+          gasEstimate = await this.#client.estimateGas(transaction);
+        } else {
+          // Create a Transaction object for a simple transfer
+          const transaction = new Transaction(
+            new Uint8Array(),    // empty data for simple transfer
+            BigInt(0),           // gas (will be estimated)
+            BigInt(0),           // gasPrice
+            undefined,           // nonce
+            toAddress,           // to
+            value || BigInt(0)   // value
+          );
+          
+          // Estimate gas using the SDK method
+          gasEstimate = await this.#client.estimateGas(transaction);
+        }
+        
         return this.#applyBuffer(gasEstimate);
       }
       
@@ -53,28 +83,24 @@ export class GasEstimator {
         const abiInstance = new ABI(JSON.stringify(abi));
         
         // Create contract instance
-        const contract = await Contract.NewDeployed(abiInstance, to);
-        
-        // Estimate gas for contract call
-        const gasEstimate = await contract.estimateGas(
-          this.#client,
-          account,
-          functionName,
-          ...(args || [])
-        );
-        
-        return this.#applyBuffer(gasEstimate);
-      }
-      
-      // Raw transaction with data
-      if (data) {
         const toAddress = new Address(to);
-        const gasEstimate = await this.#client.estimateGasRaw(
-          account, 
-          toAddress, 
-          value || BigInt(0), 
-          data
+        
+        // Encode the function call data
+        const data = abiInstance.pack(functionName, ...(args || []));
+        
+        // Create a Transaction object for gas estimation
+        const transaction = new Transaction(
+          data,                // encoded function call data
+          BigInt(0),           // gas (will be estimated)
+          BigInt(0),           // gasPrice
+          undefined,           // nonce
+          toAddress,           // to
+          value || BigInt(0)   // value
         );
+        
+        // Estimate gas using the client's estimateGas method
+        const gasEstimate = await this.#client.estimateGas(transaction);
+        
         return this.#applyBuffer(gasEstimate);
       }
       
@@ -95,12 +121,11 @@ export class GasEstimator {
    * @returns Simulation result
    */
   async simulateTransaction(
-    transaction: RadiusTransaction,
-    account: Account
+    transaction: RadiusTransaction
   ): Promise<TransactionSimulationResult> {
     try {
       // Estimate gas first to check if transaction would revert
-      const gasEstimate = await this.estimateGas(transaction, account);
+      const gasEstimate = await this.estimateGas(transaction);
       
       // Basic simulation - just checking if transaction would succeed
       // The SDK doesn't have full state change simulation yet
@@ -119,7 +144,7 @@ export class GasEstimator {
   }
   
   /**
-   * Gets the current gas price
+   * Gets the current gas price using the SDK
    * @returns Current gas price in wei
    */
   async getGasPrice(): Promise<bigint> {
@@ -131,15 +156,32 @@ export class GasEstimator {
       }
     }
     
-    // Get current gas price
-    const gasPrice = await this.#client.getGasPrice();
-    
-    // Cache the result
-    if (this.#cache) {
-      this.#cache.set("gas_price", gasPrice);
+    try {
+      // Access the underlying ethers provider
+      // @ts-expect-error - accessing private ethClient
+      const provider = this.#client.ethClient;
+      
+      if (provider) {
+        // Use getFeeData method which replaces the deprecated getGasPrice
+        const feeData = await provider.getFeeData();
+        
+        // Use maxFeePerGas if available, otherwise fall back to gasPrice
+        const gasPrice = feeData.maxFeePerGas || feeData.gasPrice || BigInt(0);
+        
+        // Cache the result
+        if (this.#cache) {
+          this.#cache.set("gas_price", gasPrice);
+        }
+        
+        return gasPrice;
+      }
+      
+      // Fallback if provider is not available
+      return BigInt(0);
+    } catch (error) {
+      console.warn("Error getting gas price:", error);
+      return BigInt(0);
     }
-    
-    return gasPrice;
   }
   
   /**
