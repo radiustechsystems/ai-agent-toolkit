@@ -70,7 +70,7 @@ export type RadiusTransaction = {
   /** Contract ABI */
   abi?: Abi;
   /** Additional transaction options */
-  options?: EVMTransactionOptions;
+  options?: RadiusTransactionOptions;
   /** Raw transaction data */
   data?: `0x${string}`;
   /** 

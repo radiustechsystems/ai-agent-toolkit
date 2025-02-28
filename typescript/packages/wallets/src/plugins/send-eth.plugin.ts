@@ -1,17 +1,17 @@
 import { Chain, PluginBase, createTool } from "@radiustechsystems/ai-agent-core";
 import { z } from "zod";
-import { EVMWalletClient } from "./evm-wallet-client";
-import { parseEther } from "./helpers";
-import { getChainToken } from "./utilities";
+import { RadiusWalletInterface } from "../core/radius-wallet-interface";
+import { parseEther } from "../utils/helpers";
+import { getChainToken } from "../utils/utilities";
 
-export class SendETHPlugin extends PluginBase<EVMWalletClient> {
+export class SendETHPlugin extends PluginBase<RadiusWalletInterface> {
   constructor() {
     super("sendETH", []);
   }
 
   supportsChain = (chain: Chain) => chain.type === "evm";
 
-  getTools(walletClient: EVMWalletClient) {
+  getTools(walletClient: RadiusWalletInterface) {
     const sendTool = createTool(
       {
         name: `send_${getChainToken(walletClient.getChain().id).symbol}`,
@@ -32,7 +32,7 @@ const sendETHParametersSchema = z.object({
 });
 
 async function sendETHMethod(
-  walletClient: EVMWalletClient,
+  walletClient: RadiusWalletInterface,
   parameters: z.infer<typeof sendETHParametersSchema>,
 ): Promise<string> {
   try {

@@ -1,12 +1,12 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { createRadiusWallet } from "../radius-wallet-client";
+import { createRadiusWallet, RadiusWalletClient } from "../radius-wallet-client";
 import { radiusTestnetBase } from "../../chain/radius-chain";
 
 // Mock the SDK components
 vi.mock("@radiustechsystems/sdk", () => {
   return {
     Client: {
-      New: vi.fn().mockImplementation((rpcUrl, ...options) => {
+      New: vi.fn().mockImplementation(() => {
         return {
           getChainId: vi.fn().mockResolvedValue(radiusTestnetBase.id),
           getBalance: vi.fn().mockResolvedValue(BigInt(1000000000000000000)), // 1 ETH
@@ -24,7 +24,7 @@ vi.mock("@radiustechsystems/sdk", () => {
       })
     },
     Account: {
-      New: vi.fn().mockImplementation((options) => {
+      New: vi.fn().mockImplementation(() => {
         return {
           address: {
             toHex: vi.fn().mockReturnValue("0xmockaddress"),
@@ -39,7 +39,7 @@ vi.mock("@radiustechsystems/sdk", () => {
       };
     }),
     Contract: {
-      NewDeployed: vi.fn().mockImplementation((abi, address) => {
+      NewDeployed: vi.fn().mockImplementation(() => {
         return {
           execute: vi.fn().mockResolvedValue({ hash: "0xmockcontracttxhash" }),
           call: vi.fn().mockResolvedValue("mockCallResult"),
@@ -68,6 +68,11 @@ describe("RadiusWalletClient", () => {
     vi.clearAllMocks();
   });
   
+  test("RadiusWalletClient class should be exported", () => {
+    expect(typeof RadiusWalletClient).toBe("function");
+    expect(RadiusWalletClient.name).toBe("RadiusWalletClient");
+  });
+  
   test("creates a wallet instance correctly", async () => {
     const wallet = await createRadiusWallet(
       { rpcUrl: mockRpcUrl, privateKey: mockPrivateKey },
@@ -76,7 +81,9 @@ describe("RadiusWalletClient", () => {
     );
     
     expect(wallet).toBeDefined();
-    expect(wallet.getAddress()).toBe("0xmockaddress");
+    // Cast to RadiusWalletClient to access getAddress method
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    expect((wallet as any).getAddress()).toBe("0xmockaddress");
     expect(wallet.getChain()).toEqual({
       type: "evm",
       id: radiusTestnetBase.id,
@@ -111,12 +118,15 @@ describe("RadiusWalletClient", () => {
     await expect(wallet.resolveAddress("not-an-address")).rejects.toThrow();
   });
   
-  test("signs messages correctly", async () => {
+  // Note: signMessage is not part of RadiusWalletInterface but is implemented in RadiusWalletClient
+  test("implementation should support signing messages correctly", async () => {
     const wallet = await createRadiusWallet(
       { rpcUrl: mockRpcUrl, privateKey: mockPrivateKey }
     );
     
-    const signature = await wallet.signMessage("Hello, world!");
+    // Cast to specific implementation to access signMessage
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const signature = await (wallet as any).signMessage("Hello, world!");
     expect(signature).toEqual({ signature: "0xmocksignature" });
   });
   
@@ -154,5 +164,34 @@ describe("RadiusWalletClient", () => {
       name: radiusTestnetBase.nativeCurrency.name,
       inBaseUnits: "1000000000000000000",
     });
+  });
+  
+  test("dispose should clean up resources", async () => {
+    const wallet = await createRadiusWallet(
+      { rpcUrl: mockRpcUrl, privateKey: mockPrivateKey }
+    );
+    
+    // Just checking that the method exists and runs without error
+    expect(() => wallet.dispose()).not.toThrow();
+  });
+  
+  // Note: getCoreTools is implementation-specific and not part of RadiusWalletInterface
+  test("implementation should provide tools for AI agents", async () => {
+    const wallet = await createRadiusWallet(
+      { rpcUrl: mockRpcUrl, privateKey: mockPrivateKey }
+    );
+    
+    // Cast to specific implementation to access getCoreTools
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tools = (wallet as any).getCoreTools();
+    expect(Array.isArray(tools)).toBe(true);
+    expect(tools.length).toBeGreaterThan(0);
+    
+    // Check that the tools have the expected structure
+    const tool = tools[0];
+    expect(tool).toHaveProperty("name");
+    expect(tool).toHaveProperty("description");
+    expect(tool).toHaveProperty("parameters");
+    expect(tool).toHaveProperty("handler");
   });
 });

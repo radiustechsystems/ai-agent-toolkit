@@ -1,6 +1,6 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { createGasEstimator } from "../gas-estimator";
-import { Account, Client, Address } from "@radiustechsystems/sdk";
+import { Account, Client } from "@radiustechsystems/sdk";
 
 // Mock the SDK components
 vi.mock("@radiustechsystems/sdk", () => {
@@ -97,6 +97,7 @@ describe("GasEstimator", () => {
       set: vi.fn(),
     };
     
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const estimator = createGasEstimator(mockClient, 1.2, mockCache as any);
     
     // First call should check cache and set it
