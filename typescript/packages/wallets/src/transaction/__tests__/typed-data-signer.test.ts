@@ -1,26 +1,56 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
+import { describe, test, expect, vi, beforeEach, type Mock } from "vitest";
 import { TypedDataSigner, createTypedDataSigner } from "../typed-data-signer";
 import { SigningError } from "../../utils/errors";
 
-// Mock SDK Account class
-vi.mock("@radiustechsystems/sdk", () => ({
-  Account: vi.fn().mockImplementation(() => ({
-    // Return a Uint8Array that would convert to "0xmocksignature"
-    signMessage: vi.fn().mockResolvedValue(new Uint8Array([0x6d, 0x6f, 0x63, 0x6b, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65]))
-  }))
-}));
+import { Account } from "@radiustechsystems/sdk";
+
+// Mock SDK dependencies
+vi.mock("@radiustechsystems/sdk", () => {
+  // Mock the Address class and zeroAddress function
+  const mockAddress = {
+    equals: vi.fn().mockReturnValue(false),
+    ethAddress: vi.fn().mockReturnValue("0xmockaddress")
+  };
+  
+  return {
+    Account: vi.fn().mockImplementation(() => ({
+      // Required Account methods and properties
+      signer: { address: vi.fn() },
+      address: vi.fn().mockReturnValue(mockAddress),
+      balance: vi.fn().mockResolvedValue(BigInt(0)),
+      nonce: vi.fn().mockResolvedValue(0),
+      send: vi.fn().mockResolvedValue({}),
+      signTransaction: vi.fn().mockResolvedValue({}),
+      // Return a Uint8Array that would convert to "0xmocksignature"
+      // eslint-disable-next-line max-len
+      signMessage: vi.fn().mockResolvedValue(new Uint8Array([0x6d, 0x6f, 0x63, 0x6b, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65]))
+    })),
+    Address: vi.fn(),
+    zeroAddress: vi.fn().mockReturnValue(mockAddress)
+  };
+});
 
 describe("TypedDataSigner", () => {
   let signer: TypedDataSigner;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockAccount: any;
+  let mockAccount: Account;
   
   beforeEach(() => {
     signer = createTypedDataSigner();
-    // Mock signMessage to return a Uint8Array as the real implementation would
+    
+    // Create a complete mock Account with properly typed mock functions
+    const mockSignMessage = vi.fn().mockResolvedValue(
+      new Uint8Array([0x6d, 0x6f, 0x63, 0x6b, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65])
+    );
+    
     mockAccount = {
-      signMessage: vi.fn().mockResolvedValue(new Uint8Array([0x6d, 0x6f, 0x63, 0x6b, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65]))
-    };
+      signer: { address: vi.fn() },
+      address: vi.fn(),
+      balance: vi.fn().mockResolvedValue(BigInt(0)),
+      nonce: vi.fn().mockResolvedValue(0),
+      send: vi.fn().mockResolvedValue({}),
+      signTransaction: vi.fn().mockResolvedValue({}),
+      signMessage: mockSignMessage
+    } as unknown as Account;
   });
   
   test("should sign EIP-712 typed data", async () => {
@@ -53,10 +83,18 @@ describe("TypedDataSigner", () => {
   });
   
   test("should throw SigningError when signing fails", async () => {
+    // Create a mock function that rejects with an error
+    const mockFailSignMessage = vi.fn().mockRejectedValue(new Error("Signing failed"));
+    
     const mockFailingAccount = {
-      // Mock the failing signMessage with same return type (Uint8Array)
-      signMessage: vi.fn().mockRejectedValue(new Error("Signing failed"))
-    };
+      signer: { address: vi.fn() },
+      address: vi.fn(),
+      balance: vi.fn().mockResolvedValue(BigInt(0)),
+      nonce: vi.fn().mockResolvedValue(0),
+      send: vi.fn().mockResolvedValue({}),
+      signTransaction: vi.fn().mockResolvedValue({}),
+      signMessage: mockFailSignMessage
+    } as unknown as Account;
     
     const typedData = {
       domain: { name: "Test" },
@@ -88,11 +126,14 @@ describe("TypedDataSigner", () => {
     
     await signer.signTypedData(mockAccount, typedData);
     
+    // Access the mock property correctly with proper type assertion
+    const signMessageMock = mockAccount.signMessage as unknown as Mock;
+    
     // Check that signMessage was called
-    expect(mockAccount.signMessage).toHaveBeenCalled();
+    expect(signMessageMock).toHaveBeenCalled();
     
     // Get what was passed to signMessage
-    const encodedData = mockAccount.signMessage.mock.calls[0][0];
+    const encodedData = signMessageMock.mock.calls[0][0];
     
     // Verify the encoded data contains the expected fields
     expect(encodedData).toContain("Test Domain");
