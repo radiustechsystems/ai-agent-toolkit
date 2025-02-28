@@ -1,5 +1,5 @@
 import { parseAbi } from "viem";
-import { Abi } from "@radiustechsystems/ai-agent-wallet-evm";
+import { Abi } from "@radiustechsystems/ai-agent-wallet";
 
 const PARSED_ERC20_ABI = parseAbi([
   "function transfer(address to, uint256 amount) external returns (bool)",

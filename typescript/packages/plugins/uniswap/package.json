@@ -13,7 +13,7 @@
   "types": "./dist/index.d.ts",
   "dependencies": {
       "@radiustechsystems/ai-agent-core": "workspace:*",
-      "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
+      "@radiustechsystems/ai-agent-wallet": "workspace:*",
       "viem": "catalog:",
       "zod": "catalog:"
   },

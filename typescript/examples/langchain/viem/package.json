@@ -10,7 +10,7 @@
       "@radiustechsystems/ai-agent-adapter-langchain": "workspace:*",
       "@radiustechsystems/ai-agent-core": "workspace:*",
       "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
-      "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
+      "@radiustechsystems/ai-agent-wallet": "workspace:*",
       "@langchain/core": "catalog:",
       "@langchain/openai": "^0.3.5",
       "dotenv": "^16.4.5",

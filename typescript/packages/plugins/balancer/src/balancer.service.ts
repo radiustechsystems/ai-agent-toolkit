@@ -16,7 +16,7 @@ import {
   TokenAmount,
 } from "@balancer/sdk";
 import { Tool } from "@radiustechsystems/ai-agent-core";
-import { EVMWalletClient } from "@radiustechsystems/ai-agent-wallet-evm";
+import { RadiusWalletInterface } from "@radiustechsystems/ai-agent-wallet";
 import { BalancerConfig } from "./balancer.plugin";
 import { LiquidityParameters, RemoveLiquidityParameters, SwapParameters } from "./parameters";
 
@@ -37,7 +37,7 @@ export class BalancerService {
     name: "swap_on_balancer",
     description: "Swap a token on Balancer using Smart Order Router"
   })
-  async swapOnBalancer(walletClient: EVMWalletClient, parameters: SwapParameters) {
+  async swapOnBalancer(walletClient: RadiusWalletInterface, parameters: SwapParameters) {
     const chainId = walletClient.getChain().id as ChainId;
     const balancerApi = this.getBalancerApi(chainId);
 
@@ -89,7 +89,7 @@ export class BalancerService {
     name: "add_liquidity_to_balancer",
     description: "Add liquidity to a Balancer pool",
   })
-  async addLiquidity(walletClient: EVMWalletClient, parameters: LiquidityParameters) {
+  async addLiquidity(walletClient: RadiusWalletInterface, parameters: LiquidityParameters) {
     const chainId = walletClient.getChain().id as ChainId;
     const balancerApi = this.getBalancerApi(chainId);
 
@@ -137,7 +137,7 @@ export class BalancerService {
     name: "remove_liquidity_from_balancer",
     description: "Remove liquidity from a Balancer pool proportionally",
   })
-  async removeLiquidity(walletClient: EVMWalletClient, parameters: RemoveLiquidityParameters) {
+  async removeLiquidity(walletClient: RadiusWalletInterface, parameters: RemoveLiquidityParameters) {
     const chainId = walletClient.getChain().id as ChainId;
     const balancerApi = this.getBalancerApi(chainId);
 

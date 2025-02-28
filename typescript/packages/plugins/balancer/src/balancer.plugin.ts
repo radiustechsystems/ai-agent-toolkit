@@ -1,6 +1,6 @@
 import { Chain, PluginBase } from "@radiustechsystems/ai-agent-core";
 import { BalancerService } from "./balancer.service";
-import { radiusTestnetBase } from "@radiustechsystems/ai-agent-wallet-evm";
+import { radiusTestnetBase } from "@radiustechsystems/ai-agent-wallet";
 
 export type BalancerConfig = {
     rpcUrl: string;

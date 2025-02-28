@@ -6,7 +6,7 @@ import * as dotenv from "dotenv";
 
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-langchain";
 import { USDC, erc20 } from "@radiustechsystems/ai-agent-plugin-erc20";
-import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet-evm";
+import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet";
 
 dotenv.config();
 

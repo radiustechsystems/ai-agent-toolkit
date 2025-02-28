@@ -4,7 +4,7 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 import * as dotenv from "dotenv";
 
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-model-context-protocol";
-import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet-evm";
+import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet";
 import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20";
 
 dotenv.config();

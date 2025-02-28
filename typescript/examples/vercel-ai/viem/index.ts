@@ -2,7 +2,7 @@ import readline from "node:readline";
 import { openai } from "@ai-sdk/openai";
 import { generateText, LanguageModelV1 } from "ai";
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai";
-import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet-evm";
+import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet";
 import * as dotenv from "dotenv";
 import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20";
 import { uniswap } from "@radiustechsystems/ai-agent-plugin-uniswap";

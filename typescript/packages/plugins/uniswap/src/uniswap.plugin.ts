@@ -1,5 +1,5 @@
 import { type Chain, PluginBase } from "@radiustechsystems/ai-agent-core";
-import { radiusTestnetBase } from "@radiustechsystems/ai-agent-wallet-evm";
+import { radiusTestnetBase } from "@radiustechsystems/ai-agent-wallet";
 import type { UniswapCtorParams } from "./types/UniswapCtorParams";
 import { UniswapService } from "./uniswap.service";
 

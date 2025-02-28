@@ -12,7 +12,7 @@
       "@radiustechsystems/ai-agent-core": "workspace:*",
       "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
       "@radiustechsystems/ai-agent-plugin-uniswap": "workspace:*",
-      "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
+      "@radiustechsystems/ai-agent-wallet": "workspace:*",
       "ai": "catalog:",
       "dotenv": "^16.4.5",
       "viem": "2.21.49"

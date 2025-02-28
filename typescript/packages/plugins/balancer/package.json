@@ -14,7 +14,7 @@
   "dependencies": {
       "@balancer/sdk": "^1.1.0",
       "@radiustechsystems/ai-agent-core": "workspace:*",
-      "@radiustechsystems/ai-agent-wallet-evm": "workspace:*",
+      "@radiustechsystems/ai-agent-wallet": "workspace:*",
       "viem": "catalog:",
       "zod": "catalog:"
   },

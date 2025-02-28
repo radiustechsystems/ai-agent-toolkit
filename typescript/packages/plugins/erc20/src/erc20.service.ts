@@ -1,5 +1,5 @@
 import { Tool } from "@radiustechsystems/ai-agent-core";
-import { EVMWalletClient } from "@radiustechsystems/ai-agent-wallet-evm";
+import { RadiusWalletInterface } from "@radiustechsystems/ai-agent-wallet";
 import { ERC20_ABI } from "./abi";
 import {
   ApproveParameters,
@@ -25,7 +25,7 @@ export class Erc20Service {
     @Tool({
       description: "Get the ERC20 token info by its symbol, including the contract address, decimals, and name",
     })
-  async getTokenInfoBySymbol(walletClient: EVMWalletClient, parameters: GetTokenInfoBySymbolParameters) {
+  async getTokenInfoBySymbol(walletClient: RadiusWalletInterface, parameters: GetTokenInfoBySymbolParameters) {
     const token = this.tokens.find((token) =>
       [token.symbol, token.symbol.toLowerCase()].includes(parameters.symbol),
     );
@@ -53,7 +53,7 @@ export class Erc20Service {
     @Tool({
       description: "Get the balance of an ERC20 token in base units. Convert to decimal units before returning.",
     })
-    async getTokenBalance(walletClient: EVMWalletClient, parameters: GetTokenBalanceParameters) {
+    async getTokenBalance(walletClient: RadiusWalletInterface, parameters: GetTokenBalanceParameters) {
       try {
         const resolvedWalletAddress = await walletClient.resolveAddress(parameters.wallet);
 
@@ -73,7 +73,7 @@ export class Erc20Service {
     @Tool({
       description: "Transfer an amount of an ERC20 token to an address",
     })
-    async transfer(walletClient: EVMWalletClient, parameters: TransferParameters) {
+    async transfer(walletClient: RadiusWalletInterface, parameters: TransferParameters) {
       try {
         const to = await walletClient.resolveAddress(parameters.to);
 
@@ -92,7 +92,7 @@ export class Erc20Service {
     @Tool({
       description: "Get the total supply of an ERC20 token",
     })
-    async getTokenTotalSupply(walletClient: EVMWalletClient, parameters: GetTokenTotalSupplyParameters) {
+    async getTokenTotalSupply(walletClient: RadiusWalletInterface, parameters: GetTokenTotalSupplyParameters) {
       try {
         const rawTotalSupply = await walletClient.read({
           address: parameters.tokenAddress,
@@ -109,7 +109,7 @@ export class Erc20Service {
     @Tool({
       description: "Get the allowance of an ERC20 token",
     })
-    async getTokenAllowance(walletClient: EVMWalletClient, parameters: GetTokenAllowanceParameters) {
+    async getTokenAllowance(walletClient: RadiusWalletInterface, parameters: GetTokenAllowanceParameters) {
       try {
         const owner = await walletClient.resolveAddress(parameters.owner);
         const spender = await walletClient.resolveAddress(parameters.spender);
@@ -129,7 +129,7 @@ export class Erc20Service {
     @Tool({
       description: "Approve an amount of an ERC20 token to an address",
     })
-    async approve(walletClient: EVMWalletClient, parameters: ApproveParameters) {
+    async approve(walletClient: RadiusWalletInterface, parameters: ApproveParameters) {
       try {
         const spender = await walletClient.resolveAddress(parameters.spender);
 
@@ -148,7 +148,7 @@ export class Erc20Service {
     @Tool({
       description: "Revoke approval for an ERC20 token to an address",
     })
-    async revokeApproval(walletClient: EVMWalletClient, parameters: RevokeApprovalParameters) {
+    async revokeApproval(walletClient: RadiusWalletInterface, parameters: RevokeApprovalParameters) {
       try {
         const spender = await walletClient.resolveAddress(parameters.spender);
 
@@ -167,7 +167,7 @@ export class Erc20Service {
     @Tool({
       description: "Transfer an amount of an ERC20 token from an address to another address",
     })
-    async transferFrom(walletClient: EVMWalletClient, parameters: TransferFromParameters) {
+    async transferFrom(walletClient: RadiusWalletInterface, parameters: TransferFromParameters) {
       try {
         const from = await walletClient.resolveAddress(parameters.from);
         const to = await walletClient.resolveAddress(parameters.to);
