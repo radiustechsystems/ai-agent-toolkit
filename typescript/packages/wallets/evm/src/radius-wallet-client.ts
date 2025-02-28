@@ -31,11 +31,55 @@ import { validateWalletConfig } from "./helpers";
  * Unified wallet client implementation using the Radius SDK.
  * Supports both standard and smart wallet functionality based on configuration options.
  */
+// Import new services
+import { 
+  createCache, 
+  WalletCache 
+} from "./cache";
+import { 
+  createTransactionMonitor, 
+  TransactionMonitor 
+} from "./transaction-monitor";
+import { 
+  createGasEstimator, 
+  GasEstimator 
+} from "./gas-estimator";
+import { 
+  createEnsResolver, 
+  EnsResolver 
+} from "./ens-resolver";
+import { 
+  createTypedDataSigner, 
+  TypedDataSigner 
+} from "./typed-data-signer";
+import { 
+  createBatchHandler, 
+  BatchTransactionHandler 
+} from "./batch-handler";
+import {
+  TransactionError,
+  BatchTransactionError,
+  AddressResolutionError,
+  ChainValidationError,
+  SigningError
+} from "./errors";
+import {
+  formatUnits
+} from "./helpers";
+
 export class RadiusWalletClient implements EVMWalletClient {
   #account: Account;
   #client: Client;
   #address: Address;
   #options: RadiusWalletOptions;
+  
+  // Advanced services
+  #cache?: WalletCache;
+  #txMonitor?: TransactionMonitor;
+  #gasEstimator?: GasEstimator;
+  #ensResolver?: EnsResolver;
+  #typedDataSigner?: TypedDataSigner;
+  #batchHandler?: BatchTransactionHandler;
 
   /**
    * Creates a new RadiusWalletClient
@@ -53,9 +97,34 @@ export class RadiusWalletClient implements EVMWalletClient {
     this.#address = account.address;
     this.#options = options;
     
+    // Initialize services if enabled
+    if (options.enableCaching !== false) {
+      this.#cache = createCache(options.maxCacheAge);
+    }
+    
+    if (options.enableENS) {
+      this.#ensResolver = createEnsResolver(
+        client, 
+        options.ensRegistryAddress,
+        this.#cache
+      );
+    }
+    
+    if (options.enableTransactionMonitoring) {
+      this.#txMonitor = createTransactionMonitor(client, {
+        confirmations: options.confirmations,
+        timeout: options.transactionTimeout,
+        pollingInterval: 5000
+      });
+    }
+    
     this.#log("Wallet initialized", { 
       address: this.getAddress(),
-      batchEnabled: !!this.#options.enableBatchTransactions
+      batchEnabled: !!options.enableBatchTransactions,
+      ensEnabled: !!options.enableENS,
+      cacheEnabled: options.enableCaching !== false,
+      monitoringEnabled: !!options.enableTransactionMonitoring,
+      gasEstimationEnabled: options.enableGasEstimation !== false
     });
   }
 
@@ -84,12 +153,27 @@ export class RadiusWalletClient implements EVMWalletClient {
    * @returns Normalized address as hex string
    */
   async resolveAddress(address: string): Promise<`0x${string}`> {
-    // For now, simple implementation - the SDK doesn't have ENS support yet
-    if (/^0x[a-fA-F0-9]{40}$/.test(address)) {
-      return address as `0x${string}`;
+    try {
+      // If ENS resolution is enabled, try to resolve through the ENS resolver
+      if (this.#options.enableENS && this.#ensResolver) {
+        return await this.#ensResolver.resolveAddress(address);
+      }
+      
+      // Basic validation for hex addresses
+      if (/^0x[a-fA-F0-9]{40}$/.test(address)) {
+        return address.toLowerCase() as `0x${string}`;
+      }
+      
+      throw new AddressResolutionError(`Cannot resolve address: ${address}. ENS resolution is ${this.#options.enableENS ? 'enabled but failed' : 'disabled'}`, address);
+    } catch (error) {
+      if (error instanceof AddressResolutionError) {
+        throw error;
+      }
+      throw new AddressResolutionError(
+        `Address resolution failed: ${error instanceof Error ? error.message : String(error)}`,
+        address
+      );
     }
-    
-    throw new Error(`Cannot resolve non-hex address: ${address}`);
   }
 
   /**
@@ -113,8 +197,20 @@ export class RadiusWalletClient implements EVMWalletClient {
    * @returns Signature object
    */
   async signTypedData(data: EVMTypedData): Promise<Signature> {
-    // The SDK doesn't have native EIP-712 support yet
-    throw new Error("EIP-712 signing not yet implemented in the Radius SDK wrapper");
+    try {
+      this.#log("Signing typed data", { domain: data.domain });
+      
+      if (!this.#typedDataSigner) {
+        this.#typedDataSigner = createTypedDataSigner();
+      }
+      
+      const signature = await this.#typedDataSigner.signTypedData(this.#account, data);
+      return { signature };
+    } catch (error) {
+      throw new SigningError(
+        `Failed to sign typed data: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
   }
 
   /**
@@ -123,14 +219,53 @@ export class RadiusWalletClient implements EVMWalletClient {
    * @returns Transaction hash
    */
   async sendTransaction(transaction: EVMTransaction): Promise<{ hash: string }> {
-    // If batch transactions are enabled, route through the batch implementation
-    if (this.#options.enableBatchTransactions) {
-      this.#log("Using batch transaction for single transaction", { transaction });
-      return this.sendBatchOfTransactions([transaction]);
+    try {
+      // If transaction has the simulate flag, only simulate without sending
+      if (transaction.simulate) {
+        await this.simulateTransaction(transaction);
+        return { hash: "0x0000000000000000000000000000000000000000000000000000000000000000" };
+      }
+      
+      // Estimate gas if enabled and not explicitly provided
+      if (this.#options.enableGasEstimation !== false && !transaction.gasLimit) {
+        if (!this.#gasEstimator) {
+          this.#gasEstimator = createGasEstimator(
+            this.#client, 
+            this.#options.gasMultiplier,
+            this.#options.enableCaching ? this.#cache : undefined
+          );
+        }
+        
+        const estimatedGas = await this.#gasEstimator.estimateGas(transaction, this.#account);
+        transaction = { ...transaction, gasLimit: estimatedGas };
+      }
+      
+      // If batch transactions are enabled, route through the batch implementation
+      if (this.#options.enableBatchTransactions) {
+        this.#log("Using batch transaction for single transaction", { transaction });
+        return this.sendBatchOfTransactions([transaction]);
+      }
+      
+      // Standard implementation follows
+      const result = await this.#sendSingleTransaction(transaction);
+      
+      // Start monitoring transaction if enabled
+      if (this.#options.enableTransactionMonitoring && this.#txMonitor) {
+        this.#txMonitor.monitorTransaction(
+          result.hash,
+          {
+            confirmations: this.#options.confirmations,
+            timeout: this.#options.transactionTimeout
+          }
+        );
+      }
+      
+      return result;
+    } catch (error) {
+      throw new TransactionError(
+        `Transaction failed: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
-    
-    // Standard implementation follows
-    return this.#sendSingleTransaction(transaction);
   }
 
   /**
@@ -140,7 +275,7 @@ export class RadiusWalletClient implements EVMWalletClient {
    */
   async sendBatchOfTransactions(transactions: EVMTransaction[]): Promise<{ hash: string }> {
     if (transactions.length === 0) {
-      throw new Error("Cannot send an empty batch of transactions");
+      throw new BatchTransactionError("Cannot send an empty batch of transactions", 0, []);
     }
 
     try {
@@ -150,16 +285,55 @@ export class RadiusWalletClient implements EVMWalletClient {
       
       this.#log("Processing batch of transactions", { count: transactions.length });
       
-      let lastHash = { hash: "" };
-      
-      // Execute each transaction sequentially
-      for (const tx of transactions) {
-        lastHash = await this.#sendSingleTransaction(tx);
+      // Estimate gas for each transaction if enabled
+      if (this.#options.enableGasEstimation !== false) {
+        if (!this.#gasEstimator) {
+          this.#gasEstimator = createGasEstimator(
+            this.#client, 
+            this.#options.gasMultiplier,
+            this.#options.enableCaching ? this.#cache : undefined
+          );
+        }
+        
+        // Add gas estimates to each transaction that doesn't have it
+        for (let i = 0; i < transactions.length; i++) {
+          if (!transactions[i].gasLimit) {
+            const estimatedGas = await this.#gasEstimator.estimateGas(transactions[i], this.#account);
+            transactions[i] = { ...transactions[i], gasLimit: estimatedGas };
+          }
+        }
       }
       
-      return lastHash;
+      // Create batch handler if needed
+      if (!this.#batchHandler) {
+        this.#batchHandler = createBatchHandler(this.#client, this.#account);
+      }
+      
+      // Execute the batch using the batch handler
+      const result = await this.#batchHandler.executeTrueBatch(transactions);
+      
+      // Start monitoring the transaction if enabled
+      if (this.#options.enableTransactionMonitoring && this.#txMonitor) {
+        this.#txMonitor.monitorTransaction(
+          result.hash,
+          {
+            confirmations: this.#options.confirmations,
+            timeout: this.#options.transactionTimeout
+          }
+        );
+      }
+      
+      return result;
     } catch (error) {
-      throw new Error(`Batch transaction failed: ${error instanceof Error ? error.message : String(error)}`);
+      if (error instanceof BatchTransactionError) {
+        throw error;
+      }
+      
+      throw new BatchTransactionError(
+        `Batch transaction failed: ${error instanceof Error ? error.message : String(error)}`,
+        0,
+        []
+      );
     }
   }
 
@@ -200,6 +374,46 @@ export class RadiusWalletClient implements EVMWalletClient {
           parameters: z.object({ message: z.string() })
         },
         (parameters) => this.signMessage(parameters.message)
+      ),
+      createTool(
+        {
+          name: "simulate_transaction",
+          description: "Simulate a transaction to check if it would succeed",
+          parameters: z.object({
+            to: z.string(),
+            value: z.optional(z.string()),
+            functionName: z.optional(z.string()),
+            args: z.optional(z.array(z.any())),
+            abi: z.optional(z.array(z.any()))
+          })
+        },
+        async (parameters) => {
+          const { to, value, functionName, args, abi } = parameters;
+          return this.simulateTransaction({
+            to,
+            value: value ? BigInt(value) : undefined,
+            functionName,
+            args,
+            abi,
+            simulate: true
+          });
+        }
+      ),
+      createTool(
+        {
+          name: "resolve_address",
+          description: "Resolve an ENS name to an address",
+          parameters: z.object({ name: z.string() })
+        },
+        (parameters) => this.resolveAddress(parameters.name)
+      ),
+      createTool(
+        {
+          name: "get_transaction_status",
+          description: "Check the status of a transaction",
+          parameters: z.object({ hash: z.string() })
+        },
+        (parameters) => this.getTransactionDetails(parameters.hash)
       )
     ];
   }
@@ -210,18 +424,29 @@ export class RadiusWalletClient implements EVMWalletClient {
    * @returns Transaction hash
    */
   async #sendSingleTransaction(transaction: EVMTransaction): Promise<{ hash: string }> {
-    const { to, abi, functionName, args, value, data } = transaction;
+    const { to, abi, functionName, args, value, data, gasLimit, gasPrice, maxFeePerGas, maxPriorityFeePerGas, nonce } = transaction;
     
     try {
       // Validate chain before proceeding
       const chainId = await this.#client.getChainId();
       validateChain(chainId);
       
-      this.#log("Sending transaction", { transaction });
+      // Resolve the recipient address (handles ENS names if enabled)
+      const resolvedTo = await this.resolveAddress(to);
+      
+      this.#log("Sending transaction", { 
+        to: resolvedTo,
+        functionName, 
+        value: value?.toString(),
+        gasLimit: gasLimit?.toString()
+      });
       
       // Simple ETH transfer (no contract interaction)
       if (!abi && !functionName) {
-        const toAddress = new Address(to);
+        const toAddress = new Address(resolvedTo);
+        
+        // SDK doesn't yet support explicit gas parameters, 
+        // but we could pass them if/when it does
         const receipt = await this.#client.send(this.#account, toAddress, value || BigInt(0));
         return { hash: receipt.hash };
       }
@@ -232,9 +457,10 @@ export class RadiusWalletClient implements EVMWalletClient {
         const abiInstance = new ABI(JSON.stringify(abi));
         
         // Create contract instance
-        const contract = await Contract.NewDeployed(abiInstance, to);
+        const contract = await Contract.NewDeployed(abiInstance, resolvedTo);
         
         // Execute contract method
+        // SDK doesn't directly support gas parameters for contract.execute yet
         const receipt = await contract.execute(
           this.#client,
           this.#account,
@@ -245,9 +471,17 @@ export class RadiusWalletClient implements EVMWalletClient {
         return { hash: receipt.hash };
       }
       
-      throw new Error("Invalid transaction: Either both abi and functionName must be provided, or neither");
+      throw new TransactionError("Invalid transaction: Either both abi and functionName must be provided, or neither");
     } catch (error) {
-      throw new Error(`Transaction failed: ${error instanceof Error ? error.message : String(error)}`);
+      if (error instanceof TransactionError || 
+          error instanceof AddressResolutionError || 
+          error instanceof ChainValidationError) {
+        throw error;
+      }
+      
+      throw new TransactionError(
+        `Transaction failed: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   }
 
@@ -262,6 +496,20 @@ export class RadiusWalletClient implements EVMWalletClient {
     try {
       this.#log("Reading contract data", { request });
       
+      // Check cache first if enabled
+      if (this.#options.enableCaching && this.#cache) {
+        const cacheKey = WalletCache.createContractReadKey(address, functionName, args || []);
+        const cached = this.#cache.get<unknown>(cacheKey);
+        
+        if (cached !== undefined) {
+          this.#log("Cache hit for contract read", { request, cacheKey });
+          return { 
+            value: cached,
+            success: true 
+          };
+        }
+      }
+      
       // Create ABI instance
       const abiInstance = new ABI(JSON.stringify(abi));
       
@@ -271,9 +519,103 @@ export class RadiusWalletClient implements EVMWalletClient {
       // Call contract method
       const result = await contract.call(this.#client, functionName, ...(args || []));
       
-      return { value: result };
+      // Cache the result if caching is enabled
+      if (this.#options.enableCaching && this.#cache) {
+        const cacheKey = WalletCache.createContractReadKey(address, functionName, args || []);
+        this.#cache.set(cacheKey, result);
+      }
+      
+      return { 
+        value: result,
+        success: true 
+      };
     } catch (error) {
-      throw new Error(`Contract read failed: ${error instanceof Error ? error.message : String(error)}`);
+      return {
+        value: null,
+        success: false,
+        error: `Contract read failed: ${error instanceof Error ? error.message : String(error)}`
+      };
+    }
+  }
+  
+  /**
+   * Simulates a transaction without sending it
+   * @param transaction Transaction to simulate
+   * @returns Simulation result
+   */
+  async simulateTransaction(transaction: EVMTransaction): Promise<TransactionSimulationResult> {
+    try {
+      this.#log("Simulating transaction", { transaction });
+      
+      if (!this.#gasEstimator) {
+        this.#gasEstimator = createGasEstimator(
+          this.#client, 
+          this.#options.gasMultiplier,
+          this.#options.enableCaching ? this.#cache : undefined
+        );
+      }
+      
+      return await this.#gasEstimator.simulateTransaction(transaction, this.#account);
+    } catch (error) {
+      return {
+        success: false,
+        gasUsed: BigInt(0),
+        error: `Simulation failed: ${error instanceof Error ? error.message : String(error)}`
+      };
+    }
+  }
+  
+  /**
+   * Gets a transaction receipt and details
+   * @param hash Transaction hash
+   * @returns Transaction details
+   */
+  async getTransactionDetails(hash: string): Promise<TransactionDetails> {
+    try {
+      if (!this.#txMonitor) {
+        this.#txMonitor = createTransactionMonitor(this.#client, {
+          confirmations: this.#options.confirmations,
+          timeout: this.#options.transactionTimeout
+        });
+      }
+      
+      return await this.#txMonitor.getTransactionDetails(hash);
+    } catch (error) {
+      throw new TransactionError(
+        `Failed to get transaction details: ${error instanceof Error ? error.message : String(error)}`,
+        { hash }
+      );
+    }
+  }
+  
+  /**
+   * Waits for a transaction to be confirmed
+   * @param hash Transaction hash to wait for
+   * @param confirmations Number of confirmations to wait for
+   * @returns Transaction details once confirmed
+   */
+  async waitForTransaction(
+    hash: string, 
+    confirmations?: number
+  ): Promise<TransactionDetails> {
+    try {
+      if (!this.#txMonitor) {
+        this.#txMonitor = createTransactionMonitor(this.#client, {
+          confirmations: this.#options.confirmations,
+          timeout: this.#options.transactionTimeout
+        });
+      }
+      
+      return await this.#txMonitor.waitForTransaction(
+        hash, 
+        confirmations || this.#options.confirmations, 
+        this.#options.transactionTimeout
+      );
+    } catch (error) {
+      throw new TransactionError(
+        `Failed waiting for transaction: ${error instanceof Error ? error.message : String(error)}`,
+        { hash }
+      );
     }
   }
 
@@ -284,22 +626,66 @@ export class RadiusWalletClient implements EVMWalletClient {
    */
   async balanceOf(address: string): Promise<BalanceInfo> {
     try {
-      const addr = new Address(address);
+      // Resolve the address if it's an ENS name
+      const resolvedAddress = await this.resolveAddress(address);
+      
+      // Check cache first if enabled
+      if (this.#options.enableCaching && this.#cache) {
+        const cacheKey = WalletCache.createBalanceKey(resolvedAddress);
+        const cached = this.#cache.get<BalanceInfo>(cacheKey);
+        
+        if (cached !== undefined) {
+          this.#log("Cache hit for balance check", { address, cacheKey });
+          return cached;
+        }
+      }
+      
+      const addr = new Address(resolvedAddress);
       const balance = await this.#client.getBalance(addr);
       
-      this.#log("Retrieved balance", { address, balance: balance.toString() });
+      this.#log("Retrieved balance", { address: resolvedAddress, balance: balance.toString() });
+      
+      // Get chain token info
+      const chainId = await this.#client.getChainId();
+      const token = getChainToken(chainId);
       
       // Format to match the expected return structure
-      return {
-        value: (Number(balance) / 10**18).toString(), // Convert wei to ETH
-        decimals: 18,
-        symbol: radiusTestnetBase.nativeCurrency.symbol,
-        name: radiusTestnetBase.nativeCurrency.name,
+      const result: BalanceInfo = {
+        value: formatUnits(balance, token.decimals),
+        decimals: token.decimals,
+        symbol: token.symbol,
+        name: token.name,
         inBaseUnits: balance.toString(),
       };
+      
+      // Cache the result if caching is enabled
+      if (this.#options.enableCaching && this.#cache) {
+        const cacheKey = WalletCache.createBalanceKey(resolvedAddress);
+        this.#cache.set(cacheKey, result);
+      }
+      
+      return result;
     } catch (error) {
       throw new Error(`Failed to get balance: ${error instanceof Error ? error.message : String(error)}`);
     }
+  }
+  
+  /**
+   * Disposes of any resources used by the wallet
+   * Should be called when the wallet is no longer needed
+   */
+  dispose(): void {
+    // Clean up transaction monitor
+    if (this.#txMonitor) {
+      this.#txMonitor.dispose();
+    }
+    
+    // Clear cache
+    if (this.#cache) {
+      this.#cache.clear();
+    }
+    
+    this.#log("Wallet resources disposed");
   }
   
   /**
@@ -350,10 +736,23 @@ export async function createRadiusWallet(
       withPrivateKey(config.privateKey, client)
     );
     
-    // Create wallet with specified options
+    // Create wallet with all the new features enabled
     return new RadiusWalletClient(account, client, { 
+      // Basic features
       enableBatchTransactions,
-      logger
+      logger,
+      
+      // Advanced features
+      enableENS: true,
+      enableCaching: true,
+      enableGasEstimation: true,
+      enableTransactionMonitoring: true,
+      
+      // Default configurations
+      gasMultiplier: 1.2,
+      confirmations: 1,
+      transactionTimeout: 60000,
+      maxCacheAge: 30000
     });
   } catch (error) {
     throw new Error(`Failed to create Radius wallet: ${error instanceof Error ? error.message : String(error)}`);

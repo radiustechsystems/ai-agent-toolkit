@@ -73,6 +73,33 @@ export type EVMTransaction = {
   options?: EVMTransactionOptions;
   /** Raw transaction data */
   data?: `0x${string}`;
+  /** 
+   * Optional gas limit for the transaction 
+   * If not provided, it will be estimated
+   */
+  gasLimit?: bigint;
+  /**
+   * Optional gas price (for networks that don't use EIP-1559)
+   */
+  gasPrice?: bigint;
+  /**
+   * Optional max fee per gas (for EIP-1559 networks)
+   */
+  maxFeePerGas?: bigint;
+  /**
+   * Optional max priority fee per gas (for EIP-1559 networks)
+   */
+  maxPriorityFeePerGas?: bigint;
+  /**
+   * Optional nonce override
+   * If not provided, it will be determined automatically
+   */
+  nonce?: number;
+  /**
+   * Optional flag to simulate the transaction without sending
+   * @default false
+   */
+  simulate?: boolean;
 };
 
 /**
@@ -126,7 +153,52 @@ export type EVMReadRequest = {
 export type EVMReadResult = {
   /** Returned value from the contract */
   value: unknown;
+  /** Success status of the read operation */
+  success: boolean;
+  /** Error message if the read operation failed */
+  error?: string;
 };
+
+/**
+ * Represents detailed information about a transaction
+ */
+export interface TransactionDetails {
+  /** Transaction hash */
+  hash: string;
+  /** Block number where the transaction was included */
+  blockNumber?: number;
+  /** Transaction status (1 for success, 0 for failure) */
+  status?: number;
+  /** Gas used by the transaction */
+  gasUsed?: bigint;
+  /** Effective gas price paid */
+  effectiveGasPrice?: bigint;
+  /** Total transaction fee paid (gasUsed * effectiveGasPrice) */
+  fee?: bigint;
+  /** Transaction nonce */
+  nonce?: number;
+  /** Block timestamp when transaction was mined */
+  timestamp?: number;
+}
+
+/**
+ * Results of a transaction simulation
+ */
+export interface TransactionSimulationResult {
+  /** Simulation success status */
+  success: boolean;
+  /** Gas used estimation */
+  gasUsed: bigint;
+  /** Return value (for contract calls) */
+  returnValue?: string;
+  /** Error message if simulation failed */
+  error?: string;
+  /** State changes if available */
+  stateChanges?: {
+    address: string;
+    storageChanges: Array<{ key: string; value: string }>;
+  }[];
+}
 
 /**
  * Configuration options for the Radius wallet client
@@ -142,6 +214,60 @@ export interface RadiusWalletOptions {
    * Logger function to capture wallet operations
    */
   logger?: (message: string, data?: Record<string, unknown>) => void;
+  
+  /**
+   * Enable ENS resolution support
+   * @default false
+   */
+  enableENS?: boolean;
+  
+  /**
+   * Custom ENS registry address
+   * Default is the mainnet ENS registry
+   */
+  ensRegistryAddress?: string;
+  
+  /**
+   * Enable transaction status monitoring
+   * @default false
+   */
+  enableTransactionMonitoring?: boolean;
+  
+  /**
+   * Default timeout (ms) for transaction confirmation
+   * @default 60000 (1 minute)
+   */
+  transactionTimeout?: number;
+  
+  /**
+   * Default number of confirmations to wait for
+   * @default 1
+   */
+  confirmations?: number;
+  
+  /**
+   * Enable gas estimation before transactions
+   * @default true
+   */
+  enableGasEstimation?: boolean;
+  
+  /**
+   * Default gas multiplier for estimated gas
+   * @default 1.2 (20% buffer)
+   */
+  gasMultiplier?: number;
+  
+  /**
+   * Enable caching
+   * @default true
+   */
+  enableCaching?: boolean;
+  
+  /**
+   * Maximum cache age in milliseconds
+   * @default 30000 (30 seconds)
+   */
+  maxCacheAge?: number;
 }
 
 /**
