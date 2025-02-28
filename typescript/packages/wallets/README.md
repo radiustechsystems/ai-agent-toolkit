@@ -5,7 +5,7 @@ The Radius Wallet package provides a simple, unified interface for interacting w
 ## Installation
 
 ```bash
-npm install @radiustechsystems/ai-agent-wallet-radius
+npm install @radiustechsystems/ai-agent-wallet
 ```
 
 ## Key Features
@@ -18,7 +18,7 @@ npm install @radiustechsystems/ai-agent-wallet-radius
 ## Basic Usage
 
 ```typescript
-import { createRadiusWallet } from "@radiustechsystems/ai-agent-wallet-radius";
+import { createRadiusWallet } from "@radiustechsystems/ai-agent-wallet";
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai";
 import * as dotenv from "dotenv";
 
@@ -116,7 +116,7 @@ const tx = await wallet.sendTransaction({
 The package includes helpful utilities for working with token amounts:
 
 ```typescript
-import { parseEther, formatUnits, parseUnits } from "@radiustechsystems/ai-agent-wallet-radius";
+import { parseEther, formatUnits, parseUnits } from "@radiustechsystems/ai-agent-wallet";
 
 // Convert ETH to wei
 const weiAmount = parseEther("1.5");  // 1.5 ETH in wei
