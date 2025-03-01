@@ -1,0 +1,8 @@
+{
+  "extends": ["../../../turbo.json"],
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"]
+    }
+  }
+}
