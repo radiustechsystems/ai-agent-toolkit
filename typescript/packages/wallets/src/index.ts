@@ -5,7 +5,6 @@ export * from "./core/types";
 
 // Chain information
 export * from "./chain/radius-chain";
-export * from "./chain/evm-wallet-client";
 
 // Utility and helpers
 export * from "./utils/utilities";

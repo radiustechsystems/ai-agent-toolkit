@@ -756,7 +756,7 @@ export class RadiusWalletClient implements RadiusWalletInterface {
  * @param config Wallet configuration (RPC URL and private key)
  * @param enableBatchTransactions Whether to enable batch transaction support
  * @param logger Optional logging function for wallet operations
- * @returns A configured EVMWalletClient ready for use
+ * @returns A configured RadiusWalletClient ready for use
  */
 export async function createRadiusWallet(
   config: RadiusWalletConfig,
