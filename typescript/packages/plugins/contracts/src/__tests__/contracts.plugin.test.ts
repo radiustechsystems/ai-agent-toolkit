@@ -34,7 +34,7 @@ describe("ContractsPlugin", () => {
 
   test("should only support EVM chains with radius ID", () => {
     // Should support Radius EVM chain
-    expect(plugin.supportsChain({ type: "evm", id: "radius" } as Chain)).toBe(true);
+    expect(plugin.supportsChain({ type: "evm", id: "radius" } as unknown as Chain)).toBe(true);
     
     // Should not support other EVM chains
     expect(plugin.supportsChain({ type: "evm", id: 1 } as Chain)).toBe(false);
