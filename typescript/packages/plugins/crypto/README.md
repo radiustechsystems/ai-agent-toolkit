@@ -1,15 +1,13 @@
 # Radius AI Agent Crypto Plugin
 
-This plugin provides AI agents with cryptographic utilities for working with the Radius blockchain.
+This plugin provides AI agents with cryptographic utilities for working with the Radius blockchain. It leverages the Radius SDK for robust cryptographic operations.
 
 ## Features
 
 - Generate Keccak-256 hashes
-- Verify message signatures
-- Recover addresses from signatures
-- Validate address formats
-- Format addresses (checksum or lowercase)
-- Hash messages according to EIP-191 standard
+- Validate and format Ethereum addresses
+- Format addresses with proper checksumming (EIP-55)
+- Hash data with different encodings (UTF-8 or hex)
 
 ## Installation
 
@@ -44,12 +42,18 @@ const tools = getTools({
 
 The crypto plugin provides the following tools:
 
-- `generate_hash`: Generate a Keccak-256 hash of input data
-- `verify_signature`: Verify that a signature was created by a specific address
-- `recover_address`: Recover the address that created a signature
-- `validate_address`: Validate if an address is properly formatted
-- `format_address`: Format an address in either checksum or lowercase format
-- `hash_message`: Hash a message according to EIP-191 standard for signing
+- `validateAddress`: Validate if an address is properly formatted and return checksummed version
+- `hashData`: Generate a Keccak-256 hash of input data with support for different encodings
+
+Each tool leverages the underlying Radius SDK for robust and secure cryptographic operations.
+
+## Implementation Notes
+
+This plugin directly uses the Radius SDK's cryptographic capabilities:
+
+- `AddressFromHex` for address validation and formatting
+- `keccak256` from the SDK's crypto/utils for Keccak-256 hash calculation
+- Standard Web APIs like TextEncoder for data encoding
 
 ## License
 
