@@ -1,6 +1,6 @@
 {
-  "extends": ["../../../turbo.json"],
-  "pipeline": {
+  "extends": ["//"],
+  "tasks": {
     "build": {
       "dependsOn": ["^build"]
     }

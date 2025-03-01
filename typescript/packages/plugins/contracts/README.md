@@ -1,6 +1,6 @@
 # Radius AI Agent Contracts Plugin
 
-This plugin provides AI agents with the ability to interact with any smart contract on the Radius blockchain through a standardized interface.
+This plugin provides AI agents with the ability to interact with any smart contract on Radius through a standardized interface.
 
 ## Features
 
