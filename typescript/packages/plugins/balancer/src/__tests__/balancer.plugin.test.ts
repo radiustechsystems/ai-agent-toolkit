@@ -19,8 +19,6 @@ vi.mock("@radiustechsystems/ai-agent-wallet", () => ({
 // Now import the modules being tested
 import { BalancerPlugin, balancer } from "../balancer.plugin";
 import { BalancerService } from "../balancer.service";
-// Define our own type for testing
-type EvmChain = { id: number; type: "evm" };
 
 // Mock the BalancerService
 vi.mock("../balancer.service", () => ({
