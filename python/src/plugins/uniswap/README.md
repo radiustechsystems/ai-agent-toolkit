@@ -30,17 +30,20 @@ pip install radius-ai-agent-sdk-plugin-uniswap
 ## Development Setup
 
 ### 1. Clone the Repository
+
 ```bash
 git clone git@github.com:radiustechsystems/ai-agent-toolkit.git
 cd ai-agent-toolkit/python/src/plugins/uniswap
 ```
 
 ### 2. Install Development Dependencies
+
 ```bash
 pip install -e ".[dev]"
 ```
 
 ### 3. Build the Package
+
 ```bash
 pip install build
 python -m build
@@ -57,6 +60,7 @@ pytest
 ## Documentation
 
 For detailed documentation:
+
 - [API Documentation](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/src/plugins/uniswap/README.md)
 - [Examples](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python/examples)
 - [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md)

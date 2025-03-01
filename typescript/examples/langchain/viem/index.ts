@@ -6,22 +6,21 @@ import * as dotenv from "dotenv";
 
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-langchain";
 import { USDC, erc20 } from "@radiustechsystems/ai-agent-plugin-erc20";
-import { sendETH } from "@radiustechsystems/ai-agent-wallet-evm";
-import { createRadiusViemWallet } from "@radiustechsystems/ai-agent-wallet-viem";
+import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet";
 
 dotenv.config();
-
-// Create a Radius Viem wallet using our helper
-const wallet = createRadiusViemWallet({
-  rpcUrl: process.env.RPC_PROVIDER_URL!,
-  privateKey: process.env.WALLET_PRIVATE_KEY!
-});
 
 const llm = new ChatOpenAI({
   model: "gpt-4o-mini",
 });
 
 (async (): Promise<void> => {
+  // Create a Radius wallet using our helper
+  const wallet = await createRadiusWallet({
+    rpcUrl: process.env.RPC_PROVIDER_URL!,
+    privateKey: process.env.WALLET_PRIVATE_KEY!
+  });
+
   const prompt = await pull<ChatPromptTemplate>("hwchase17/structured-chat-agent");
 
   const tools = await getOnChainTools({

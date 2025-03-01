@@ -333,3 +333,6 @@ pyrightconfig.json
 
 ### Vitest ###
 .vite/
+
+### Claude Context File ###
+CLAUDE.md

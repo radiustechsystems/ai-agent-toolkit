@@ -34,23 +34,27 @@ pip install radius-ai-agent-sdk-example-langchain-web3
 ## Development Setup
 
 ### 1. Clone the Repository
+
 ```bash
 git clone git@github.com:radiustechsystems/ai-agent-toolkit.git
 cd ai-agent-toolkit/python/examples/langchain/web3
 ```
 
 ### 2. Install Development Dependencies
+
 ```bash
 pip install -e ".[dev]"
 ```
 
 ### 3. Configure Environment
+
 ```bash
 cp .env.template .env
 # Edit .env with your configuration
 ```
 
 ### 4. Run the Example
+
 ```bash
 python example.py
 ```
@@ -66,6 +70,7 @@ pytest
 ## Documentation
 
 For detailed documentation:
+
 - [API Documentation](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/examples/langchain/web3/README.md)
 - [Examples](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python/examples)
 - [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md)

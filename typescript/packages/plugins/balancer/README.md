@@ -3,6 +3,7 @@
 Balancer plugin for AI Agent Toolkit for Radius. Allows you to create tools for trading strategies and liquidity provision options using Balancer.
 
 ## Installation
-```
+
+```bash
 npm install @radiustechsystems/ai-agent-plugin-balancer
 ```

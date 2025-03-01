@@ -1,5 +1,5 @@
 import { Tool } from "@radiustechsystems/ai-agent-core";
-import { EVMWalletClient } from "@radiustechsystems/ai-agent-wallet-evm";
+import { RadiusWalletInterface } from "@radiustechsystems/ai-agent-wallet";
 import { CheckApprovalBodySchema, GetQuoteParameters } from "./parameters";
 import type { UniswapCtorParams } from "./types/UniswapCtorParams";
 import {
@@ -46,7 +46,7 @@ export class UniswapService {
    * Converts transaction data from API format to EVM format
    * Handles conversion of string values to bigint and ensures proper hex formatting
    */
-  private convertToEVMTransaction(tx: { to: string; value: string; data: string }) {
+  private convertToRadiusTransaction(tx: { to: string; value: string; data: string }) {
     return {
       to: tx.to,
       value: tx.value ? BigInt(tx.value) : 0n,
@@ -60,7 +60,7 @@ export class UniswapService {
       `Check if the wallet has enough approval for a token and return the transaction to approve the token.
       The approval must takes place before the swap transaction`,
   })
-  async checkApproval(walletClient: EVMWalletClient, parameters: CheckApprovalBodySchema) {
+  async checkApproval(walletClient: RadiusWalletInterface, parameters: CheckApprovalBodySchema) {
     const data = await this.makeRequest<CheckApprovalResponse>("check_approval", {
       token: parameters.token,
       amount: parameters.amount,
@@ -77,7 +77,7 @@ export class UniswapService {
     }
 
     const transaction = await walletClient.sendTransaction(
-      this.convertToEVMTransaction(approval)
+      this.convertToRadiusTransaction(approval)
     );
 
     return {
@@ -90,7 +90,7 @@ export class UniswapService {
     name: "uniswap_get_quote",
     description: "Get the quote for a swap",
   })
-  async getQuote(walletClient: EVMWalletClient, parameters: GetQuoteParameters) {
+  async getQuote(walletClient: RadiusWalletInterface, parameters: GetQuoteParameters) {
     return this.makeRequest<QuoteResponse>("quote", {
       ...parameters,
       tokenInChainId: walletClient.getChain().id,
@@ -103,7 +103,7 @@ export class UniswapService {
     name: "uniswap_swap_tokens",
     description: "Swap tokens on Uniswap",
   })
-  async getSwapTransaction(walletClient: EVMWalletClient, parameters: GetQuoteParameters) {
+  async getSwapTransaction(walletClient: RadiusWalletInterface, parameters: GetQuoteParameters) {
     const quote = await this.getQuote(walletClient, parameters);
 
     const response = await this.makeRequest<SwapResponse>("swap", {
@@ -111,7 +111,7 @@ export class UniswapService {
     });
 
     const transaction = await walletClient.sendTransaction(
-      this.convertToEVMTransaction(response.swap)
+      this.convertToRadiusTransaction(response.swap)
     );
 
     return {

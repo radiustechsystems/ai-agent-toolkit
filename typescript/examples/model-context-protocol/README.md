@@ -12,7 +12,7 @@ This example shows you how to integrate the AI Agent Toolkit for Radius into Cla
 
 If you use VSCode/Cursor, you can use the following command to create the file:
 
-```
+```bash
 code ~/Library/Application\ Support/Claude/claude_desktop_config.json
 ```
 
@@ -38,8 +38,6 @@ This tells Claude for Desktop:
 There’s an MCP server named “radius”
 Launch it by running `node /ABSOLUTE/PATH/TO/PARENT/FOLDER/build/index.js`
 Save the file, and restart Claude for Desktop.
-
-
-4. Run Claude!
+Run Claude!
 
 For more information on how to use the model context protocol, check out the [docs](https://modelcontextprotocol.io/quickstart/server).

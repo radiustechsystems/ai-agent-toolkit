@@ -14,6 +14,7 @@ This guide provides specific guidelines for contributing to the TypeScript AI Ag
 ### Async Patterns
 
 We use async/await consistently:
+
 ```typescript
 class MyClass {
     static async New(url: string, ...opts: Option[]): Promise<MyClass> {
@@ -37,6 +38,7 @@ class MyClass {
 - Use readonly when appropriate
 
 Example:
+
 ```typescript
 export class MyClass implements SomeInterface {
    private constructor(
@@ -57,6 +59,7 @@ export class MyClass implements SomeInterface {
 - Document when methods accept variable arguments
 
 Example:
+
 ```typescript
 // ✅ Use variadic arguments for optional parameters
 async someFunc(foo: string, bar: Number, ...args: unknown[]): Promise<void>
@@ -83,6 +86,7 @@ async someFunc(foo: string, bar: Number, args: unknown[] = []): Promise<void>
 Before submitting:
 
 1. Run linter:
+
    ```bash
    pnpm lint
    ```
@@ -95,6 +99,7 @@ For convenience, you can fix all lint and formatting errors by running the clean
 ## Build System
 
 We use tsup for building:
+
 - Generates both ESM and CJS outputs
 - Handles type definitions
 - Manages source maps
@@ -112,6 +117,7 @@ We use tsup for building:
 ### Async Factory Methods
 
 Use static async factory methods:
+
 ```typescript
 export class MyClass {
    private constructor(
@@ -133,12 +139,14 @@ export class MyClass {
 ### Error Handling
 
 Follow these principles:
+
 - Use typed errors
 - Provide meaningful error messages
 - Handle async errors properly
 - Use error subclasses when appropriate
 
 Example:
+
 ```typescript
 try {
    const result = await this.provider.send(tx);
@@ -154,6 +162,7 @@ try {
 ### Interface Implementation
 
 Implement interfaces explicitly:
+
 ```typescript
 interface SomeInterface {
    someFunc(): Promise<string>;

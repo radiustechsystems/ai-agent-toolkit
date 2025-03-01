@@ -3,7 +3,8 @@
 ERC20 plugin for AI Agent Toolkit for Radius. Allows you to create tools for transferring and getting the balance of ERC20 tokens.
 
 ## Installation
-```
+
+```bash
 npm install @radiustechsystems/ai-agent-plugin-erc20
 ```
 
@@ -19,6 +20,7 @@ const plugin = erc20({
 ```
 
 ### Adding custom tokens
+
 ```typescript
 import { erc20 } from "@radiustechsystems/ai-agent-plugin-erc20"
 
