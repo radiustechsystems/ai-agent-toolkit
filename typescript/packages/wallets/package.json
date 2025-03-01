@@ -13,12 +13,12 @@
   },
   "dependencies": {
     "@radiustechsystems/ai-agent-core": "workspace:*",
-    "@radiustechsystems/sdk": "workspace:*",
+    "@radiustechsystems/sdk": "^1.0.0",
     "zod": "catalog:"
   },
   "peerDependencies": {
     "@radiustechsystems/ai-agent-core": "workspace:*",
-    "@radiustechsystems/sdk": "workspace:*"
+    "@radiustechsystems/sdk": "^1.0.0"
   },
   "license": "MIT"
 }
