@@ -1,17 +1,28 @@
 import { describe, test, expect, vi } from "vitest";
 import { sendETH, SendETHPlugin } from "../send-eth.plugin";
 import { RadiusWalletInterface } from "../../core/radius-wallet-interface";
-import { EvmChain } from "@radiustechsystems/ai-agent-core";
+import { RadiusChain } from "@radiustechsystems/ai-agent-core";
 
 // Mock zod
-vi.mock("zod", () => ({
-  object: vi.fn(() => ({
-    describe: vi.fn().mockReturnThis(),
-  })),
-  string: vi.fn(() => ({
-    describe: vi.fn().mockReturnThis(),
-  }))
-}));
+vi.mock("zod", () => {
+  return {
+    z: {
+      object: vi.fn(() => ({
+        describe: vi.fn().mockReturnThis(),
+      })),
+      string: vi.fn(() => ({
+        describe: vi.fn().mockReturnThis(),
+      }))
+    },
+    // Also return these at the top level for imports without z namespace
+    object: vi.fn(() => ({
+      describe: vi.fn().mockReturnThis(),
+    })),
+    string: vi.fn(() => ({
+      describe: vi.fn().mockReturnThis(),
+    }))
+  };
+});
 
 // Mock the required dependencies
 vi.mock("@radiustechsystems/ai-agent-core", () => {
@@ -49,7 +60,7 @@ vi.mock("../../utils/helpers", () => ({
 describe("SendETHPlugin", () => {
   // Create a more complete mock that matches the RadiusWalletInterface
   const mockWalletClient: Partial<RadiusWalletInterface> = {
-    getChain: vi.fn(() => ({ id: 1223953, type: "evm" } as EvmChain)),
+    getChain: vi.fn(() => ({ id: 1223953, type: "evm" } as RadiusChain)),
     sendTransaction: vi.fn().mockResolvedValue({ hash: "0xmocktxhash" }),
     getAddress: vi.fn(() => "0xmockaddress"),
     signMessage: vi.fn().mockResolvedValue({ signature: "0xmocksignature" }),
@@ -122,7 +133,7 @@ describe("SendETHPlugin", () => {
   test("sendETHMethod should throw error when transaction fails", async () => {
     const mockFailingWalletClient: Partial<RadiusWalletInterface> = {
       ...mockWalletClient,
-      getChain: vi.fn(() => ({ id: 1223953, type: "evm" } as EvmChain)),
+      getChain: vi.fn(() => ({ id: 1223953, type: "evm" } as RadiusChain)),
       sendTransaction: vi.fn().mockRejectedValue(new Error("Transaction failed"))
     };
     

@@ -56,9 +56,9 @@ describe("EnsResolver", () => {
     resolver = createEnsResolver(mockClient, undefined, mockCache);
   });
   
-  test("should resolve ENS names to addresses", async () => {
-    const address = await resolver.resolveAddress("test.eth");
-    expect(address).toBe("0xresolvedaddress");
+  test("should not resolve ENS names to addresses", async () => {
+    await expect(resolver.resolveAddress("test.eth"))
+      .rejects.toThrow(/Cannot resolve ENS name/);
   });
   
   test("should return lowercase hex address for valid addresses", async () => {
@@ -69,20 +69,16 @@ describe("EnsResolver", () => {
     expect(mixedCaseAddress).toBe("0x1234567890123456789012345678901234abcdef");
   });
   
-  test("should cache resolved addresses", async () => {
-    const cacheSpy = vi.spyOn(mockCache, "set");
-    const getSpy = vi.spyOn(mockCache, "get").mockReturnValue(undefined);
+  test("should use cached ENS addresses when available", async () => {
+    const getSpy = vi.spyOn(mockCache, "get");
     
-    await resolver.resolveAddress("test.eth");
-    
-    expect(cacheSpy).toHaveBeenCalledWith("ens:test.eth", "0xresolvedaddress");
-    
-    // Reset mock and return cached value
+    // Simulate a cache hit for ENS name
     getSpy.mockReturnValue("0xcachedaddress");
     
-    // Should use cached value
+    // Should use cached value and not throw
     const cachedAddress = await resolver.resolveAddress("test.eth");
     expect(cachedAddress).toBe("0xcachedaddress");
+    expect(getSpy).toHaveBeenCalledWith("ens:test.eth");
   });
   
   test("should throw for invalid ENS names", async () => {
@@ -95,10 +91,12 @@ describe("EnsResolver", () => {
       .rejects.toThrow(AddressResolutionError);
   });
   
-  test("canResolve should return true for resolvable addresses", async () => {
+  test("canResolve should only return true for hex addresses", async () => {
+    // ENS names are no longer resolvable
     const canResolve = await resolver.canResolve("test.eth");
-    expect(canResolve).toBe(true);
+    expect(canResolve).toBe(false);
     
+    // Hex addresses should still be resolvable
     const canResolveHex = await resolver.canResolve("0x1234567890123456789012345678901234567890");
     expect(canResolveHex).toBe(true);
   });

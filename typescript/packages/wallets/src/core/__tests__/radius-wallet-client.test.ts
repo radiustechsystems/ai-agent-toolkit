@@ -5,12 +5,21 @@ import { radiusTestnetBase } from "../../chain/radius-chain";
 // Mock the SDK components
 vi.mock("@radiustechsystems/sdk", () => {
   return {
+    Transaction: vi.fn().mockImplementation(() => {
+      return {};
+    }),
     Client: {
       New: vi.fn().mockImplementation(() => {
         return {
           getChainId: vi.fn().mockResolvedValue(radiusTestnetBase.id),
+          chainID: vi.fn().mockResolvedValue(BigInt(radiusTestnetBase.id)), // SDK uses chainID
+          balanceAt: vi.fn().mockResolvedValue(BigInt(1000000000000000000)), // 1 ETH
           getBalance: vi.fn().mockResolvedValue(BigInt(1000000000000000000)), // 1 ETH
-          send: vi.fn().mockResolvedValue({ hash: "0xmocktxhash" }),
+          send: vi.fn().mockResolvedValue({ 
+            txHash: { 
+              hex: vi.fn().mockReturnValue("0xmocktxhash") 
+            }
+          }),
           getTransactionReceipt: vi.fn().mockResolvedValue({
             blockNumber: 123,
             status: 1,
@@ -20,33 +29,64 @@ vi.mock("@radiustechsystems/sdk", () => {
           getBlockNumber: vi.fn().mockResolvedValue(125),
           estimateGas: vi.fn().mockResolvedValue(BigInt(21000)),
           getGasPrice: vi.fn().mockResolvedValue(BigInt(20000000000)),
+          // Add ethClient for getFeeData
+          ethClient: {
+            getFeeData: vi.fn().mockResolvedValue({
+              maxFeePerGas: BigInt(20000000000),
+              gasPrice: BigInt(20000000000)
+            })
+          }
         };
       })
     },
     Account: {
       New: vi.fn().mockImplementation(() => {
         return {
-          address: {
+          address: vi.fn().mockReturnValue({
             toHex: vi.fn().mockReturnValue("0xmockaddress"),
-          },
+            hex: vi.fn().mockReturnValue("0xmockaddress")
+          }),
           signMessage: vi.fn().mockResolvedValue("0xmocksignature"),
+          signer: {
+            address: vi.fn().mockReturnValue({
+              toHex: vi.fn().mockReturnValue("0xmockaddress"),
+              hex: vi.fn().mockReturnValue("0xmockaddress")
+            }),
+            signMessage: vi.fn().mockResolvedValue("0xmocksignature")
+          }
         };
       })
     },
     Address: vi.fn().mockImplementation((address) => {
       return {
         toHex: vi.fn().mockReturnValue(address),
+        hex: vi.fn().mockReturnValue(address),
+        address: address
       };
     }),
     Contract: {
       NewDeployed: vi.fn().mockImplementation(() => {
         return {
-          execute: vi.fn().mockResolvedValue({ hash: "0xmockcontracttxhash" }),
+          execute: vi.fn().mockResolvedValue({ 
+            txHash: { 
+              hex: vi.fn().mockReturnValue("0xmockcontracttxhash") 
+            } 
+          }),
           call: vi.fn().mockResolvedValue("mockCallResult"),
           estimateGas: vi.fn().mockResolvedValue(BigInt(50000)),
         };
       })
     },
+    NewContract: vi.fn().mockImplementation(() => {
+      return {
+        execute: vi.fn().mockResolvedValue({ 
+          txHash: { 
+            hex: vi.fn().mockReturnValue("0xmockcontracttxhash") 
+          } 
+        }),
+        call: vi.fn().mockResolvedValue("mockCallResult"),
+      };
+    }),
     ABI: vi.fn().mockImplementation((abiJson) => {
       return { abiJson };
     }),
@@ -55,6 +95,11 @@ vi.mock("@radiustechsystems/sdk", () => {
     }),
     withLogger: vi.fn().mockImplementation((logger) => {
       return { logger };
+    }),
+    Hash: vi.fn().mockImplementation(() => {
+      return {
+        hex: vi.fn().mockReturnValue("0xmockhash")
+      };
     })
   };
 });
@@ -97,10 +142,17 @@ describe("RadiusWalletClient", () => {
       mockLogger
     );
     
+    // Mock the resolveAddress method
+    const origResolveAddress = wallet.resolveAddress;
+    wallet.resolveAddress = vi.fn().mockResolvedValue("0xrecipient" as `0x${string}`);
+    
     const result = await wallet.sendTransaction({
       to: "0xrecipient",
       value: BigInt(100000000000000000) // 0.1 ETH
     });
+    
+    // Reset the mock after use
+    wallet.resolveAddress = origResolveAddress;
     
     expect(result).toEqual({ hash: "0xmocktxhash" });
   });
@@ -147,7 +199,7 @@ describe("RadiusWalletClient", () => {
       }]
     });
     
-    expect(result).toEqual({ value: "mockCallResult" });
+    expect(result).toEqual({ value: "mockCallResult", success: true });
   });
   
   test("gets balance correctly", async () => {
@@ -155,7 +207,14 @@ describe("RadiusWalletClient", () => {
       { rpcUrl: mockRpcUrl, privateKey: mockPrivateKey }
     );
     
+    // Mock the resolveAddress method
+    const origResolveAddress = wallet.resolveAddress;
+    wallet.resolveAddress = vi.fn().mockResolvedValue("0xuser" as `0x${string}`);
+    
     const balance = await wallet.balanceOf("0xuser");
+    
+    // Reset the mock after use
+    wallet.resolveAddress = origResolveAddress;
     
     expect(balance).toEqual({
       value: "1",
@@ -192,6 +251,6 @@ describe("RadiusWalletClient", () => {
     expect(tool).toHaveProperty("name");
     expect(tool).toHaveProperty("description");
     expect(tool).toHaveProperty("parameters");
-    expect(tool).toHaveProperty("handler");
+    expect(tool).toHaveProperty("execute");
   });
 });

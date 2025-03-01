@@ -2,7 +2,7 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { CryptoService } from "../crypto.service";
 import { ValidateAddressParameters, HashDataParameters } from "../parameters";
 import { RadiusWalletInterface } from "@radiustechsystems/ai-agent-wallet";
-import { EvmChain } from "@radiustechsystems/ai-agent-core";
+import { RadiusChain } from "@radiustechsystems/ai-agent-core";
 
 // Mock the SDK - use async function
 vi.mock("@radiustechsystems/sdk", async () => {
@@ -38,7 +38,7 @@ vi.mock("@radiustechsystems/ai-agent-core", async () => {
 
 // Create a more complete mock wallet client
 const mockWalletClient: Partial<RadiusWalletInterface> = {
-  getChain: vi.fn().mockReturnValue({ id: 1, type: "evm" } as EvmChain),
+  getChain: vi.fn().mockReturnValue({ id: 1, type: "evm" } as RadiusChain),
   getAddress: vi.fn().mockReturnValue("0xmockaddress"),
   signMessage: vi.fn().mockResolvedValue({
     signature: "0xmocksignature",

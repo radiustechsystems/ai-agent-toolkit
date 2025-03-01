@@ -6,7 +6,7 @@ import {
   SimulateContractParameters 
 } from "../parameters";
 import { RadiusWalletInterface } from "@radiustechsystems/ai-agent-wallet";
-import { EvmChain } from "@radiustechsystems/ai-agent-core";
+import { RadiusChain } from "@radiustechsystems/ai-agent-core";
 
 // Import the actual ai-agent-core module and just mock the Tool decorator
 vi.mock("@radiustechsystems/ai-agent-core", async () => {
@@ -43,7 +43,7 @@ const mockAbi = [
 
 // Create a mock wallet client
 const mockWalletClient: Partial<RadiusWalletInterface> = {
-  getChain: vi.fn(() => ({ id: 1, type: "evm" } as EvmChain)),
+  getChain: vi.fn(() => ({ id: 1, type: "evm" } as RadiusChain)),
   getAddress: vi.fn(() => "0xmockaddress"),
   read: vi.fn().mockResolvedValue({ value: "mockResult", success: true }),
   sendTransaction: vi.fn().mockResolvedValue({ hash: "0xmocktxhash" }),

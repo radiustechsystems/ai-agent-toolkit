@@ -1,10 +1,10 @@
 /**
  * Defines the chain type supported by the Radius AI Agent Toolkit
- * Currently only supports EVM as Radius is EVM-compatible
+ * Radius is the only supported chain (which is EVM-compatible)
  */
-export type Chain = EvmChain;
+export type Chain = RadiusChain;
 
-export type EvmChain = {
+export type RadiusChain = {
   type: "evm";
   id: number;
 };

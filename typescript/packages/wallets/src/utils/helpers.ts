@@ -34,7 +34,7 @@ export function parseEther(value: string): bigint {
       wei += BigInt(fraction) * BigInt(10**padding);
     } else {
       // Truncate if too many decimal places
-      wei += BigInt(fraction.slice(0, 18)) * BigInt(10**(18 - fraction.length));
+      wei += BigInt(fraction.slice(0, 18)) * BigInt(10**0); // When padding < 0, the exponent is always 0
     }
   }
   

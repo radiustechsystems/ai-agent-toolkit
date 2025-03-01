@@ -1,4 +1,4 @@
-import { type EvmChain, type Signature, WalletClientBase } from "@radiustechsystems/ai-agent-core";
+import { type RadiusChain, type Signature, WalletClientBase } from "@radiustechsystems/ai-agent-core";
 import type { 
   RadiusReadRequest, 
   RadiusReadResult, 
@@ -16,7 +16,7 @@ export interface RadiusWalletInterface extends WalletClientBase {
     /**
      * Returns the chain information for this wallet
      */
-    getChain(): EvmChain;
+    getChain(): RadiusChain;
     
     /**
      * Sends a transaction

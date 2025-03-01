@@ -1,6 +1,6 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { createGasEstimator } from "../gas-estimator";
-import { Account, Client } from "@radiustechsystems/sdk";
+import { Client } from "@radiustechsystems/sdk";
 
 // Mock the SDK components
 vi.mock("@radiustechsystems/sdk", () => {
@@ -12,7 +12,10 @@ vi.mock("@radiustechsystems/sdk", () => {
     },
     Account: {},
     Address: vi.fn().mockImplementation((address) => {
-      return { address };
+      return { 
+        address,
+        toHex: () => address
+      };
     }),
     Contract: {
       NewDeployed: vi.fn().mockImplementation(() => {
@@ -21,18 +24,36 @@ vi.mock("@radiustechsystems/sdk", () => {
         };
       })
     },
-    ABI: vi.fn().mockImplementation(() => {})
+    ABI: vi.fn().mockImplementation(() => {
+      return {
+        pack: vi.fn().mockReturnValue(new Uint8Array([1, 2, 3]))
+      };
+    }),
+    Transaction: vi.fn().mockImplementation(() => {
+      return {};
+    })
   };
 });
 
 describe("GasEstimator", () => {
-  const mockClient = {
-    estimateGas: vi.fn().mockResolvedValue(BigInt(21000)),
-    estimateGasRaw: vi.fn().mockResolvedValue(BigInt(50000)),
-    getGasPrice: vi.fn().mockResolvedValue(BigInt(20000000000)),
-  } as unknown as Client;
+  // Type the mock functions explicitly so we can use mockResolvedValueOnce
+  const mockEstimateGas = vi.fn().mockResolvedValue(BigInt(21000));
+  const mockEstimateGasRaw = vi.fn().mockResolvedValue(BigInt(50000));
+  const mockGetGasPrice = vi.fn().mockResolvedValue(BigInt(20000000000));
+  const mockGetFeeData = vi.fn().mockResolvedValue({
+    maxFeePerGas: BigInt(20000000000),
+    gasPrice: BigInt(20000000000)
+  });
   
-  const mockAccount = {} as unknown as Account;
+  const mockClient = {
+    estimateGas: mockEstimateGas,
+    estimateGasRaw: mockEstimateGasRaw,
+    getGasPrice: mockGetGasPrice,
+    // Mock the ethClient property that's used in getGasPrice method
+    ethClient: {
+      getFeeData: mockGetFeeData
+    }
+  } as unknown as Client;
   
   beforeEach(() => {
     vi.clearAllMocks();
@@ -50,10 +71,13 @@ describe("GasEstimator", () => {
     
     // Should apply 1.2x multiplier to the 21000 gas limit
     expect(result).toBe(BigInt(25200)); // 21000 * 1.2 = 25200
-    expect(mockClient.estimateGas).toHaveBeenCalled();
+    expect(mockEstimateGas).toHaveBeenCalled();
   });
   
   test("estimates gas correctly for contract call", async () => {
+    // Mock the client estimate gas to return 50000 for this test specifically
+    mockEstimateGas.mockResolvedValueOnce(BigInt(50000));
+    
     const estimator = createGasEstimator(mockClient, 1.5);
     
     const transaction = {
@@ -78,6 +102,9 @@ describe("GasEstimator", () => {
   });
   
   test("simulates transaction successfully", async () => {
+    // Ensure we get a consistent gas estimate
+    mockEstimateGas.mockResolvedValueOnce(BigInt(21000));
+    
     const estimator = createGasEstimator(mockClient);
     
     const transaction = {
