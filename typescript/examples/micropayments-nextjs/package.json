@@ -1,0 +1,37 @@
+{
+  "name": "radius-examples-micropayments-nextjs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "^1.1.12",
+    "@radiustechsystems/ai-agent-adapter-vercel-ai": "workspace:*",
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
+    "@radiustechsystems/ai-agent-wallet": "workspace:*",
+    "ai": "^4.1.47",
+    "d3": "^7.8.5",
+    "next": "14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss-animate": "^1.0.7",
+    "viem": "2.21.49"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "@types/node": "^20.11.19",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "autoprefixer": "^10.4.17",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.1.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
+  }
+}
