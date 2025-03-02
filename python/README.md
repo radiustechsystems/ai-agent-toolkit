@@ -21,23 +21,27 @@ This guide will help you set up and run the AI Agent Toolkit project.
 ## Development Setup
 
 ### 1. Clone the Repository
+
 ```bash
 git clone git@github.com:radiustechsystems/ai-agent-toolkit.git
 cd ai-agent-toolkit/python
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 pip install -e .
 ```
 
 ### 3. Build the Package
+
 ```bash
 pip install build
 python -m build
 ```
 
 ### 4. Configure Environment Variables
+
 ```bash
 cd examples/langchain/web3
 cp .env.template .env
@@ -50,11 +54,13 @@ Open `.env` and set the following variables:
 - RPC_PROVIDER_URL=your_rpc_provider_url_here
 
 Note:
-- Get an OpenAI API key from: https://platform.openai.com/api-keys
+
+- Get an OpenAI API key from: <https://platform.openai.com/api-keys>
 - The wallet private key should be from an EVM-compatible wallet
-- RPC provider URL from Radius testnet: https://testnet.tryradi.us/dashboard/rpc-endpoints
+- RPC provider URL from Radius testnet: <https://testnet.tryradi.us/dashboard/rpc-endpoints>
 
 ### 5. Run the Example
+
 ```bash
 python examples/langchain/web3/main.py
 ```
@@ -64,6 +70,7 @@ python examples/langchain/web3/main.py
 If you encounter any issues:
 
 ### Clean and Rebuild
+
 ```bash
 # Remove build artifacts
 rm -rf dist/
@@ -74,6 +81,7 @@ pip install -e .
 ```
 
 ### Verify Python Version
+
 ```bash
 python --version  # Should be >=3.10
 ```
@@ -89,6 +97,7 @@ python --version  # Should be >=3.10
 ## Documentation
 
 For detailed documentation:
+
 - [API Documentation](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/src/radius_ai_agent_sdk/README.md)
 - [Examples](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python/examples)
 - [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md)
