@@ -1,4 +1,4 @@
-name: TypeScript SDK Publish
+name: TypeScript AI Agent Toolkit Publish
 
 on:
   push:
@@ -59,7 +59,7 @@ jobs:
       
       - name: Build package
         working-directory: typescript
-        run: pnpm build:prod
+        run: pnpm build:libs:prod
       
       - name: Publish to NPM
         working-directory: typescript
