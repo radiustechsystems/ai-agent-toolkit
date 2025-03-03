@@ -27,14 +27,6 @@ Each example project may require additional environment variables specific to th
 2. Use `.env.template` files to document required variables without values
 3. Store sensitive values securely using environment variables or secrets management
 
-## Langchain
+## Micropayments
 
-- [Viem](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/typescript/examples/langchain)
-
-## Model Context Protocol
-
-- [Viem](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/typescript/examples/model-context-protocol)
-
-## Vercel AI SDK
-
-- [Viem](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/typescript/examples/vercel-ai/viem)
+- [Vercel AI SDK](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/typescript/examples/micropayments/vercel-ai)
