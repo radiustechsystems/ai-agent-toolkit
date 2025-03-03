@@ -105,11 +105,26 @@ export function TransactionDetails({ payments, metrics, agentContributions }: Tr
               
               <div className="mt-2 flex text-xs text-gray-500">
                 <div className="truncate max-w-32">
-                  {payment.to.substring(0, 6)}...{payment.to.substring(payment.to.length - 4)}
+                  <a 
+                    href={`https://testnet.tryradi.us/address/${payment.to}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {payment.to.substring(0, 6)}...{payment.to.substring(payment.to.length - 4)}
+                  </a>
                 </div>
                 <div className="ml-auto">
-                  Tx: {payment.transactionHash.substring(0, 6)}...
-                  {payment.transactionHash.substring(payment.transactionHash.length - 4)}
+                  Tx:
+                  <a 
+                    href={`https://testnet.tryradi.us/tx/${payment.transactionHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {payment.transactionHash.substring(0, 6)}...
+                    {payment.transactionHash.substring(payment.transactionHash.length - 4)}
+                  </a>
                 </div>
               </div>
             </div>
