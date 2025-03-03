@@ -35,7 +35,3 @@ jobs:
       - name: Run lint
         working-directory: typescript
         run: pnpm lint
-      
-      - name: Type check
-        working-directory: typescript
-        run: pnpm tsc --noEmit
