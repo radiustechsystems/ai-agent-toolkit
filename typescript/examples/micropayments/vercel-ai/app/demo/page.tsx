@@ -31,6 +31,18 @@ function DynamicLoadingIndicator({ workflowType }: { workflowType: string }) {
         { text: "Processing payments...", emoji: "💸" },
         { text: "Finalizing edited content...", emoji: "✨" }
       ];
+    case "autonomous":
+      return [
+        { text: "Creating original content...", emoji: "✍️" },
+        { text: "Researching supporting information...", emoji: "🔬" },
+        { text: "Creator paying for research...", emoji: "💸" },
+        { text: "Enhancing content with research...", emoji: "📊" },
+        { text: "Editing and improving content...", emoji: "📝" },
+        { text: "Creator paying for editing...", emoji: "💸" },
+        { text: "Reviewing for quality...", emoji: "⭐" },
+        { text: "Editor paying for review...", emoji: "💸" },
+        { text: "Finalizing autonomous workflow...", emoji: "✨" }
+      ];
     case "full":
     default:
       return [
@@ -95,27 +107,27 @@ function DynamicLoadingIndicator({ workflowType }: { workflowType: string }) {
             <div className="flex justify-center gap-4">
               {workflowType === "creator-only" ? (
                 <span className="bg-[#4F46E5]/20 border border-[#4F46E5]/30 text-[#4F46E5] px-3 py-1 rounded flex items-center">
-                  <span className="mr-1">✍️</span> Creator Agent
+                  <span className="mr-1">✍️</span> Creator
                 </span>
               ) : workflowType === "create-edit" ? (
                 <>
                   <span className="bg-[#4F46E5]/20 border border-[#4F46E5]/30 text-[#4F46E5] px-3 py-1 rounded flex items-center">
-                    <span className="mr-1">✍️</span> Creator Agent
+                    <span className="mr-1">✍️</span> Creator
                   </span>
                   <span className="bg-[#059669]/20 border border-[#059669]/30 text-[#059669] px-3 py-1 rounded flex items-center">
-                    <span className="mr-1">📝</span> Editor Agent
+                    <span className="mr-1">📝</span> Editor
                   </span>
                 </>
               ) : (
                 <>
                   <span className="bg-[#4F46E5]/20 border border-[#4F46E5]/30 text-[#4F46E5] px-3 py-1 rounded flex items-center">
-                    <span className="mr-1">✍️</span> Creator Agent
+                    <span className="mr-1">✍️</span> Creator
                   </span>
                   <span className="bg-[#059669]/20 border border-[#059669]/30 text-[#059669] px-3 py-1 rounded flex items-center">
-                    <span className="mr-1">📝</span> Editor Agent
+                    <span className="mr-1">📝</span> Editor
                   </span>
                   <span className="bg-[#DB2777]/20 border border-[#DB2777]/30 text-[#DB2777] px-3 py-1 rounded flex items-center">
-                    <span className="mr-1">🔍</span> Fact-Checker Agent
+                    <span className="mr-1">🔍</span> Fact-Checker
                   </span>
                 </>
               )}
@@ -136,7 +148,7 @@ export default function DemoPage() {
   const [paymentMetrics, setPaymentMetrics] = useState<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [agentContributions, setAgentContributions] = useState<any>(null);
-  const [workflowType, setWorkflowType] = useState<string>("full");
+  const [workflowType, setWorkflowType] = useState<string>("autonomous");
   
   const handleContentSubmission = async (prompt: string, creatorAddress: string) => {
     setIsGenerating(true);
@@ -190,8 +202,8 @@ export default function DemoPage() {
         </Link>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        <div className="md:col-span-5">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-4">
           <h1 className="text-3xl font-bold mb-6">AI Content with Multi-Agent Micropayments</h1>
           <p className="mb-4 text-gray-300">
             Generate AI content using a team of specialized agents that collaborate autonomously and receive
@@ -229,7 +241,17 @@ export default function DemoPage() {
                     : "bg-radius-dark/70 text-gray-300 hover:bg-radius-dark"
                 }`}
               >
-                Full Team (Creator, Editor, Fact-Checker)
+                Full Team (Traditional)
+              </button>
+              <button
+                onClick={() => handleWorkflowChange("autonomous")}
+                className={`px-3 py-1 rounded-md text-sm ${
+                  workflowType === "autonomous" 
+                    ? "bg-radius-primary text-white" 
+                    : "bg-radius-dark/70 text-gray-300 hover:bg-radius-dark"
+                }`}
+              >
+                Autonomous Team (Agent-to-Agent)
               </button>
             </div>
             <p className="text-xs text-gray-400 mt-2">
@@ -248,7 +270,7 @@ export default function DemoPage() {
           )}
         </div>
         
-        <div className="md:col-span-7">
+        <div className="lg:col-span-8">
           {isGenerating ? (
             <DynamicLoadingIndicator workflowType={workflowType} />
           ) : (

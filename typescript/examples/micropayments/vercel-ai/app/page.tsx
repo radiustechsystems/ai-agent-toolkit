@@ -26,13 +26,13 @@ export default function Home() {
             </p>
             <ul className="list-disc list-inside space-y-2 mb-6">
               <li>
-                <span className="text-radius-primary font-medium">Creator Agent</span> - Generates original content
+                <span className="text-radius-primary font-medium">Creator</span> - Generates original content
               </li>
               <li>
-                <span className="text-radius-secondary font-medium">Editor Agent</span> - Refines and improves content
+                <span className="text-radius-secondary font-medium">Editor</span> - Refines and improves content
               </li>
               <li>
-                <span className="text-radius-accent font-medium">Fact-Checker Agent</span>
+                <span className="text-radius-accent font-medium">Fact-Checker</span>
                  - Ensures accuracy and reliability
               </li>
             </ul>
