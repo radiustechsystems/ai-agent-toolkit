@@ -2,6 +2,12 @@
   "private": true,
   "name": "@radiustechsystems/ai-agent-toolkit",
   "version": "0.1.0",
+  "description": "TypeScript AI Agent Toolkit for integrating AI agents with the Radius Platform for smart contracts, automation, and payments",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
+  },
+  "type": "module",
   "scripts": {
     "build": "pnpm turbo build",
     "build:libs": "pnpm turbo --filter \"./packages/**\" build",
@@ -10,13 +16,9 @@
     "clean:node_modules": "pnpm rimraf \"**/node_modules\" --glob",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "pnpm turbo test",
-    "change:add": "pnpm changeset add",
-    "change:publish": "pnpm build:libs:prod && pnpm changeset publish --no-git-tag",
-    "change:version": "pnpm changeset version && pnpm lint:fix"
+    "test": "pnpm turbo test"
   },
   "devDependencies": {
-    "@changesets/cli": "2.27.10",
     "@types/node": "22.7.4",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
@@ -33,5 +35,35 @@
     "pnpm": ">=9"
   },
   "license": "MIT",
-  "packageManager": "pnpm@9.14.2"
+  "packageManager": "pnpm@9.14.2",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "radius",
+    "evm",
+    "automation",
+    "payment",
+    "llm",
+    "agent",
+    "agentic",
+    "toolkit",
+    "ai"
+  ],
+  "homepage": "https://github.com/radiustechsystems/ai-agent-toolkit/typescript#readme",
+  "bugs": {
+    "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

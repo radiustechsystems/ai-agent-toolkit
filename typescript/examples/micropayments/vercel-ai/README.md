@@ -5,7 +5,7 @@ This example demonstrates a real-time AI content generation platform with instan
 ## Key Features
 
 - **Real-time AI content generation** using Anthropic's Claude models and Vercel AI SDK
-- **Instant micropayments** directly to content creators 
+- **Instant micropayments** directly to content creators
 - **Visual transaction processing** with beautiful D3.js animations
 - **Performance metrics** highlighting Radius's speed
 - **Near-zero transaction fees** perfect for micropayment business models
@@ -15,7 +15,7 @@ This example demonstrates a real-time AI content generation platform with instan
 ### Prerequisites
 
 1. Node.js (v18+) and pnpm installed
-2. A Radius wallet with some ETH (obtain from the Radius faucet)
+2. A Radius wallet with some ETH (obtain from the [Radius faucet](https://testnet.tryradi.us/dashboard/faucet))
 3. Anthropic API key for Claude models
 
 ### Setup
