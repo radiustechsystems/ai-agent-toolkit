@@ -12,15 +12,13 @@
     "@ai-sdk/anthropic": "^1.1.12",
     "@radiustechsystems/ai-agent-adapter-vercel-ai": "workspace:*",
     "@radiustechsystems/ai-agent-core": "workspace:*",
-    "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
     "@radiustechsystems/ai-agent-wallet": "workspace:*",
     "ai": "^4.1.47",
     "d3": "^7.8.5",
     "next": "14.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss-animate": "^1.0.7",
-    "viem": "2.21.49"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",

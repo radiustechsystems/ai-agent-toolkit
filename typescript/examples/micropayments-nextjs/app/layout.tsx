@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Radius AI Micropayments",
-  description: "Real-time AI content generation with Radius blockchain micropayments",
+  description: "Real-time AI content generation with Radius micropayments",
 };
 
 export default function RootLayout({

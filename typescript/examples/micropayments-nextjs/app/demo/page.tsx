@@ -1,11 +1,131 @@
+/* eslint-disable max-len */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { PaymentVisualization } from "@/components/PaymentVisualization";
 import { ContentForm } from "@/components/ContentForm";
 import { ContentDisplay } from "@/components/ContentDisplay";
 import { TransactionDetails } from "@/components/TransactionDetails";
+
+// Dynamic Loading Indicator Component
+function DynamicLoadingIndicator({ workflowType }: { workflowType: string }) {
+  const [messageIndex, setMessageIndex] = useState(0);
+  const [fadeState, setFadeState] = useState("in"); // "in" or "out"
+  
+  // Define messages based on workflow type
+  const getMessages = () => {
+    switch (workflowType) {
+    case "creator-only":
+      return [
+        { text: "Creating original content...", emoji: "✍️" },
+        { text: "Generating ideas...", emoji: "💡" },
+        { text: "Processing payments...", emoji: "💸" },
+        { text: "Finalizing content...", emoji: "📝" }
+      ];
+    case "create-edit":
+      return [
+        { text: "Creating original content...", emoji: "✍️" },
+        { text: "Editing for clarity and style...", emoji: "📝" },
+        { text: "Improving structure...", emoji: "🔄" },
+        { text: "Processing payments...", emoji: "💸" },
+        { text: "Finalizing edited content...", emoji: "✨" }
+      ];
+    case "full":
+    default:
+      return [
+        { text: "Creating original content...", emoji: "✍️" },
+        { text: "Editing for clarity and style...", emoji: "📝" },
+        { text: "Fact-checking content...", emoji: "🔍" },
+        { text: "Verifying accuracy...", emoji: "✅" },
+        { text: "Processing payments...", emoji: "💸" },
+        { text: "Finalizing verified content...", emoji: "✨" }
+      ];
+    }
+  };
+  
+  const messages = getMessages();
+  
+  // Animation effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (fadeState === "in") {
+        setFadeState("out");
+      } else {
+        setFadeState("in");
+        setMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
+      }
+    }, 2000); // Cycle every 2 seconds
+    
+    return () => clearInterval(interval);
+  }, [fadeState, messages.length]);
+  
+  const currentMessage = messages[messageIndex];
+  
+  return (
+    <div className="h-96 flex items-center justify-center">
+      <div className="text-center">
+        {/* Concentric spinner circles based on workflow */}
+        <div className="relative mb-12 flex items-center justify-center h-24">
+          {/* Only show relevant spinners based on the workflow type */}
+          {workflowType === "creator-only" ? (
+            /* Creator-only workflow - only blue spinner */
+            <div className="absolute animate-spin rounded-full h-20 w-20 border-2 border-t-[#4F46E5] border-[#4F46E5]/20"></div>
+          ) : workflowType === "create-edit" ? (
+            /* Creator + Editor workflow - blue and green spinners */
+            <>
+              <div className="absolute animate-spin rounded-full h-20 w-20 border-2 border-t-[#4F46E5] border-[#4F46E5]/20"></div>
+              <div className="absolute animate-spin-slow-reverse rounded-full h-14 w-14 border-2 border-t-[#059669] border-[#059669]/20"></div>
+            </>
+          ) : (
+            /* Full workflow - blue, green, and pink spinners */
+            <>
+              <div className="absolute animate-spin rounded-full h-20 w-20 border-2 border-t-[#4F46E5] border-[#4F46E5]/20"></div>
+              <div className="absolute animate-spin-slow-reverse rounded-full h-14 w-14 border-2 border-t-[#059669] border-[#059669]/20"></div>
+              <div className="absolute animate-spin-slow rounded-full h-8 w-8 border-2 border-t-[#DB2777] border-[#DB2777]/20"></div>
+            </>
+          )}
+        </div>
+        
+        <div className={`transition-opacity duration-500 ease-in-out ${fadeState === "in" ? "opacity-100" : "opacity-0"}`}>
+          <div className="text-4xl mb-3">{currentMessage.emoji}</div>
+          <p className="text-lg font-medium text-white">{currentMessage.text}</p>
+          
+          <div className="mt-8 text-sm">
+            <div className="flex justify-center gap-4">
+              {workflowType === "creator-only" ? (
+                <span className="bg-[#4F46E5]/20 border border-[#4F46E5]/30 text-[#4F46E5] px-3 py-1 rounded flex items-center">
+                  <span className="mr-1">✍️</span> Creator Agent
+                </span>
+              ) : workflowType === "create-edit" ? (
+                <>
+                  <span className="bg-[#4F46E5]/20 border border-[#4F46E5]/30 text-[#4F46E5] px-3 py-1 rounded flex items-center">
+                    <span className="mr-1">✍️</span> Creator Agent
+                  </span>
+                  <span className="bg-[#059669]/20 border border-[#059669]/30 text-[#059669] px-3 py-1 rounded flex items-center">
+                    <span className="mr-1">📝</span> Editor Agent
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="bg-[#4F46E5]/20 border border-[#4F46E5]/30 text-[#4F46E5] px-3 py-1 rounded flex items-center">
+                    <span className="mr-1">✍️</span> Creator Agent
+                  </span>
+                  <span className="bg-[#059669]/20 border border-[#059669]/30 text-[#059669] px-3 py-1 rounded flex items-center">
+                    <span className="mr-1">📝</span> Editor Agent
+                  </span>
+                  <span className="bg-[#DB2777]/20 border border-[#DB2777]/30 text-[#DB2777] px-3 py-1 rounded flex items-center">
+                    <span className="mr-1">🔍</span> Fact-Checker Agent
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function DemoPage() {
   const [generatedContent, setGeneratedContent] = useState<string>("");
@@ -70,12 +190,12 @@ export default function DemoPage() {
         </Link>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <div className="md:col-span-5">
           <h1 className="text-3xl font-bold mb-6">AI Content with Multi-Agent Micropayments</h1>
           <p className="mb-4 text-gray-300">
             Generate AI content using a team of specialized agents that collaborate autonomously and receive
-            micropayments on the Radius blockchain based on their contributions.
+            micropayments on Radius based on their contributions.
           </p>
           
           <div className="bg-radius-dark/50 p-4 rounded-lg mb-6">
@@ -128,24 +248,14 @@ export default function DemoPage() {
           )}
         </div>
         
-        <div>
+        <div className="md:col-span-7">
           {isGenerating ? (
-            <div className="h-96 flex items-center justify-center">
-              <div className="text-center">
-                <div 
-                  className={`
-                    inline-block animate-spin rounded-full h-12 w-12
-                    border-t-2 border-radius-primary border-r-2 mb-4
-                  `}
-                ></div>
-                <p>Generating content with AI agents and processing payments...</p>
-              </div>
-            </div>
+            <DynamicLoadingIndicator workflowType={workflowType} />
           ) : (
-            <>
+            <div className="flex flex-col">
               {payments.length > 0 && <PaymentVisualization payments={payments} />}
               {generatedContent && <ContentDisplay content={generatedContent} />}
-            </>
+            </div>
           )}
         </div>
       </div>

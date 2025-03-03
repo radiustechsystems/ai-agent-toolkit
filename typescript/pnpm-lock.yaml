@@ -135,9 +135,6 @@ importers:
       '@radiustechsystems/ai-agent-core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@radiustechsystems/ai-agent-plugin-erc20':
-        specifier: workspace:*
-        version: link:../../packages/plugins/erc20
       '@radiustechsystems/ai-agent-wallet':
         specifier: workspace:*
         version: link:../../packages/wallets
@@ -159,9 +156,6 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.17)
-      viem:
-        specifier: 2.21.49
-        version: 2.21.49(typescript@5.3.3)(zod@3.23.8)
     devDependencies:
       '@types/d3':
         specifier: ^7.4.3

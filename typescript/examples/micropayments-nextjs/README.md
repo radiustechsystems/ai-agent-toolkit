@@ -1,6 +1,6 @@
 # AI-Driven Micropayments Platform with Radius
 
-This example demonstrates a real-time AI content generation platform with instant micropayments on the Radius blockchain. It showcases Radius's unique capabilities for high-throughput, near-zero transaction fees, and instant finality - perfect for AI payment interactions.
+This example demonstrates a real-time AI content generation platform with instant micropayments on Radius. It showcases Radius's unique capabilities for high-throughput, near-zero transaction fees, and instant finality - perfect for AI payment interactions.
 
 ## Key Features
 
@@ -44,7 +44,7 @@ pnpm dev
 
 This Next.js application demonstrates:
 
-- **Server Components**: For handling Radius blockchain interactions
+- **Server Components**: For handling Radius interactions
 - **Client Components**: For UI visualization and interactivity
 - **API Routes**: For content generation and payment processing
 - **D3.js Visualizations**: For beautiful transaction animations

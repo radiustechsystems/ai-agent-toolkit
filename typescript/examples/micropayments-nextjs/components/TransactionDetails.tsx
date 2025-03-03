@@ -90,7 +90,12 @@ export function TransactionDetails({ payments, metrics, agentContributions }: Tr
                     <span>{formatTime(agentContributions[payment.agent].processingTime)}</span>
                   </div>
                   <div className="mt-2">
-                    <div className="text-gray-400 mb-1">Contribution:</div>
+                    <div className="text-gray-400 mb-1">
+                      {payment.role === "creator" ? "Original Content:" : 
+                        payment.role === "editor" ? "Edited Content:" : 
+                          payment.role === "factChecker" ? "Fact-Checked Content:" : 
+                            "Contribution:"}
+                    </div>
                     <div className="bg-black/40 p-2 rounded-md text-xs font-mono max-h-32 overflow-y-auto">
                       {agentContributions[payment.agent].content}
                     </div>

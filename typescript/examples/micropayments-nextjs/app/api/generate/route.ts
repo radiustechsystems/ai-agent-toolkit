@@ -1,11 +1,11 @@
+/* eslint-disable max-len */
 import { NextRequest, NextResponse } from "next/server";
 import { anthropic } from "@ai-sdk/anthropic";
 import { generateText } from "ai";
-import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai";
-import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet";
+import { createRadiusWallet, RadiusWalletInterface } from "@radiustechsystems/ai-agent-wallet";
 
 // Constants for payment calculation
-const PAYMENT_PER_TOKEN = 0.000001; // Very small ETH payment per token
+const PAYMENT_PER_TOKEN = 0.0001; // Very small ETH payment per token
 
 // Agent roles and capabilities
 const AGENT_ROLES = {
@@ -23,7 +23,7 @@ const AGENT_REGISTRY = [
     model: "claude-3-haiku-20240307",
     fee: 0.7, // 70% of payment
     walletAddress: process.env.CREATOR_AGENT_ADDRESS || "0x1234567890123456789012345678901234567890",
-    systemPrompt: "You are a creative AI assistant that generates original content based on user prompts.",
+    systemPrompt: "You are a creative AI assistant that generates original content based on user prompts. Generate complete and well-structured content that addresses the user's request.",
   },
   {
     id: "claude-editor",
@@ -32,8 +32,9 @@ const AGENT_REGISTRY = [
     model: "claude-3-haiku-20240307",
     fee: 0.2, // 20% of payment
     walletAddress: process.env.EDITOR_AGENT_ADDRESS || "0x2345678901234567890123456789012345678901",
-    systemPrompt: `You are an expert editor. Your job is to improve the clarity, 
-      coherence, and style of content while preserving the original meaning.`,
+    systemPrompt: `You are an expert editor in a multi-agent workflow. Your job is to improve content created by another agent. 
+      Enhance clarity, coherence, flow, and style while preserving the original meaning. Return the complete edited 
+      content in your response, not just feedback or changes. Your output will be passed to the next agent in the workflow.`,
   },
   {
     id: "claude-fact-checker",
@@ -42,8 +43,10 @@ const AGENT_REGISTRY = [
     model: "claude-3-haiku-20240307",
     fee: 0.1, // 10% of payment
     walletAddress: process.env.FACT_CHECKER_AGENT_ADDRESS || "0x3456789012345678901234567890123456789012",
-    systemPrompt: `You are a fact-checking assistant. Your job is to verify 
-    factual claims and suggest corrections where necessary.`,
+    systemPrompt: `You are a fact-checking assistant in a multi-agent workflow. Your job is to verify 
+      factual claims in content that has already been edited by another agent. Provide the complete 
+      fact-checked content in your response, incorporating any necessary corrections. Your output 
+      will be the final result shown to the user, so it must be complete and well-formatted.`,
   },
 ];
 
@@ -70,11 +73,6 @@ export async function POST(request: NextRequest) {
       privateKey: process.env.WALLET_PRIVATE_KEY!
     });
     
-    // Initialize payment tools
-    const paymentTools = await getOnChainTools({
-      wallet: serviceWallet,
-      plugins: [sendETH()] // Using ETH for micropayments
-    });
     const walletInitTime = Date.now() - walletStartTime;
     
     // Execute the multi-agent workflow
@@ -89,7 +87,7 @@ export async function POST(request: NextRequest) {
     const paymentStartTime = Date.now();
     const paymentAmount = tokenCount * PAYMENT_PER_TOKEN;
     const paymentTransactions = await processAgentPayments(
-      paymentTools, 
+      serviceWallet, 
       workflow, 
       paymentAmount,
       creatorAddress
@@ -165,7 +163,6 @@ async function executeWorkflow(agents: typeof AGENT_REGISTRY, userPrompt: string
     const result = await generateText({
       model: anthropic(agent.model),
       prompt: agentPrompt,
-      maxTokens: 1000, // Limit token count for demo purposes
       system: agent.systemPrompt,
     });
     
@@ -179,11 +176,25 @@ async function executeWorkflow(agents: typeof AGENT_REGISTRY, userPrompt: string
     currentContent = result.text;
   }
   
+  // For the demo purpose, we'll add a summary of the workflow if using multiple agents
+  const finalContent = currentContent;
+  
+  // If we're using multiple agents, let's build a better view of the final content
+  if (agents.length > 1) {
+    // Now we'll add structured access to see all versions through the workflow
+    // const factCheckerAgent = agents.find(a => a.role === AGENT_ROLES.FACT_CHECKER);
+    // const editorAgent = agents.find(a => a.role === AGENT_ROLES.EDITOR);
+    // const creatorAgent = agents.find(a => a.role === AGENT_ROLES.CREATOR);
+    
+    // The lastAgent (either fact-checker, editor, or creator) has already set the currentContent
+    // So there's no need to change finalContent - it's already the output of the last agent in the chain
+  }
+  
   // Calculate total tokens in final content
-  const tokenCount = currentContent.split(/\\s+/).length;
+  const tokenCount = finalContent.split(/\\s+/).length;
   
   return {
-    finalContent: currentContent,
+    finalContent,
     agentOutputs,
     tokenCount,
     workflowMetrics: {
@@ -196,8 +207,9 @@ async function executeWorkflow(agents: typeof AGENT_REGISTRY, userPrompt: string
 function createAgentPrompt(role: string, previousContent: string, originalPrompt: string) {
   switch (role) {
   case AGENT_ROLES.EDITOR:
-    return `Below is content created by another AI. Please edit it to improve clarity, 
-      flow, and style while preserving the original meaning.
+    return `Below is content created by another AI. Edit it to improve clarity, 
+      flow, and style while preserving the original meaning. 
+      Return the COMPLETE edited content in your response.
       
       Original user prompt: ${originalPrompt}
 
@@ -206,8 +218,8 @@ function createAgentPrompt(role: string, previousContent: string, originalPrompt
 
   case AGENT_ROLES.FACT_CHECKER:
     return `Below is content that needs fact-checking. Verify any factual claims 
-    and provide the same content with corrections if needed. If no corrections 
-    are needed, return the original content.
+    and provide corrections if needed. If no corrections are needed, return the 
+    original content unchanged. Return the COMPLETE final fact-checked content.
     
     Original user prompt: ${originalPrompt}
 
@@ -221,7 +233,7 @@ function createAgentPrompt(role: string, previousContent: string, originalPrompt
 
 async function processAgentPayments(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  paymentTools: any,
+  serviceWallet: RadiusWalletInterface,
   agents: typeof AGENT_REGISTRY,
   totalAmount: number,
   userSpecifiedAddress?: string
@@ -242,26 +254,20 @@ async function processAgentPayments(
   for (const agent of workflowAgents) {
     // Calculate payment amount for this agent
     const agentPayment = totalAmount * agent.fee;
-    
-    // Skip payments that are too small (less than 0.0000001 ETH)
-    if (agentPayment < 0.0000001) continue;
-    
-    // Execute payment
-    const payment = await paymentTools.sendETH({
+
+    const tx = await serviceWallet.sendTransaction({
       to: agent.walletAddress,
-      amount: agentPayment.toString()
-    });
+      value: BigInt(Math.floor(agentPayment * 1e18)),
+    })
     
-    // Record transaction
+    // Record simulated transaction
     transactions.push({
       agent: agent.id,
       role: agent.role,
       amount: agentPayment,
       token: "ETH",
       to: agent.walletAddress,
-      transactionHash: payment.transactionHash,
-      fee: payment.fee,
-      blockNumber: payment.blockNumber
+      transactionHash: tx.hash
     });
   }
   

@@ -42,18 +42,18 @@ export default function Home() {
           </div>
           
           <div className="bg-radius-dark/30 rounded-xl p-6 border border-radius-dark">
-            <h2 className="text-2xl font-semibold mb-4">Blockchain Micropayments</h2>
+            <h2 className="text-2xl font-semibold mb-4">Radius Micropayments</h2>
             <p className="mb-4">
               Instant, fair compensation for AI agent contributions:
             </p>
             <ul className="list-disc list-inside space-y-2 mb-6">
               <li>Automatic payment based on contribution value</li>
-              <li>Near-zero transaction fees on Radius blockchain</li>
+              <li>Near-zero transaction fees on Radius</li>
               <li>Instant finality with no confirmation delays</li>
               <li>Transparent payment distribution and metrics</li>
             </ul>
             <p className="text-sm text-gray-400">
-              Utilize the Radius blockchain for efficient, low-cost micropayments that scale.
+              Utilize Radius for efficient, low-cost micropayments that scale.
             </p>
           </div>
         </div>
@@ -98,7 +98,7 @@ export default function Home() {
     Try the Demo
           </Link>
           <p className="mt-4 text-center text-gray-400 text-sm">
-            Experience how multiple AI agents can collaborate and receive micropayments on the Radius blockchain.
+            Experience how multiple AI agents can collaborate and receive micropayments on Radius.
           </p>
         </div>
       </div>
