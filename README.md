@@ -1,15 +1,10 @@
-# Radius AI Agent Toolkit
+# Radius AI Agent Toolkits
 
-Official toolkit for integrating [Radius](https://radiustech.xyz/) capabilities into AI agent workflows. Radius is a high-performance smart contract platform that enables near-instant settlement and can process millions of transactions per second.
+Official toolkits for integrating [Radius](https://radiustech.xyz/) capabilities into AI agent workflows. Radius is a high-performance smart contract platform that enables near-instant settlement and can process millions of transactions per second.
 
 ## Overview
 
-Radius AI Agent Toolkit provides seamless integration with major AI agent frameworks, allowing developers to incorporate Radius' EVM-compatible functionality into AI agent systems with minimal effort.
-
-## Available Implementations
-
-- [Python](./python)
-- [TypeScript](./typescript)
+Radius AI Agent Toolkits provide seamless integration with major AI agent frameworks, allowing developers to incorporate Radius' EVM-compatible functionality into AI agent systems with minimal effort.
 
 ## Key Features
 
@@ -17,13 +12,19 @@ Radius AI Agent Toolkit provides seamless integration with major AI agent framew
 - Support for major agent frameworks:
   - LangChain
   - Vercel AI SDK
+  - ...More to come!
 - Wallet management and transaction capabilities
 - Clean, idiomatic implementations
 - Integration with Radius' high-throughput and near-instant settlement capabilities
 
+## Available Toolkits
+
+- [Python](./python)
+- [TypeScript](./typescript)
+
 ## Contributing
 
-We welcome contributions to the Radius AI Agent Toolkit! Please see:
+We welcome contributions to the Radius AI Agent Toolkits! Please see:
 
 - [General Contributing Guide](CONTRIBUTING.md) - Repository-wide guidelines and principles
 - [TypeScript Contributing Guide](typescript/CONTRIBUTING.md) - TypeScript-specific guidelines
@@ -36,4 +37,4 @@ We welcome contributions to the Radius AI Agent Toolkit! Please see:
 
 ## License
 
-This toolkit is released under the [MIT License](LICENSE).
+These toolkits are released under the [MIT License](LICENSE).
