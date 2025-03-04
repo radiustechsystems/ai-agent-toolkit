@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-plugin-crypto",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Cryptographic utilities for Radius AI agents",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

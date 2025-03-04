@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-adapter-langchain",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "LangChain adapter for the Radius AI Agent Toolkit",
   "sideEffects": false,
   "files": ["dist/**/*", "README.md", "package.json"],
@@ -14,19 +14,19 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     }
   },
   "dependencies": {
       "@radiustechsystems/ai-agent-core": "workspace:*",
-      "@langchain/core": "catalog:"
+      "@langchain/core": "^0.3.6"
   },
   "peerDependencies": {
       "@radiustechsystems/ai-agent-core": "workspace:*",
-      "@langchain/core": "catalog:",
-      "zod": "^3.0.0"
+      "@langchain/core": "^0.3.6",
+      "zod": "^3.22.4"
   },
   "devDependencies": {
       "zod": "^3.22.4"

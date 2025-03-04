@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-plugin-erc20",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "ERC20 token operations plugin for the Radius AI Agent Toolkit",
   "files": ["dist/**/*", "README.md", "package.json"],
   "scripts": {
@@ -14,20 +14,20 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     }
   },
   "dependencies": {
       "@radiustechsystems/ai-agent-core": "workspace:*",
       "@radiustechsystems/ai-agent-wallet": "workspace:*",
-      "viem": "^2.0.0",
+      "viem": "^2.5.0",
       "zod": "^3.22.4"
   },
   "peerDependencies": {
       "@radiustechsystems/ai-agent-core": "workspace:*",
-      "viem": "^2.0.0"
+      "viem": "^2.5.0"
   },
   "keywords": [
     "radius",

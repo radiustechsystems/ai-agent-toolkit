@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-plugin-contracts",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Generic smart contract interactions for AI agents",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -36,7 +36,7 @@
   },
   "peerDependencies": {
     "@radiustechsystems/ai-agent-core": "workspace:*",
-    "viem": "^2.0.0"
+    "viem": "^2.5.0"
   },
   "keywords": [
     "radius",

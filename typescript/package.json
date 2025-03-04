@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-toolkit",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "TypeScript AI Agent Toolkit for integrating AI agents with the Radius Platform for smart contracts, automation, and payments",
   "repository": {
     "type": "git",
