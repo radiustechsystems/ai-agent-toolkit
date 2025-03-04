@@ -1,5 +1,5 @@
 import { Account } from "@radiustechsystems/sdk";
-import { RadiusTypedData } from "../core/types";
+import { RadiusTypedData } from "../core/WalletTypes";
 import { SigningError } from "../utils/errors";
 
 // Simple implementation of a structured data encoder/signer

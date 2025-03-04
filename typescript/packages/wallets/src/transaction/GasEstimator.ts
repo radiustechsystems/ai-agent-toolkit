@@ -1,7 +1,7 @@
 import { Client, ABI, Address, Transaction } from "@radiustechsystems/sdk";
-import { RadiusTransaction, TransactionSimulationResult } from "../core/types";
+import { RadiusTransaction, TransactionSimulationResult } from "../core/WalletTypes";
 import { GasEstimationError } from "../utils/errors";
-import { WalletCache } from "../utils/cache";
+import { WalletCache } from "../utils/Cache";
 
 /**
  * Gas estimation service for EVM transactions

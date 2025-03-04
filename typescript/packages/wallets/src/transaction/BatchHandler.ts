@@ -1,5 +1,5 @@
 import { Account, Client, Contract, ABI, Address } from "@radiustechsystems/sdk";
-import { RadiusTransaction } from "../core/types";
+import { RadiusTransaction } from "../core/WalletTypes";
 import { BatchTransactionError } from "../utils/errors";
 
 /**

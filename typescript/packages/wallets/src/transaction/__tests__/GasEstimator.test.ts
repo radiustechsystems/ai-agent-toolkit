@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { createGasEstimator } from "../gas-estimator";
+import { createGasEstimator } from "../GasEstimator";
 import { Client } from "@radiustechsystems/sdk";
 
 // Mock the SDK components

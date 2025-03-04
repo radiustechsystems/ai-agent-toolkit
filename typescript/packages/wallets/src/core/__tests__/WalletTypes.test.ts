@@ -11,7 +11,7 @@ import type {
   TransactionDetails,
   TransactionSimulationResult,
   RadiusTypedData
-} from "../types";
+} from "../WalletTypes";
 
 describe("Type Definitions", () => {
   test("AbiItem type is correctly defined", () => {

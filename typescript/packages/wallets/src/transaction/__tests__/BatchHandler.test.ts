@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { BatchTransactionHandler, createBatchHandler } from "../batch-handler";
+import { BatchTransactionHandler, createBatchHandler } from "../BatchHandler";
 
 // Mock the Radius SDK components
 vi.mock("@radiustechsystems/sdk", () => {

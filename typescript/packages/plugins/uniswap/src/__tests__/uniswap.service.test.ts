@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { UniswapService } from "../uniswap.service";
-import { SwapType, Protocol, Routing, CheckApprovalBodySchema, GetQuoteParameters } from "../parameters";
+import { SwapType, Protocol, Routing, CheckApprovalBodySchema, GetQuoteParameters } from "../uniswap.parameters";
 
 // Setup mock for global fetch
 const mockFetch = vi.fn();

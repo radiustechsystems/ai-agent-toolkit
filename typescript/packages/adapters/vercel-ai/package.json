@@ -20,12 +20,12 @@
     }
   },
   "dependencies": {
-      "@radiustechsystems/ai-agent-core": "^0.1.0",
-      "ai": "^2.0.0"
+      "@radiustechsystems/ai-agent-core": "workspace:*",
+      "ai": "catalog:"
   },
   "peerDependencies": {
-      "@radiustechsystems/ai-agent-core": "^0.1.0",
-      "ai": "^2.0.0",
+      "@radiustechsystems/ai-agent-core": "workspace:*",
+      "ai": "catalog:",
       "zod": "^3.0.0"
   },
   "devDependencies": {

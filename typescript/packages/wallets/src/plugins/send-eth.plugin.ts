@@ -1,6 +1,6 @@
 import { Chain, PluginBase, createTool } from "@radiustechsystems/ai-agent-core";
 import { z } from "zod";
-import { RadiusWalletInterface } from "../core/radius-wallet-interface";
+import { RadiusWalletInterface } from "../core/RadiusWalletInterface";
 import { parseEther } from "../utils/helpers";
 import { getChainToken } from "../utils/utilities";
 

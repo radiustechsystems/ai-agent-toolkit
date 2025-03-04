@@ -3,7 +3,7 @@ import {
   RadiusWalletInterface, 
   TransactionError 
 } from "@radiustechsystems/ai-agent-wallet";
-import { CheckApprovalBodySchema, GetQuoteParameters } from "./parameters";
+import { CheckApprovalBodySchema, GetQuoteParameters } from "./uniswap.parameters";
 import { type UniswapConfig } from "./types/UniswapCtorParams";
 import {
   ApiResponse,

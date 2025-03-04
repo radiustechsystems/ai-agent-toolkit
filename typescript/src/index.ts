@@ -5,19 +5,25 @@
  * It re-exports all the components from the various packages.
  */
 
-// Core exports
-export * from "@radiustechsystems/ai-agent-core";
+// Export everything with namespaces to avoid conflicts
+import * as Core from "@radiustechsystems/ai-agent-core";
+import * as Wallet from "@radiustechsystems/ai-agent-wallet";
+import * as VercelAI from "@radiustechsystems/ai-agent-adapter-vercel-ai";
+import * as LangChain from "@radiustechsystems/ai-agent-adapter-langchain";
+import * as ModelContextProtocol from "@radiustechsystems/ai-agent-adapter-model-context-protocol";
+import * as Contracts from "@radiustechsystems/ai-agent-plugin-contracts";
+import * as Crypto from "@radiustechsystems/ai-agent-plugin-crypto";
+import * as ERC20 from "@radiustechsystems/ai-agent-plugin-erc20";
+import * as Uniswap from "@radiustechsystems/ai-agent-plugin-uniswap";
 
-// Wallet exports
-export * from "@radiustechsystems/ai-agent-wallet";
-
-// Adapter exports
-export * from "@radiustechsystems/ai-agent-adapter-vercel-ai";
-export * from "@radiustechsystems/ai-agent-adapter-langchain";
-export * from "@radiustechsystems/ai-agent-adapter-model-context-protocol";
-
-// Plugin exports
-export * from "@radiustechsystems/ai-agent-plugin-contracts";
-export * from "@radiustechsystems/ai-agent-plugin-crypto";
-export * from "@radiustechsystems/ai-agent-plugin-erc20";
-export * from "@radiustechsystems/ai-agent-plugin-uniswap";
+export {
+  Core,
+  Wallet,
+  VercelAI,
+  LangChain,
+  ModelContextProtocol,
+  Contracts,
+  Crypto,
+  ERC20,
+  Uniswap
+};

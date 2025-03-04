@@ -1,7 +1,7 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { EnsResolver, createEnsResolver } from "../ens-resolver";
+import { EnsResolver, createEnsResolver } from "../EnsResolver";
 import { AddressResolutionError } from "../../utils/errors";
-import { WalletCache } from "../../utils/cache";
+import { WalletCache } from "../../utils/Cache";
 
 // Mock the SDK components
 vi.mock("@radiustechsystems/sdk", () => {

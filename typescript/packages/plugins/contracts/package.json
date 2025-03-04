@@ -25,8 +25,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@radiustechsystems/ai-agent-core": "^0.1.0",
-    "@radiustechsystems/ai-agent-wallet": "^0.1.0",
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "@radiustechsystems/ai-agent-wallet": "workspace:*",
     "viem": "^2.5.0",
     "zod": "^3.22.4"
   },
@@ -35,7 +35,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@radiustechsystems/ai-agent-core": "^0.1.0",
+    "@radiustechsystems/ai-agent-core": "workspace:*",
     "viem": "^2.0.0"
   },
   "keywords": [

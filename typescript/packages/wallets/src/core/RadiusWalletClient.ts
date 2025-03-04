@@ -21,10 +21,10 @@ import {
   type RadiusWalletOptions,
   type BalanceInfo,
   type RadiusWalletConfig
-} from "./types";
+} from "./WalletTypes";
 
-import { RadiusWalletInterface } from "./radius-wallet-interface";
-import { radiusTestnetBase } from "../chain/radius-chain";
+import { RadiusWalletInterface } from "./RadiusWalletInterface";
+import { radiusTestnetBase } from "../chain/RadiusChain";
 import { Signature } from "@radiustechsystems/ai-agent-core";
 import { validateChain, getChainToken } from "../utils/utilities";
 import { validateWalletConfig } from "../utils/helpers";
@@ -37,27 +37,27 @@ import { validateWalletConfig } from "../utils/helpers";
 import { 
   createCache, 
   WalletCache 
-} from "../utils/cache";
+} from "../utils/Cache";
 import { 
   createTransactionMonitor, 
   TransactionMonitor 
-} from "../transaction/transaction-monitor";
+} from "../transaction/TransactionMonitor";
 import { 
   createGasEstimator, 
   GasEstimator 
-} from "../transaction/gas-estimator";
+} from "../transaction/GasEstimator";
 import { 
   createEnsResolver, 
   EnsResolver 
-} from "../transaction/ens-resolver";
+} from "../transaction/EnsResolver";
 import { 
   createTypedDataSigner, 
   TypedDataSigner 
-} from "../transaction/typed-data-signer";
+} from "../transaction/TypedDataSigner";
 import { 
   createBatchHandler, 
   BatchTransactionHandler 
-} from "../transaction/batch-handler";
+} from "../transaction/BatchHandler";
 import {
   TransactionError,
   BatchTransactionError,
@@ -582,7 +582,9 @@ export class RadiusWalletClient implements RadiusWalletInterface {
    * @param transaction Transaction to simulate
    * @returns Simulation result
    */
-  async simulateTransaction(transaction: RadiusTransaction): Promise<import("./types").TransactionSimulationResult> {
+  async simulateTransaction(
+    transaction: RadiusTransaction
+  ): Promise<import("./WalletTypes").TransactionSimulationResult> {
     try {
       this.#log("Simulating transaction", { transaction });
       
@@ -609,7 +611,7 @@ export class RadiusWalletClient implements RadiusWalletInterface {
    * @param hash Transaction hash
    * @returns Transaction details
    */
-  async getTransactionDetails(hash: string): Promise<import("./types").TransactionDetails> {
+  async getTransactionDetails(hash: string): Promise<import("./WalletTypes").TransactionDetails> {
     try {
       if (!this.#txMonitor) {
         this.#txMonitor = createTransactionMonitor(this.#client, {
@@ -636,7 +638,7 @@ export class RadiusWalletClient implements RadiusWalletInterface {
   async waitForTransaction(
     hash: string, 
     confirmations?: number
-  ): Promise<import("./types").TransactionDetails> {
+  ): Promise<import("./WalletTypes").TransactionDetails> {
     try {
       if (!this.#txMonitor) {
         this.#txMonitor = createTransactionMonitor(this.#client, {

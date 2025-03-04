@@ -1,4 +1,4 @@
-import { RadiusWalletConfig } from "../core/types";
+import { RadiusWalletConfig } from "../core/WalletTypes";
 
 /**
  * Validates wallet configuration

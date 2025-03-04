@@ -5,7 +5,7 @@ export default defineConfig({
   ...treeShakableConfig,
   entry: ["src/index.ts"],
   format: ["esm", "cjs"],
-  dts: true,
+  dts: false, // Disable TypeScript declaration to avoid rootDir issues
   sourcemap: true, 
   clean: true,
   skipNodeModulesBundle: true,

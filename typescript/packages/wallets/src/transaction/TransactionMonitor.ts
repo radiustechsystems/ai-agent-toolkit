@@ -1,4 +1,4 @@
-import { TransactionDetails } from "../core/types";
+import { TransactionDetails } from "../core/WalletTypes";
 import { Client } from "@radiustechsystems/sdk";
 import { EventEmitter } from "events";
 import { TransactionError } from "../utils/errors";

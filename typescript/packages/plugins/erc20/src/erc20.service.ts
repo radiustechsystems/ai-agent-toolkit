@@ -18,7 +18,7 @@ import {
   RevokeApprovalParameters,
   TransferFromParameters,
   TransferParameters,
-} from "./parameters";
+} from "./erc20.parameters";
 import { Token } from "./token";
 
 export class Erc20Service {

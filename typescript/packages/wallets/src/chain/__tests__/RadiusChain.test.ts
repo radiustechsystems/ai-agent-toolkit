@@ -4,7 +4,7 @@ import {
   getRadiusChainConfig, 
   isRadiusChain, 
   getRadiusChainId
-} from "../radius-chain";
+} from "../RadiusChain";
 
 describe("radius-chain", () => {
   describe("radiusTestnetBase", () => {

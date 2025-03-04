@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
-import { TransactionMonitor, createTransactionMonitor } from "../transaction-monitor";
+import { TransactionMonitor, createTransactionMonitor } from "../TransactionMonitor";
 import { EventEmitter } from "events";
 
 vi.mock("@radiustechsystems/sdk", () => ({

@@ -1,6 +1,6 @@
 import { describe, test, expect, vi } from "vitest";
 import { sendETH, SendETHPlugin } from "../send-eth.plugin";
-import { RadiusWalletInterface } from "../../core/radius-wallet-interface";
+import { RadiusWalletInterface } from "../../core/RadiusWalletInterface";
 import { RadiusChain } from "@radiustechsystems/ai-agent-core";
 
 // Mock zod

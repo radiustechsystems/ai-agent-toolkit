@@ -20,12 +20,12 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@radiustechsystems/ai-agent-core": "^0.1.0",
+    "@radiustechsystems/ai-agent-core": "workspace:*",
     "@radiustechsystems/sdk": "^1.0.0",
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@radiustechsystems/ai-agent-core": "^0.1.0",
+    "@radiustechsystems/ai-agent-core": "workspace:*",
     "@radiustechsystems/sdk": "^1.0.0"
   },
   "keywords": [

@@ -7,7 +7,7 @@ import type {
   BalanceInfo,
   TransactionDetails,
   TransactionSimulationResult
-} from "./types";
+} from "./WalletTypes";
 
 /**
  * Interface defining the contract for Radius wallet clients

@@ -1,6 +1,6 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { createRadiusWallet, RadiusWalletClient } from "../radius-wallet-client";
-import { radiusTestnetBase } from "../../chain/radius-chain";
+import { createRadiusWallet, RadiusWalletClient } from "../RadiusWalletClient";
+import { radiusTestnetBase } from "../../chain/RadiusChain";
 
 // Mock the SDK components
 vi.mock("@radiustechsystems/sdk", () => {

@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach, type Mock } from "vitest";
-import { TypedDataSigner, createTypedDataSigner } from "../typed-data-signer";
+import { TypedDataSigner, createTypedDataSigner } from "../TypedDataSigner";
 import { SigningError } from "../../utils/errors";
 
 import { Account } from "@radiustechsystems/sdk";

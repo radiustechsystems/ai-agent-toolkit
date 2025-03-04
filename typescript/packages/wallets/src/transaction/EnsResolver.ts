@@ -1,6 +1,6 @@
 import { Client } from "@radiustechsystems/sdk";
 import { AddressResolutionError } from "../utils/errors";
-import { WalletCache } from "../utils/cache";
+import { WalletCache } from "../utils/Cache";
 
 /**
  * Simplified service for working with ENS addresses

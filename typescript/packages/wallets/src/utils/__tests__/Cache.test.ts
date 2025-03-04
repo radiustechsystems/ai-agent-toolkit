@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
-import { WalletCache, createCache } from "../cache";
+import { WalletCache, createCache } from "../Cache";
 
 describe("WalletCache", () => {
   let cache: WalletCache;
