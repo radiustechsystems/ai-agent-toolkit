@@ -217,12 +217,12 @@ pnpm --version  # Should be >=9
 - [Website](https://radiustech.xyz/)
 - [Testnet Access](https://docs.radiustech.xyz/radius-testnet-access)
 - [GitHub Issues](https://github.com/radiustechsystems/ai-agent-toolkit/issues)
-- [Changelog](CHANGELOG.md)
+- [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/CHANGELOG.md)
 
 ## Contributing
 
-Please see the [TypeScript Contributing Guide](CONTRIBUTING.md) for detailed information about contributing to this toolkit. For repository-wide guidelines and principles, see the [General Contributing Guide](../CONTRIBUTING.md).
+Please see the [TypeScript Contributing Guide](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/typescript/CONTRIBUTING.md) for detailed information about contributing to this toolkit. For repository-wide guidelines and principles, see the [General Contributing Guide](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/CONTRIBUTING.md).
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/LICENSE).

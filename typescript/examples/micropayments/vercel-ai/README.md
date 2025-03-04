@@ -64,3 +64,18 @@ This example shows how Radius enables new business models for AI:
 - [AI Agent Toolkit](https://github.com/radiustechsystems/ai-agent-toolkit)
 - [Anthropic Claude API](https://docs.anthropic.com/claude/reference/getting-started-with-the-api)
 - [Vercel AI SDK](https://sdk.vercel.ai/docs)
+
+## Resources
+
+- [Website](https://radiustech.xyz/)
+- [Testnet Access](https://docs.radiustech.xyz/radius-testnet-access)
+- [GitHub Issues](https://github.com/radiustechsystems/ai-agent-toolkit/issues)
+- [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/CHANGELOG.md)
+
+## Contributing
+
+Please see the [Contributing Guide](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/CONTRIBUTING.md) for detailed information about contributing to this toolkit.
+
+## License
+
+This project is licensed under the [MIT License](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/LICENSE).

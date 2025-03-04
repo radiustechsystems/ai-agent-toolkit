@@ -1,7 +1,6 @@
 import { describe, expect, test, vi, beforeEach } from "vitest";
 import { getOnChainTools } from "../index";
-import { PluginBase, ToolBase, WalletClientBase } from "@radiustechsystems/ai-agent-core";
-import type { Chain } from "@radiustechsystems/ai-agent-core/dist/types";
+import { PluginBase, ToolBase, WalletClientBase, type Chain } from "@radiustechsystems/ai-agent-core";
 import { z } from "zod";
 import * as coreModule from "@radiustechsystems/ai-agent-core";
 
@@ -142,7 +141,7 @@ describe("getOnChainTools (Vercel AI)", () => {
     // Simulate execution of the tool
     const tool1 = result.tool1;
     if (tool1.execute) {
-      const executeResult = await tool1.execute({ param: "test" }, { messages: [] });
+      const executeResult = await tool1.execute({ param: "test" }, { messages: [], toolCallId: "test-call-id" });
       
       expect(executeResult).toBe("tool1 executed with test");
     } else {

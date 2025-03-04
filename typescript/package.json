@@ -2,11 +2,26 @@
   "name": "@radiustechsystems/ai-agent-toolkit",
   "version": "1.0.0",
   "description": "TypeScript AI Agent Toolkit for integrating AI agents with the Radius Platform for smart contracts, automation, and payments",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
+  
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
   },
+
   "type": "module",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+
   "scripts": {
     "build": "pnpm build:all",
     "build:libs": "pnpm turbo --filter \"./packages/**\" build",
@@ -21,6 +36,7 @@
     "lint:fix": "eslint . --fix",
     "test": "pnpm turbo test"
   },
+
   "dependencies": {
     "@radiustechsystems/ai-agent-core": "workspace:*",
     "@radiustechsystems/ai-agent-wallet": "workspace:*",
@@ -44,43 +60,24 @@
     "typescript": "5.3.3",
     "vitest": "2.1.5"
   },
+
   "engines": {
     "node": ">=20.12.2 <23",
     "pnpm": ">=9"
   },
-  "license": "MIT",
   "packageManager": "pnpm@9.14.2",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
+
+  "keywords": ["ai", "agent", "toolkit", "radius", "blockchain", "ethereum", "automation", "payments", "llm", "web3"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
   },
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md",
-    "CHANGELOG.md"
-  ],
-  "keywords": [
-    "radius",
-    "evm",
-    "automation",
-    "payment",
-    "llm",
-    "agent",
-    "agentic",
-    "toolkit",
-    "ai"
-  ],
   "homepage": "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript#readme",
   "bugs": {
     "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
   },
+  "license": "MIT",
+
   "publishConfig": {
     "access": "public"
   }
