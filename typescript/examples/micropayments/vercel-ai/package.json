@@ -2,6 +2,7 @@
   "name": "radius-examples-micropayments-vercel-ai",
   "version": "0.1.0",
   "private": true,
+  "description": "Example demonstrating multi-agent micropayments on Radius using the Vercel AI SDK",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,9 +11,9 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.1.12",
-    "@radiustechsystems/ai-agent-adapter-vercel-ai": "workspace:*",
-    "@radiustechsystems/ai-agent-core": "workspace:*",
-    "@radiustechsystems/ai-agent-wallet": "workspace:*",
+    "@radiustechsystems/ai-agent-adapter-vercel-ai": "^0.1.0",
+    "@radiustechsystems/ai-agent-core": "^0.1.0",
+    "@radiustechsystems/ai-agent-wallet": "^0.1.0",
     "ai": "^4.1.47",
     "d3": "^7.8.5",
     "next": "14.1.0",
@@ -31,5 +32,18 @@
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
+  },
+  "keywords": [
+    "radius",
+    "ai",
+    "agent",
+    "micropayments",
+    "vercel-ai",
+    "example"
+  ],
+  "license": "MIT"
 }

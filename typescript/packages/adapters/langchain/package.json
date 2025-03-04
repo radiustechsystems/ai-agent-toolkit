@@ -1,27 +1,55 @@
 {
   "name": "@radiustechsystems/ai-agent-adapter-langchain",
   "version": "0.1.0",
+  "description": "LangChain adapter for the Radius AI Agent Toolkit",
   "sideEffects": false,
   "files": ["dist/**/*", "README.md", "package.json"],
   "scripts": {
       "build": "tsup",
-      "clean": "rm -rf dist",
+      "clean": "rimraf dist",
       "test": "vitest run --passWithNoTests"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "dependencies": {
-      "@radiustechsystems/ai-agent-core": "workspace:*",
-      "@langchain/core": "catalog:"
+      "@radiustechsystems/ai-agent-core": "^0.1.0",
+      "@langchain/core": "^0.1.0"
   },
   "peerDependencies": {
-      "@radiustechsystems/ai-agent-core": "workspace:*",
-      "@langchain/core": "catalog:",
+      "@radiustechsystems/ai-agent-core": "^0.1.0",
+      "@langchain/core": "^0.1.0",
       "zod": "^3.0.0"
   },
   "devDependencies": {
-      "zod": "catalog:"
+      "zod": "^3.22.4"
+  },
+  "keywords": [
+    "radius",
+    "ai",
+    "agent",
+    "toolkit",
+    "langchain",
+    "adapter",
+    "blockchain"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
+  },
+  "homepage": "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/adapters/langchain#readme",
+  "bugs": {
+    "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "MIT"
 }
