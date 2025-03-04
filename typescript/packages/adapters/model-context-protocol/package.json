@@ -3,7 +3,11 @@
     "version": "0.1.0",
     "description": "Model Context Protocol adapter for the Radius AI Agent Toolkit",
     "sideEffects": false,
-    "files": ["dist/**/*", "README.md", "package.json"],
+    "files": [
+        "dist/**/*",
+        "README.md",
+        "package.json"
+    ],
     "scripts": {
         "build": "tsup",
         "clean": "rimraf dist",
@@ -20,13 +24,13 @@
         }
     },
     "dependencies": {
-        "@radiustechsystems/ai-agent-core": "workspace:*",
         "@modelcontextprotocol/sdk": "^1.0.4",
-        "zod-to-json-schema": "^3.22.3"
+        "@radiustechsystems/ai-agent-core": "^0.1.0",
+        "zod-to-json-schema": "^3.23.5"
     },
     "peerDependencies": {
-        "@radiustechsystems/ai-agent-core": "workspace:*",
-        "@modelcontextprotocol/sdk": "^1.0.4"
+        "@modelcontextprotocol/sdk": "^1.0.4",
+        "@radiustechsystems/ai-agent-core": "^0.1.0"
     },
     "keywords": [
         "radius",
@@ -48,5 +52,8 @@
     "publishConfig": {
         "access": "public"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "devDependencies": {
+        "zod": "^3.23.8"
+    }
 }

@@ -22,15 +22,15 @@
     "test": "pnpm turbo test"
   },
   "dependencies": {
-    "@radiustechsystems/ai-agent-core": "workspace:*",
-    "@radiustechsystems/ai-agent-wallet": "workspace:*",
-    "@radiustechsystems/ai-agent-adapter-vercel-ai": "workspace:*",
-    "@radiustechsystems/ai-agent-adapter-langchain": "workspace:*",
-    "@radiustechsystems/ai-agent-adapter-model-context-protocol": "workspace:*",
-    "@radiustechsystems/ai-agent-plugin-contracts": "workspace:*",
-    "@radiustechsystems/ai-agent-plugin-crypto": "workspace:*",
-    "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
-    "@radiustechsystems/ai-agent-plugin-uniswap": "workspace:*"
+    "@radiustechsystems/ai-agent-core": "^0.1.0",
+    "@radiustechsystems/ai-agent-wallet": "^0.1.0",
+    "@radiustechsystems/ai-agent-adapter-vercel-ai": "^0.1.0",
+    "@radiustechsystems/ai-agent-adapter-langchain": "^0.1.0",
+    "@radiustechsystems/ai-agent-adapter-model-context-protocol": "^0.1.0",
+    "@radiustechsystems/ai-agent-plugin-contracts": "^0.1.0",
+    "@radiustechsystems/ai-agent-plugin-crypto": "^0.1.0",
+    "@radiustechsystems/ai-agent-plugin-erc20": "^0.1.0",
+    "@radiustechsystems/ai-agent-plugin-uniswap": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "22.7.4",
