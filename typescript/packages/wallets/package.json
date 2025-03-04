@@ -1,11 +1,19 @@
 {
   "name": "@radiustechsystems/ai-agent-wallet",
   "version": "0.1.0",
+  "description": "Wallet management and transaction capabilities for the Radius AI Agent Toolkit",
   "sideEffects": false,
   "files": ["dist/**/*", "README.md", "package.json"],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "tsup",
     "clean": "rimraf dist",
@@ -14,11 +22,32 @@
   "dependencies": {
     "@radiustechsystems/ai-agent-core": "workspace:*",
     "@radiustechsystems/sdk": "^1.0.0",
-    "zod": "catalog:"
+    "zod": "^3.22.4"
   },
   "peerDependencies": {
     "@radiustechsystems/ai-agent-core": "workspace:*",
     "@radiustechsystems/sdk": "^1.0.0"
+  },
+  "keywords": [
+    "radius",
+    "ai",
+    "agent",
+    "toolkit",
+    "wallet",
+    "transactions",
+    "blockchain",
+    "ethereum"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
+  },
+  "homepage": "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/wallets#readme",
+  "bugs": {
+    "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "MIT"
 }

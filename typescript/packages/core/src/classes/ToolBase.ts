@@ -1,6 +1,5 @@
 import type { z } from "zod";
 
-
 /**
  * Configuration interface for creating a Tool
  * @template TParameters - The Zod schema type for the tool's parameters

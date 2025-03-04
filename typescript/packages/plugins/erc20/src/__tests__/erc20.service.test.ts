@@ -27,7 +27,7 @@ type RadiusWalletInterface = any;
 
 import { Erc20Service } from "../erc20.service";
 // eslint-disable-next-line max-len
-import { ConvertFromBaseUnitParameters, ConvertToBaseUnitParameters, GetTokenInfoBySymbolParameters } from "../parameters";
+import { ConvertFromBaseUnitParameters, ConvertToBaseUnitParameters, GetTokenInfoBySymbolParameters } from "../erc20.parameters";
 import { USDC, WETH } from "../token";
 
 // Mock Tool decorator

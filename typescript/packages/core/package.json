@@ -1,11 +1,19 @@
 {
   "name": "@radiustechsystems/ai-agent-core",
   "version": "0.1.0",
+  "description": "Core abstractions and base classes for the Radius AI Agent Toolkit",
   "sideEffects": false,
   "files": ["dist/**/*", "README.md", "package.json"],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "build": "tsup",
     "clean": "rimraf dist",
@@ -15,10 +23,29 @@
     "reflect-metadata": "0.2.1"
   },
   "devDependencies": {
-    "zod": "catalog:"
+    "zod": "^3.22.4"
   },
   "peerDependencies": {
     "zod": "^3.0.0"
+  },
+  "keywords": [
+    "radius",
+    "ai",
+    "agent",
+    "toolkit",
+    "core",
+    "blockchain"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
+  },
+  "homepage": "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/core#readme",
+  "bugs": {
+    "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "license": "MIT"
 }

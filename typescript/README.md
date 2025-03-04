@@ -19,6 +19,10 @@ A TypeScript implementation for integrating [Radius](https://radiustech.xyz/) ca
 
 ## Installation
 
+### Option 1: Complete Toolkit (Recommended)
+
+Install the complete toolkit package which automatically installs all adapters and plugins as dependencies:
+
 ```bash
 pnpm add @radiustechsystems/ai-agent-toolkit
 ```
@@ -29,13 +33,102 @@ Or using npm:
 npm install @radiustechsystems/ai-agent-toolkit
 ```
 
+This single command will install all packages in the toolkit, making them available for import.
+
+### Option 2: Individual Packages
+
+If you prefer to install only the specific components you need:
+
+```bash
+# Core packages (required)
+pnpm add @radiustechsystems/ai-agent-core @radiustechsystems/ai-agent-wallet
+
+# Adapters (pick one based on your AI framework)
+pnpm add @radiustechsystems/ai-agent-adapter-vercel-ai
+# OR
+pnpm add @radiustechsystems/ai-agent-adapter-langchain
+# OR
+pnpm add @radiustechsystems/ai-agent-adapter-model-context-protocol
+
+# Plugins (install the ones you need)
+pnpm add @radiustechsystems/ai-agent-plugin-contracts
+pnpm add @radiustechsystems/ai-agent-plugin-erc20
+pnpm add @radiustechsystems/ai-agent-plugin-uniswap
+# etc.
+```
+
 ## Quick Links
 
 - [Radius Docs](https://docs.radiustech.xyz/)
 - [Testnet Access](https://docs.radiustech.xyz/radius-testnet-access)
 - [GitHub Issues](https://github.com/radiustechsystems/ai-agent-toolkit/issues)
 
-### Basic Usage
+## Usage
+
+### Using the Complete Toolkit
+
+When using the complete toolkit package, you can import everything from a single entry point:
+
+```typescript
+// Import everything from the umbrella package
+import { 
+  // Core types and interfaces
+  PluginBase, ToolBase,
+  
+  // Wallet functionality
+  createRadiusWallet, sendETH,
+  
+  // Adapter for Vercel AI
+  getOnChainTools,
+  
+  // Plugins
+  erc20, USDC, uniswap
+} from "@radiustechsystems/ai-agent-toolkit";
+
+// Create a wallet
+const wallet = await createRadiusWallet({
+  rpcUrl: process.env.RPC_PROVIDER_URL,
+  privateKey: process.env.WALLET_PRIVATE_KEY
+});
+
+// Configure tools for Vercel AI
+const tools = await getOnChainTools({
+  wallet,
+  plugins: [
+    sendETH(),
+    erc20({ tokens: [USDC] }),
+    uniswap({
+      baseUrl: process.env.UNISWAP_BASE_URL,
+      apiKey: process.env.UNISWAP_API_KEY,
+    })
+  ]
+});
+
+// Use with your AI framework
+const result = await generateText({
+  model: openai("gpt-4o"),
+  tools,
+  maxSteps: 10,
+  prompt: "Transfer 0.01 ETH to 0x1234...",
+});
+```
+
+### Using Individual Packages
+
+When installing individual packages, import directly from each package:
+
+```typescript
+// Import from individual packages
+import { PluginBase, ToolBase } from "@radiustechsystems/ai-agent-core";
+import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet";
+import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai";
+import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20";
+import { uniswap } from "@radiustechsystems/ai-agent-plugin-uniswap";
+
+// The rest of the code is the same
+```
+
+### Examples
 
 Here's a guide to spinning up an example that demonstrates multi-agent micropayments on Radius using the Vercel AI SDK:
 
@@ -132,4 +225,4 @@ Please see the [TypeScript Contributing Guide](CONTRIBUTING.md) for detailed inf
 
 ## License
 
-This project is licensed under the [MIT License](../LICENSE).
+This project is licensed under the [MIT License](LICENSE).

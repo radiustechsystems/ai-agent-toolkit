@@ -20,7 +20,7 @@ vi.mock("../../chain/radius-chain", () => {
 describe("utilities", () => {
   describe("validateChain", () => {
     test("should not throw for supported chain", () => {
-      expect(() => validateChain(234)).not.toThrow();
+      expect(() => validateChain(1223953)).not.toThrow();
     });
     
     test("should throw for unsupported chain", () => {
@@ -32,10 +32,10 @@ describe("utilities", () => {
   
   describe("getChainToken", () => {
     test("should return correct token info for Radius testnet", () => {
-      const token = getChainToken(234);
+      const token = getChainToken(1223953);
       expect(token).toEqual({
-        symbol: "RAD",
-        name: "Radius Token",
+        symbol: "ETH",
+        name: "ETH",
         decimals: 18
       });
     });

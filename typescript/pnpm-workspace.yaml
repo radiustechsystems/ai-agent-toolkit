@@ -1,7 +1,6 @@
 packages:
   - "examples/**/*"
   - "packages/**/*"
-  - "../../sdk/typescript"
   - "!**/dist/**"
 
 catalog:

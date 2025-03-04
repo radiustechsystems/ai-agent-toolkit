@@ -7,7 +7,9 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "files": [
-    "dist/**"
+    "dist/**",
+    "README.md",
+    "package.json"
   ],
   "exports": {
     ".": {
@@ -31,5 +33,31 @@
   "devDependencies": {
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
-  }
+  },
+  "peerDependencies": {
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "viem": "^2.0.0"
+  },
+  "keywords": [
+    "radius",
+    "ai",
+    "agent",
+    "toolkit",
+    "contracts",
+    "smart-contracts",
+    "blockchain",
+    "ethereum"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
+  },
+  "homepage": "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/plugins/contracts#readme",
+  "bugs": {
+    "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
 }

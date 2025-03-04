@@ -1,24 +1,52 @@
 {
     "name": "@radiustechsystems/ai-agent-adapter-model-context-protocol",
     "version": "0.1.0",
+    "description": "Model Context Protocol adapter for the Radius AI Agent Toolkit",
     "sideEffects": false,
     "files": ["dist/**/*", "README.md", "package.json"],
     "scripts": {
         "build": "tsup",
-        "clean": "rm -rf dist",
+        "clean": "rimraf dist",
         "test": "vitest run --passWithNoTests"
     },
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
     "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
     "dependencies": {
         "@radiustechsystems/ai-agent-core": "workspace:*",
-        "@modelcontextprotocol/sdk": "catalog:",
-        "zod-to-json-schema": "catalog:"
+        "@modelcontextprotocol/sdk": "^1.0.4",
+        "zod-to-json-schema": "^3.22.3"
     },
     "peerDependencies": {
         "@radiustechsystems/ai-agent-core": "workspace:*",
-        "@modelcontextprotocol/sdk": "catalog:"
+        "@modelcontextprotocol/sdk": "^1.0.4"
+    },
+    "keywords": [
+        "radius",
+        "ai",
+        "agent",
+        "toolkit",
+        "model-context-protocol",
+        "adapter",
+        "blockchain"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
+    },
+    "homepage": "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/adapters/model-context-protocol#readme",
+    "bugs": {
+        "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+    },
+    "publishConfig": {
+        "access": "public"
     },
     "license": "MIT"
 }
