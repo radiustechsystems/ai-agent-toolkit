@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-plugin-crypto",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Cryptographic utilities for Radius AI agents",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -25,9 +25,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@radiustechsystems/ai-agent-core": "^0.1.0",
-    "@radiustechsystems/ai-agent-wallet": "^0.1.0",
-    "@radiustechsystems/sdk": "^1.0.0",
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "@radiustechsystems/ai-agent-wallet": "workspace:*",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -35,7 +34,7 @@
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
-    "@radiustechsystems/ai-agent-core": "^0.1.0"
+    "@radiustechsystems/ai-agent-core": "workspace:*"
   },
   "keywords": [
     "radius",

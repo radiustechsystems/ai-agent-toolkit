@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-wallet",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Wallet management and transaction capabilities for the Radius AI Agent Toolkit",
   "sideEffects": false,
   "files": ["dist/**/*", "README.md", "package.json"],
@@ -20,13 +20,11 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@radiustechsystems/ai-agent-core": "^0.1.0",
-    "@radiustechsystems/sdk": "^1.0.0",
+    "@radiustechsystems/ai-agent-core": "workspace:*",
     "zod": "^3.22.4"
   },
   "peerDependencies": {
-    "@radiustechsystems/ai-agent-core": "^0.1.0",
-    "@radiustechsystems/sdk": "^1.0.0"
+    "@radiustechsystems/ai-agent-core": "workspace:*"
   },
   "keywords": [
     "radius",

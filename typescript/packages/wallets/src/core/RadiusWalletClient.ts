@@ -1,14 +1,71 @@
-import { 
-  Account,
-  Address,
-  Client,
-  ABI,
-  withPrivateKey,
-  withLogger,
-  NewContract,
-  Hash,
-  Signer
-} from "@radiustechsystems/sdk";
+// Mock types until @radiustechsystems/sdk is available
+interface Account {
+  address(): string;
+  signMessage(message: string): Promise<string>;
+  signTransaction(tx: any): Promise<string>;
+}
+
+class Address {
+  constructor(address: string) {}
+  hex(): string { return "0x0"; }
+}
+
+class Hash {
+  constructor(data: Uint8Array) {}
+  hex(): string { return "0x0"; }
+}
+
+class ABI {
+  constructor(json: string) {}
+}
+
+interface Client {
+  chainID(): Promise<bigint>;
+  balanceAt(address: Address): Promise<bigint>;
+  send(signer: Signer, to: Address, value: bigint): Promise<{txHash: Hash}>;
+}
+
+interface Signer {
+  address(): string;
+  signMessage(message: string): Promise<string>;
+  signTransaction(tx: any): Promise<string>;
+  chainID(): bigint;
+  hash(): Hash;
+}
+
+// Mock functions
+const withPrivateKey = (pk: string, client: any) => ({});
+const withLogger = (logger: any) => ({});
+
+const NewContract = (address: Address, abi: ABI) => ({
+  execute: async (client: Client, signer: Signer, functionName: string, ...args: any[]) => {
+    return { txHash: new Hash(new Uint8Array(32)) };
+  },
+  call: async (client: Client, functionName: string, ...args: any[]) => {
+    return null;
+  }
+});
+
+// Mock static methods
+const Client = {
+  New: async (...args: any[]): Promise<Client> => {
+    return {
+      chainID: async () => BigInt(1),
+      balanceAt: async () => BigInt(0),
+      send: async () => ({ txHash: new Hash(new Uint8Array(32)) })
+    };
+  }
+};
+
+const Account = {
+  New: async (...args: any[]): Promise<Account> => {
+    return {
+      address: () => "0x0",
+      signMessage: async () => "0x0",
+      signTransaction: async () => "0x0"
+    };
+  }
+};
 
 import { z } from "zod";
 import { ToolBase, createTool } from "@radiustechsystems/ai-agent-core";

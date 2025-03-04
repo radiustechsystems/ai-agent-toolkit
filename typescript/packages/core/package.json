@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Core abstractions and base classes for the Radius AI Agent Toolkit",
   "sideEffects": false,
   "files": ["dist/**/*", "README.md", "package.json"],
