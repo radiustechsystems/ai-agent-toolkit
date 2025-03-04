@@ -27,7 +27,6 @@
     "@radiustechsystems/ai-agent-adapter-vercel-ai": "^0.1.0",
     "@radiustechsystems/ai-agent-adapter-langchain": "^0.1.0",
     "@radiustechsystems/ai-agent-adapter-model-context-protocol": "^0.1.0",
-    "@radiustechsystems/ai-agent-plugin-balancer": "^0.1.0",
     "@radiustechsystems/ai-agent-plugin-contracts": "^0.1.0",
     "@radiustechsystems/ai-agent-plugin-crypto": "^0.1.0",
     "@radiustechsystems/ai-agent-plugin-erc20": "^0.1.0",

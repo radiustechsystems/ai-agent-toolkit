@@ -18,7 +18,6 @@
       "@radiustechsystems/ai-agent-adapter-vercel-ai": ["node_modules/@radiustechsystems/ai-agent-adapter-vercel-ai"],
       "@radiustechsystems/ai-agent-adapter-langchain": ["node_modules/@radiustechsystems/ai-agent-adapter-langchain"],
       "@radiustechsystems/ai-agent-adapter-model-context-protocol": ["node_modules/@radiustechsystems/ai-agent-adapter-model-context-protocol"],
-      "@radiustechsystems/ai-agent-plugin-balancer": ["node_modules/@radiustechsystems/ai-agent-plugin-balancer"],
       "@radiustechsystems/ai-agent-plugin-contracts": ["node_modules/@radiustechsystems/ai-agent-plugin-contracts"],
       "@radiustechsystems/ai-agent-plugin-crypto": ["node_modules/@radiustechsystems/ai-agent-plugin-crypto"],
       "@radiustechsystems/ai-agent-plugin-erc20": ["node_modules/@radiustechsystems/ai-agent-plugin-erc20"],

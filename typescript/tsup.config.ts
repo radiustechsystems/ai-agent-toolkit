@@ -15,7 +15,6 @@ export default defineConfig({
     "@radiustechsystems/ai-agent-adapter-vercel-ai",
     "@radiustechsystems/ai-agent-adapter-langchain",
     "@radiustechsystems/ai-agent-adapter-model-context-protocol",
-    "@radiustechsystems/ai-agent-plugin-balancer",
     "@radiustechsystems/ai-agent-plugin-contracts",
     "@radiustechsystems/ai-agent-plugin-crypto",
     "@radiustechsystems/ai-agent-plugin-erc20",

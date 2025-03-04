@@ -17,7 +17,6 @@ export * from "@radiustechsystems/ai-agent-adapter-langchain";
 export * from "@radiustechsystems/ai-agent-adapter-model-context-protocol";
 
 // Plugin exports
-export * from "@radiustechsystems/ai-agent-plugin-balancer";
 export * from "@radiustechsystems/ai-agent-plugin-contracts";
 export * from "@radiustechsystems/ai-agent-plugin-crypto";
 export * from "@radiustechsystems/ai-agent-plugin-erc20";
