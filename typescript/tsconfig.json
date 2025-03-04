@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "Bundler",
     "esModuleInterop": true,
     "strict": true,
     "skipLibCheck": true,
@@ -13,15 +13,15 @@
     "resolveJsonModule": true,
     "jsx": "preserve",
     "paths": {
-      "@radiustechsystems/ai-agent-core": ["node_modules/@radiustechsystems/ai-agent-core"],
-      "@radiustechsystems/ai-agent-wallet": ["node_modules/@radiustechsystems/ai-agent-wallet"],
-      "@radiustechsystems/ai-agent-adapter-vercel-ai": ["node_modules/@radiustechsystems/ai-agent-adapter-vercel-ai"],
-      "@radiustechsystems/ai-agent-adapter-langchain": ["node_modules/@radiustechsystems/ai-agent-adapter-langchain"],
-      "@radiustechsystems/ai-agent-adapter-model-context-protocol": ["node_modules/@radiustechsystems/ai-agent-adapter-model-context-protocol"],
-      "@radiustechsystems/ai-agent-plugin-contracts": ["node_modules/@radiustechsystems/ai-agent-plugin-contracts"],
-      "@radiustechsystems/ai-agent-plugin-crypto": ["node_modules/@radiustechsystems/ai-agent-plugin-crypto"],
-      "@radiustechsystems/ai-agent-plugin-erc20": ["node_modules/@radiustechsystems/ai-agent-plugin-erc20"],
-      "@radiustechsystems/ai-agent-plugin-uniswap": ["node_modules/@radiustechsystems/ai-agent-plugin-uniswap"]
+      "@radiustechsystems/ai-agent-core": ["packages/core/src"],
+      "@radiustechsystems/ai-agent-wallet": ["packages/wallets/src"],
+      "@radiustechsystems/ai-agent-adapter-vercel-ai": ["packages/adapters/vercel-ai/src"],
+      "@radiustechsystems/ai-agent-adapter-langchain": ["packages/adapters/langchain/src"],
+      "@radiustechsystems/ai-agent-adapter-model-context-protocol": ["packages/adapters/model-context-protocol/src"],
+      "@radiustechsystems/ai-agent-plugin-contracts": ["packages/plugins/contracts/src"],
+      "@radiustechsystems/ai-agent-plugin-crypto": ["packages/plugins/crypto/src"],
+      "@radiustechsystems/ai-agent-plugin-erc20": ["packages/plugins/erc20/src"],
+      "@radiustechsystems/ai-agent-plugin-uniswap": ["packages/plugins/uniswap/src"]
     }
   },
   "include": ["src/**/*"],
