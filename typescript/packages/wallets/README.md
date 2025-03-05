@@ -1,62 +1,107 @@
-# Radius AI Agent Toolkit - Radius Wallet (TypeScript)
+# Radius AI Agent Toolkit - Wallet
 
-The Radius Wallet package provides a simple, unified interface for interacting with the Radius blockchain from AI agents. Built directly on the Radius SDK, it offers high performance, streamlined wallet operations, and tool-based interactions that integrate seamlessly with AI agent frameworks.
+The Radius Wallet package provides a simple, unified interface for interacting with Radius from AI agents. It offers high-performance wallet operations and tool-based interactions that integrate seamlessly with AI agent frameworks.
+
+This package is part of the [Radius AI Agent Toolkit](https://github.com/radiustechsystems/ai-agent-toolkit), which provides tools for integrating AI agents with the Radius platform.
 
 ## Installation
 
 ```bash
+# Install this specific package
 npm install @radiustechsystems/ai-agent-wallet
+
+# Required peer dependencies
+npm install @radiustechsystems/ai-agent-core
 ```
 
-## Key Features
+## Prerequisites
 
-- **SDK-Native Integration**: Built directly on the Radius SDK for optimal performance
-- **Unified Wallet Interface**: Simple API that handles both standard and batch transactions
-- **Tool-Based Architecture**: Integrates with AI agent frameworks using a tool-based approach
-- **Type-Safe**: Comprehensive TypeScript definitions for a robust development experience
+- Node.js >=20.12.2 <23
+- Access to a Radius RPC endpoint
+- A funded private key for the Radius network
 
-## Basic Usage
+## Usage
 
 ```typescript
-import { createRadiusWallet } from "@radiustechsystems/ai-agent-wallet";
+import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet";
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai";
-import * as dotenv from "dotenv";
 
-dotenv.config();
+// Create a Radius wallet
+const wallet = await createRadiusWallet({
+  rpcUrl: process.env.RPC_PROVIDER_URL,
+  privateKey: process.env.WALLET_PRIVATE_KEY
+});
 
-async function main() {
-  // Create a Radius wallet using the unified wallet creation function
-  const wallet = await createRadiusWallet({
-    rpcUrl: process.env.RPC_PROVIDER_URL,
-    privateKey: process.env.WALLET_PRIVATE_KEY
-  });
+// Get wallet address
+const address = await wallet.getAddress();
+console.log(`Wallet address: ${address}`);
 
-  // Get AI agent tools that use this wallet
-  const tools = await getOnChainTools({
-    wallet
-  });
+// Check wallet balance
+const balance = await wallet.getBalance();
+console.log(`Balance: ${balance}`);
 
-  // Now use these tools with your AI agent framework of choice
-  // ...
-}
-
-main().catch(console.error);
+// Create tools for AI agents
+const tools = await getOnChainTools({
+  wallet,
+  plugins: [sendETH()] // Enable ETH transfers
+});
 ```
+
+## API Reference
+
+### `createRadiusWallet(options, enableBatch?, logger?)`
+
+Creates a new Radius wallet instance.
+
+**Parameters:**
+
+- `options.rpcUrl` (string): URL of the Radius RPC endpoint
+- `options.privateKey` (string): Private key for the wallet
+- `enableBatch` (boolean, optional): Whether to enable batch transactions
+- `logger` (function, optional): Custom logger function
+
+**Returns:**
+
+- A RadiusWalletInterface instance that can be used with AI agent tools
+
+### `sendETH()`
+
+Creates a plugin that enables ETH transfer functionality for AI agents.
+
+**Returns:**
+
+- A plugin that can be used with the `getOnChainTools` function
+
+### Wallet Methods
+
+#### `wallet.getAddress()`
+
+Returns the wallet's address.
+
+#### `wallet.getBalance()`
+
+Returns the wallet's ETH balance.
+
+#### `wallet.sendTransaction(tx)`
+
+Sends a transaction to the network.
+
+#### `wallet.sendBatchOfTransactions(txs)`
+
+Sends multiple transactions as a batch (if batch mode is enabled).
 
 ## Advanced Usage
 
-### Enabling Batch Transactions
-
-For use cases that require sending multiple transactions, you can enable batch transaction support:
+### Batch Transactions
 
 ```typescript
-// Create a wallet with batch transaction capabilities
+// Create a wallet with batch transaction support
 const wallet = await createRadiusWallet(
   {
     rpcUrl: process.env.RPC_PROVIDER_URL,
     privateKey: process.env.WALLET_PRIVATE_KEY
   },
-  true  // Enable batch transactions
+  true // Enable batch transactions
 );
 
 // Send a batch of transactions
@@ -66,35 +111,10 @@ const result = await wallet.sendBatchOfTransactions([
 ]);
 ```
 
-### Logging Operations
-
-For debugging or monitoring, you can provide a custom logger:
+### Smart Contract Interactions
 
 ```typescript
-const wallet = await createRadiusWallet(
-  {
-    rpcUrl: process.env.RPC_PROVIDER_URL,
-    privateKey: process.env.WALLET_PRIVATE_KEY
-  },
-  false,  // Batch transactions disabled
-  (message, data) => {
-    console.log(`[Radius Wallet] ${message}`, data);
-  }
-);
-```
-
-## Architecture
-
-This package follows a clean, modular architecture:
-
-- **Core Wallet Client**: A unified implementation built on the Radius SDK that handles both standard and batch transactions
-- **Tools Interface**: Implements the AI Agent Toolkit's tools interface for seamless integration
-- **Radius Blockchain**: Optimized specifically for the Radius blockchain and its features
-
-## Working with Smart Contracts
-
-```typescript
-// Example of interacting with a smart contract
+// Read from a contract
 const result = await wallet.read({
   address: "0xContractAddress",
   functionName: "balanceOf",
@@ -102,7 +122,7 @@ const result = await wallet.read({
   abi: [...] // Contract ABI
 });
 
-// Example of executing a contract method
+// Write to a contract
 const tx = await wallet.sendTransaction({
   to: "0xContractAddress",
   functionName: "transfer",
@@ -111,41 +131,29 @@ const tx = await wallet.sendTransaction({
 });
 ```
 
-## Utility Functions
+## Integration Examples
 
-The package includes helpful utilities for working with token amounts:
+For a complete example integrating this package with AI frameworks, see:
 
-```typescript
-import { parseEther, formatUnits, parseUnits } from "@radiustechsystems/ai-agent-wallet";
+- [Micropayments Example](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/examples/micropayments/vercel-ai)
 
-// Convert ETH to wei
-const weiAmount = parseEther("1.5");  // 1.5 ETH in wei
+## Related Packages
 
-// Format from wei to ETH
-const ethAmount = formatUnits(weiAmount, 18);  // "1.5"
+- [@radiustechsystems/ai-agent-core](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/core): Core abstractions and base classes
+- [@radiustechsystems/ai-agent-plugin-erc20](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/plugins/erc20): ERC20 token operations
+- [@radiustechsystems/ai-agent-plugin-contracts](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/plugins/contracts): Smart contract interactions
 
-// Parse any token amount with custom decimals
-const tokenAmount = parseUnits("10.5", 6);  // 10.5 tokens with 6 decimals
-```
+## Resources
 
-## Limitations
-
-- This package is optimized specifically for the Radius network
-- EIP-712 signing has been implemented with preliminary support
+- [Website](https://radiustech.xyz/)
+- [Testnet Access](https://docs.radiustech.xyz/radius-testnet-access)
+- [GitHub Issues](https://github.com/radiustechsystems/ai-agent-toolkit/issues)
+- [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/CHANGELOG.md)
 
 ## Contributing
 
-We welcome contributions to the Radius AI Agent Toolkit! Please see:
-
-- [General Contributing Guide](CONTRIBUTING.md) - Repository-wide guidelines and principles
-- [TypeScript Contributing Guide](typescript/CONTRIBUTING.md) - TypeScript-specific guidelines
-
-## Support
-
-- [Website](https://radiustech.xyz/)
-- [Documentation](https://docs.radiustech.xyz/)
-- [GitHub Issues](https://github.com/radiustechsystems/ai-agent-toolkit/issues)
+Please see the [Contributing Guide](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/CONTRIBUTING.md) for detailed information about contributing to this toolkit.
 
 ## License
 
-This toolkit is released under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/LICENSE).

@@ -1,16 +1,11 @@
 {
   "name": "@radiustechsystems/ai-agent-plugin-crypto",
   "version": "1.0.0",
-  "description": "Cryptographic utilities for Radius AI agents",
+  "description": "Cryptographic utilities for the Radius AI Agent Toolkit",
+
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "license": "MIT",
-  "files": [
-    "dist/**",
-    "README.md",
-    "package.json"
-  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -18,35 +13,41 @@
       "require": "./dist/index.js"
     }
   },
+
+  "sideEffects": false,
+  "files": [
+    "dist/**",
+    "README.md",
+    "package.json"
+  ],
+
   "scripts": {
     "build": "tsup",
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
+
   "dependencies": {
     "@radiustechsystems/ai-agent-core": "workspace:*",
     "@radiustechsystems/ai-agent-wallet": "workspace:*",
     "@radiustechsystems/sdk": "^1.0.0",
     "zod": "^3.22.4"
   },
+  "peerDependencies": {
+    "@radiustechsystems/ai-agent-core": "workspace:*"
+  },
   "devDependencies": {
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
   },
-  "peerDependencies": {
-    "@radiustechsystems/ai-agent-core": "workspace:*"
+
+  "engines": {
+    "node": ">=20.12.2 <23",
+    "pnpm": ">=9"
   },
-  "keywords": [
-    "radius",
-    "ai",
-    "agent",
-    "toolkit",
-    "crypto",
-    "cryptography",
-    "blockchain",
-    "security"
-  ],
+
+  "keywords": ["ai", "agent", "plugin", "radius", "crypto", "cryptography", "hashing", "encryption", "security"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
@@ -55,8 +56,9 @@
   "bugs": {
     "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
   },
+  "license": "MIT",
+
   "publishConfig": {
     "access": "public"
-  },
-  "sideEffects": false
+  }
 }

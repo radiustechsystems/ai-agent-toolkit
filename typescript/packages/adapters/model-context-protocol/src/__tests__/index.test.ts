@@ -1,7 +1,6 @@
 import { describe, expect, test, vi, beforeEach } from "vitest";
 import { getOnChainTools } from "../index";
-import { PluginBase, ToolBase, WalletClientBase } from "@radiustechsystems/ai-agent-core";
-import type { Chain } from "@radiustechsystems/ai-agent-core/dist/types";
+import { PluginBase, ToolBase, WalletClientBase, type Chain } from "@radiustechsystems/ai-agent-core";
 import { z } from "zod";
 import * as coreModule from "@radiustechsystems/ai-agent-core";
 

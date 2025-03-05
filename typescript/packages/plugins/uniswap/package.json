@@ -2,13 +2,7 @@
   "name": "@radiustechsystems/ai-agent-plugin-uniswap",
   "version": "1.0.0",
   "description": "Uniswap integration plugin for the Radius AI Agent Toolkit",
-  "files": ["dist/**/*", "README.md", "package.json"],
-  "scripts": {
-      "build": "tsup",
-      "clean": "rimraf dist",
-      "test": "vitest run --passWithNoTests"
-  },
-  "sideEffects": false,
+
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -19,26 +13,33 @@
       "require": "./dist/index.js"
     }
   },
+
+  "sideEffects": false,
+  "files": ["dist/**/*", "README.md", "package.json"],
+
+  "scripts": {
+    "build": "tsup",
+    "clean": "rimraf dist",
+    "test": "vitest run --passWithNoTests"
+  },
+
   "dependencies": {
-      "@radiustechsystems/ai-agent-core": "workspace:*",
-      "@radiustechsystems/ai-agent-wallet": "workspace:*",
-      "viem": "^2.5.0",
-      "zod": "^3.22.4"
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "@radiustechsystems/ai-agent-wallet": "workspace:*",
+    "viem": "^2.5.0",
+    "zod": "^3.22.4"
   },
   "peerDependencies": {
-      "@radiustechsystems/ai-agent-core": "workspace:*",
-      "viem": "^2.5.0"
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "viem": "^2.5.0"
   },
-  "keywords": [
-    "radius",
-    "ai",
-    "agent",
-    "toolkit",
-    "uniswap",
-    "dex",
-    "blockchain",
-    "defi"
-  ],
+
+  "engines": {
+    "node": ">=20.12.2 <23",
+    "pnpm": ">=9"
+  },
+
+  "keywords": ["ai", "agent", "plugin", "radius", "uniswap", "dex", "defi", "liquidity", "swap"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
@@ -47,8 +48,9 @@
   "bugs": {
     "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
   },
+  "license": "MIT",
+
   "publishConfig": {
     "access": "public"
-  },
-  "license": "MIT"
+  }
 }
