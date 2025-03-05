@@ -96,33 +96,130 @@ The package includes these predefined tokens:
 
 The ERC20 plugin provides the following AI agent tools:
 
-#### `erc20_get_balance`
-
-Gets the balance of a specific token for an address.
-
-#### `erc20_transfer`
-
-Transfers tokens from the wallet to another address.
-
-#### `erc20_get_token_info_by_symbol`
+#### `get_token_info_by_symbol`
 
 Gets information about a token by its symbol.
 
-#### `erc20_approve`
+**Parameters:**
 
-Approves a spender to use a specific amount of tokens.
+- `symbol` (string): The token symbol to lookup
 
-#### `erc20_get_allowance`
+**Example:**
+
+```typescript
+try {
+  const tokenInfo = await getTokenInfoBySymbolTool.execute({ 
+    symbol: "USDC" 
+  });
+  console.log("Token info:", tokenInfo);
+  // { symbol: "USDC", name: "USD Coin", decimals: 6, address: "0x..." }
+} catch (error) {
+  console.error(`Token info lookup failed: ${error.message}`);
+}
+```
+
+#### `get_token_balance`
+
+Gets the balance of a specific token for an address.
+
+**Parameters:**
+
+- `tokenAddress` (string): The token contract address
+- `wallet` (string, optional): The wallet address to check (defaults to connected wallet)
+
+**Example:**
+
+```typescript
+try {
+  const balance = await getTokenBalanceTool.execute({
+    tokenAddress: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
+    wallet: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+  });
+  console.log(`Balance: ${balance.formatted} ${balance.symbol}`);
+} catch (error) {
+  console.error(`Balance check failed: ${error.message}`);
+}
+```
+
+#### `transfer`
+
+Transfers tokens from the wallet to another address.
+
+**Parameters:**
+
+- `tokenAddress` (string): The token contract address
+- `to` (string): The recipient address
+- `amount` (string): The amount to transfer
+- `formatAmount` (boolean, optional): Whether the amount is in decimal format (default: false)
+
+#### `get_token_allowance`
 
 Gets the current allowance for a spender.
 
-#### `erc20_convert_to_base_unit`
+**Parameters:**
 
-Converts a human-readable token amount to its base unit (e.g., USDC to 6 decimal places).
+- `tokenAddress` (string): The token contract address
+- `spender` (string): The spender address
+- `owner` (string, optional): The token owner (defaults to connected wallet)
 
-#### `erc20_convert_from_base_unit`
+#### `approve`
+
+Approves a spender to use a specific amount of tokens.
+
+**Parameters:**
+
+- `tokenAddress` (string): The token contract address
+- `spender` (string): The spender address
+- `amount` (string): The amount to approve
+- `formatAmount` (boolean, optional): Whether the amount is in decimal format (default: false)
+
+#### `convert_to_base_unit`
+
+Converts a human-readable token amount to its base unit.
+
+**Parameters:**
+
+- `amount` (string): The decimal amount (e.g., "10.5")
+- `decimals` (number): The token decimals (e.g., 6 for USDC, 18 for most tokens)
+
+**Example:**
+
+```typescript
+try {
+  const baseUnitResult = await convertToBaseUnitTool.execute({
+    amount: "100",
+    decimals: 6 // USDC has 6 decimals
+  });
+  console.log(`100 USDC in base units: ${baseUnitResult}`); // 100000000
+} catch (error) {
+  console.error(`Conversion failed: ${error.message}`);
+}
+```
+
+#### `convert_from_base_unit`
 
 Converts a base unit token amount to its human-readable form.
+
+**Parameters:**
+
+- `amount` (string): The amount in base units
+- `decimals` (number): The token decimals
+
+**Example:**
+
+```typescript
+try {
+  const decimalResult = await convertFromBaseUnitTool.execute({
+    amount: "100000000", // 100 USDC in base units
+    decimals: 6 // USDC has 6 decimals
+  });
+  console.log(`100000000 base units in USDC: ${decimalResult}`); // "100"
+} catch (error) {
+  console.error(`Conversion failed: ${error.message}`);
+}
+```
+
+> **Note on Tool Naming**: The tool names in this documentation match the actual names used at runtime. The @Tool decorator in the implementation automatically converts camelCase method names to snake_case for the final tool names.
 
 ## Integration Examples
 

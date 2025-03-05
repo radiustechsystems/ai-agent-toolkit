@@ -36,12 +36,18 @@ const wallet = await createRadiusWallet({
 const address = await wallet.getAddress();
 console.log(`Wallet address: ${address}`);
 
-// Check wallet balance
-const balance = await wallet.getBalance();
-console.log(`Balance: ${balance}`);
+// Check wallet balance using balanceOf method
+const balance = await wallet.balanceOf(address);
+console.log(`Balance: ${balance.value} ${balance.symbol}`);
 
-// Create tools for AI agents
-const tools = await getOnChainTools({
+// Create sendETH plugin
+const sendEthPlugin = sendETH();
+
+// Get the tools provided by the plugin
+const tools = sendEthPlugin.getTools(wallet);
+
+// Or create tools for AI agents with the adapter
+const aiTools = await getOnChainTools({
   wallet,
   plugins: [sendETH()] // Enable ETH transfers
 });
@@ -78,9 +84,9 @@ Creates a plugin that enables ETH transfer functionality for AI agents.
 
 Returns the wallet's address.
 
-#### `wallet.getBalance()`
+#### `wallet.balanceOf(address)`
 
-Returns the wallet's ETH balance.
+Returns the balance info for the specified address, including value, symbol, and other details.
 
 #### `wallet.sendTransaction(tx)`
 

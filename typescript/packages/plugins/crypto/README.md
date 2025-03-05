@@ -54,7 +54,7 @@ const result = await generateText({
   prompt: `Validate if 0x1234abcd... is a valid Ethereum address and generate a Keccak-256 hash of the text "Hello Radius"`,
 });
 
-// The AI will use the crypto_validate_address and crypto_hash_data tools
+// The AI will use the validate_address and hash_data tools
 ```
 
 ## API Reference
@@ -71,7 +71,7 @@ Creates a new Crypto plugin instance.
 
 The Crypto plugin provides the following AI agent tools:
 
-#### `crypto_validate_address`
+#### `validate_address`
 
 Validates if an address is properly formatted and checksummed for Radius.
 
@@ -79,14 +79,21 @@ Validates if an address is properly formatted and checksummed for Radius.
 
 - `address` (string): The address to validate
 
-**Returns:**
+**Example:**
 
-- Object containing:
-  - `isValid` (boolean): Whether the address is valid
-  - `address` (string): The checksummed address (EIP-55 compliant)
-  - `bytes` (array): The address as a byte array
+```typescript
+try {
+  const validationResult = await validateAddressTool.execute({
+    address: "0xefbf7a6fa61a1602eb7630c92e79e5b6e63909e1"
+  });
+  console.log(`Is valid address: ${validationResult.isValid}`);
+  console.log(`Checksummed address: ${validationResult.address}`);
+} catch (error) {
+  console.error(`Validation failed: ${error.message}`);
+}
+```
 
-#### `crypto_hash_data`
+#### `hash_data`
 
 Generates a Keccak-256 hash of input data with support for different encodings.
 
@@ -95,11 +102,29 @@ Generates a Keccak-256 hash of input data with support for different encodings.
 - `data` (string): The data to hash
 - `encoding` (string, optional): The encoding to use ("utf8" or "hex", defaults to "utf8")
 
-**Returns:**
+**Example:**
 
-- Object containing:
-  - `hash` (string): The resulting Keccak-256 hash
-  - `bytes` (array): The hash as a byte array
+```typescript
+try {
+  // Hash UTF-8 string
+  const hashResult = await hashDataTool.execute({
+    data: "Hello, Radius!",
+    encoding: "utf8"
+  });
+  console.log(`Hash: ${hashResult.hash}`);
+  
+  // Hash hex data
+  const hexHashResult = await hashDataTool.execute({
+    data: "0x1234567890abcdef",
+    encoding: "hex"
+  });
+  console.log(`Hash of hex: ${hexHashResult.hash}`);
+} catch (error) {
+  console.error(`Hashing failed: ${error.message}`);
+}
+```
+
+> **Note on Tool Naming**: The tool names in this documentation (`validate_address`, `hash_data`) match the actual names used at runtime. The @Tool decorator in the implementation automatically converts camelCase method names to snake_case for the final tool names.
 
 ## Integration Examples
 

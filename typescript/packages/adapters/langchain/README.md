@@ -18,7 +18,9 @@ npm install @langchain/core
 ## Prerequisites
 
 - Node.js >=20.12.2 <23
-- LangChain installed in your project
+- LangChain installed in your project:
+  - `npm install @langchain/core @langchain/openai langchain`
+- OpenAI API key or other LLM provider credentials
 - Radius wallet setup with a funded account
 
 ## Usage
@@ -26,24 +28,42 @@ npm install @langchain/core
 ```typescript
 import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-langchain";
 import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet";
-import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatOpenAI } from "@langchain/openai";
-import { createToolAgentExecutor } from "langchain/agents/tool";
+import * as dotenv from "dotenv";
 
-// 1. Create a Radius wallet
+// Load environment variables
+dotenv.config();
+
+// 1. Create a Radius wallet (always validate your environment variables)
+const rpcUrl = process.env.RPC_PROVIDER_URL;
+const privateKey = process.env.WALLET_PRIVATE_KEY;
+
+if (!rpcUrl || !privateKey) {
+  console.warn("WARNING: Missing required environment variables");
+  console.warn("RPC_PROVIDER_URL and WALLET_PRIVATE_KEY must be set");
+}
+
 const wallet = await createRadiusWallet({
-  rpcUrl: process.env.RPC_PROVIDER_URL,
-  privateKey: process.env.WALLET_PRIVATE_KEY
+  rpcUrl,
+  privateKey
 });
+
+// Retrieve the wallet address
+const address = await wallet.getAddress();
+console.log(`Wallet address: ${address}`);
 
 // 2. Configure the tools for LangChain
 const tools = await getOnChainTools({
   wallet,
   plugins: [
     sendETH(), // Enable ETH transfers
-    erc20({ tokens: [USDC] }) // Enable ERC20 token operations
   ]
+});
+
+console.log(`Configured ${tools.length} tools for LangChain`);
+tools.forEach(tool => {
+  console.log(` - ${tool.name}: ${tool.description}`);
 });
 
 // 3. Create a LangChain agent with the tools
@@ -53,18 +73,42 @@ const prompt = ChatPromptTemplate.fromMessages([
   ["human", "{input}"]
 ]);
 
-const executor = await createToolAgentExecutor({
-  llm,
-  tools,
-  prompt
-});
+// Verify we have the components for creating a LangChain agent
+if (
+  llm && typeof llm.invoke === 'function' &&
+  tools && Array.isArray(tools) && tools.length > 0 &&
+  prompt && typeof prompt.format === 'function'
+) {
+  console.log("All components for creating a LangChain agent are valid");
+  
+  // For production use, you would create an agent executor like this:
+  // const executor = await createToolAgentExecutor({
+  //   llm,
+  //   tools,
+  //   prompt
+  // });
+  //
+  // const result = await executor.invoke({
+  //   input: "Send 0.01 ETH to 0x1234..."
+  // });
+  //
+  // console.log(result.output);
+}
+```
 
-// 4. Execute the agent with a query
-const result = await executor.invoke({
-  input: "Send 0.01 ETH to 0x1234..."
-});
+If you want to include ERC20 token support, you would add:
 
-console.log(result.output);
+```typescript
+import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20";
+
+// Then in the plugins array:
+const tools = await getOnChainTools({
+  wallet,
+  plugins: [
+    sendETH(), 
+    erc20({ tokens: [USDC] }) // Add ERC20 token support
+  ]
+});
 ```
 
 ## API Reference
@@ -81,6 +125,18 @@ Creates a collection of tools compatible with LangChain that provides access to 
 **Returns:**
 
 - (Array): An array of LangChain-compatible tools that can be used with LangChain agents
+
+**Default Tools:**
+
+The `getOnChainTools` function automatically provides the following wallet-related tools:
+
+- `get_address`: Get the address of the wallet
+- `get_chain`: Get the chain of the wallet
+- `get_balance`: Get the balance of an address
+- `sign_message`: Sign a message with the wallet
+- `simulate_transaction`: Simulate a transaction to check if it would succeed
+- `resolve_address`: Resolve an ENS name to an address
+- `get_transaction_status`: Check the status of a transaction
 
 **Example:**
 
@@ -99,6 +155,24 @@ const tools = await getOnChainTools({
 For complete examples integrating this adapter with LangChain, see:
 
 - [Vercel AI Micropayments Example](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/examples/micropayments/vercel-ai) (Similar concept, but with Vercel AI SDK)
+
+## Troubleshooting
+
+### Error: Missing LangChain Dependencies
+
+If you encounter errors related to missing LangChain dependencies, ensure you have installed all required packages:
+
+```bash
+npm install @langchain/core @langchain/openai langchain
+```
+
+### Error: Cannot Create Agent Executor
+
+The LangChain agent creation API may change between versions. If you encounter errors creating the agent executor:
+
+1. Check your LangChain version and ensure compatibility
+2. Verify that your tools have the expected structure (name, description, and call method)
+3. Check the [LangChain documentation](https://js.langchain.com/docs/modules/agents/) for the latest API patterns
 
 ## Related Packages
 
