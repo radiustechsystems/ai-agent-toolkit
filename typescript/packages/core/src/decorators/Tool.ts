@@ -1,49 +1,51 @@
-import type { z } from "zod";
-import { WalletClientBase } from "../classes";
-import { snakeCase } from "../utils/snakeCase";
-import "reflect-metadata";
+import type { z } from 'zod';
+import { WalletClientBase } from '../classes';
+import { snakeCase } from '../utils/snakeCase';
+import 'reflect-metadata';
 
 export type ToolDecoratorParams = {
-    name?: string;
-    description: string;
+  name?: string;
+  description: string;
 };
 
 export type StoredToolMetadata = {
-    name: string;
-    description: string;
-    parameters: {
-        index: number;
-        schema: z.ZodSchema;
-    };
-    walletClient?: {
-        index: number;
-    };
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    target: Function;
+  name: string;
+  description: string;
+  parameters: {
+    index: number;
+    schema: z.ZodSchema;
+  };
+  walletClient?: {
+    index: number;
+  };
+  // biome-ignore lint/suspicious/noExplicitAny: Required for compatibility with various method signatures
+  target: any;
 };
 
 export type StoredToolMetadataMap = Map<string, StoredToolMetadata>;
 
-export const toolMetadataKey = Symbol("radius:tool");
+export const toolMetadataKey = Symbol('radius:tool');
 
 export function Tool(params: ToolDecoratorParams) {
-  return function(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    target: any,
+  return (
+    target: object,
     propertyKey: string | symbol,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    descriptor: TypedPropertyDescriptor<any>
-  ) {
+    // biome-ignore lint/suspicious/noExplicitAny: Required for compatibility with various method signatures
+    descriptor: TypedPropertyDescriptor<any>,
+  ) => {
     // Store the original method
     const originalMethod = descriptor.value;
-        
+
+    if (!originalMethod) {
+      throw new Error(`Method ${String(propertyKey)} has no value in its descriptor`);
+    }
+
     // Get the parameter types using the design:paramtypes metadata
-    const paramTypes = Reflect.getMetadata("design:paramtypes", target, propertyKey);
-        
+    const paramTypes = Reflect.getMetadata('design:paramtypes', target, propertyKey);
+
     if (!paramTypes) {
       throw new Error(
-        `No parameter type metadata found for ${String(propertyKey)}. ` +
-                "Ensure TypeScript is configured with emitDecoratorMetadata: true"
+        `No parameter type metadata found for ${String(propertyKey)}. Ensure TypeScript is configured with emitDecoratorMetadata: true`,
       );
     }
 
@@ -53,8 +55,7 @@ export function Tool(params: ToolDecoratorParams) {
 
     if (parametersIndex === -1) {
       throw new Error(
-        `Method ${String(propertyKey)} must have a parameters argument ` +
-                "created with createToolParameters"
+        `Method ${String(propertyKey)} must have a parameters argument created with createToolParameters`,
       );
     }
 
@@ -63,14 +64,12 @@ export function Tool(params: ToolDecoratorParams) {
     const schema = parametersType.prototype.constructor.schema;
 
     if (!schema) {
-      throw new Error(
-        `Parameters type for ${String(propertyKey)} must have a schema property`
-      );
+      throw new Error(`Parameters type for ${String(propertyKey)} must have a schema property`);
     }
 
     // Get or create the tools metadata map on the constructor
-    const existingTools: StoredToolMetadataMap = 
-            Reflect.getMetadata(toolMetadataKey, target.constructor) || new Map();
+    const existingTools: StoredToolMetadataMap =
+      Reflect.getMetadata(toolMetadataKey, target.constructor) || new Map();
 
     // Store the tool metadata
     existingTools.set(propertyKey.toString(), {
@@ -78,14 +77,16 @@ export function Tool(params: ToolDecoratorParams) {
       description: params.description,
       parameters: {
         index: parametersIndex,
-        schema: schema
+        schema: schema,
       },
-      ...(walletClientIndex !== -1 ? {
-        walletClient: {
-          index: walletClientIndex
-        }
-      } : {}),
-      target: originalMethod
+      ...(walletClientIndex !== -1
+        ? {
+            walletClient: {
+              index: walletClientIndex,
+            },
+          }
+        : {}),
+      target: originalMethod,
     });
 
     // Update the metadata on the constructor
@@ -96,14 +97,19 @@ export function Tool(params: ToolDecoratorParams) {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isWalletClientParameter(param: any): boolean {
-  if (!param || !param.prototype) return false;
+function isWalletClientParameter(param: unknown): boolean {
+  if (!param || typeof param !== 'function' || !('prototype' in param)) return false;
   if (param === WalletClientBase) return true;
   return param.prototype instanceof WalletClientBase;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isParametersParameter(param: any): boolean {
-  return param?.prototype?.constructor?.schema != null;
+function isParametersParameter(param: unknown): boolean {
+  return (
+    param != null &&
+    typeof param === 'function' &&
+    'prototype' in param &&
+    param.prototype &&
+    typeof param.prototype === 'object' &&
+    param.prototype.constructor?.schema != null
+  );
 }

@@ -1,20 +1,20 @@
 // Base configuration for Radius testnet
 export const radiusTestnetBase = {
   id: 1223953,
-  name: "Radius Testnet",
-  network: "radius-testnet",
+  name: 'Radius Testnet',
+  network: 'radius-testnet',
   nativeCurrency: {
     decimals: 18,
-    name: "ETH",
-    symbol: "ETH",
+    name: 'ETH',
+    symbol: 'ETH',
   },
-  testnet: true
-} as const
+  testnet: true,
+} as const;
 
 // Type for chain configuration
 export type RadiusChainConfig = {
-  rpcUrl: string
-}
+  rpcUrl: string;
+};
 
 // Radius Chain type definition
 export type RadiusChain = {
@@ -31,7 +31,7 @@ export type RadiusChain = {
     default: { http: string[] };
     public: { http: string[] };
   };
-}
+};
 
 // Helper to get chain configuration with user's RPC URL
 export function getRadiusChainConfig(config: RadiusChainConfig): RadiusChain {
@@ -39,17 +39,17 @@ export function getRadiusChainConfig(config: RadiusChainConfig): RadiusChain {
     ...radiusTestnetBase,
     rpcUrls: {
       default: { http: [config.rpcUrl] },
-      public: { http: [config.rpcUrl] }
-    }
-  }
+      public: { http: [config.rpcUrl] },
+    },
+  };
 }
 
 // Helper to validate if a chain ID is a valid Radius chain
 export function isRadiusChain(chainId: number): boolean {
-  return chainId === radiusTestnetBase.id
+  return chainId === radiusTestnetBase.id;
 }
 
 // Get the Radius chain ID
 export function getRadiusChainId(): number {
-  return radiusTestnetBase.id
+  return radiusTestnetBase.id;
 }

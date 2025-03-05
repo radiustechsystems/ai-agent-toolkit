@@ -6,7 +6,7 @@ export type UniswapConfig = {
    * API key for Uniswap API
    */
   apiKey: string;
-  
+
   /**
    * Base URL for Uniswap API
    */

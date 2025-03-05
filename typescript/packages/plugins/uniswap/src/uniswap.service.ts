@@ -1,17 +1,14 @@
-import { Tool } from "@radiustechsystems/ai-agent-core";
-import { 
-  RadiusWalletInterface, 
-  TransactionError 
-} from "@radiustechsystems/ai-agent-wallet";
-import { CheckApprovalBodySchema, GetQuoteParameters } from "./uniswap.parameters";
-import { type UniswapConfig } from "./types/UniswapCtorParams";
-import {
+import { Tool } from '@radiustechsystems/ai-agent-core';
+import { type RadiusWalletInterface, TransactionError } from '@radiustechsystems/ai-agent-wallet';
+import type { UniswapConfig } from './types/UniswapCtorParams';
+import type {
   ApiResponse,
   CheckApprovalResponse,
   QuoteResponse,
   SwapResponse,
-  UniswapToolResult
-} from "./types/UniswapResponses";
+  UniswapToolResult,
+} from './types/UniswapResponses';
+import type { CheckApprovalBodySchema, GetQuoteParameters } from './uniswap.parameters';
 
 /**
  * Service for interacting with Uniswap protocol
@@ -40,11 +37,11 @@ export class UniswapService {
       const url = new URL(`${this.baseUrl}/${endpoint}`);
 
       const response = await fetch(url.toString(), {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(parameters),
         headers: {
-          "x-api-key": this.apiKey,
-          "Content-Type": "application/json"
+          'x-api-key': this.apiKey,
+          'Content-Type': 'application/json',
         },
       });
 
@@ -55,7 +52,9 @@ export class UniswapService {
 
       return response.json() as Promise<T>;
     } catch (error) {
-      throw new Error(`Uniswap API request failed: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Uniswap API request failed: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -67,7 +66,7 @@ export class UniswapService {
   private normalizeHexString(hex: string): `0x${string}` {
     // Remove '0x' prefix if it exists, then add it back
     // This ensures we have exactly one '0x' prefix
-    const cleanHex = hex.replace(/^0x/, "");
+    const cleanHex = hex.replace(/^0x/, '');
     return `0x${cleanHex}` as `0x${string}`;
   }
 
@@ -80,7 +79,7 @@ export class UniswapService {
     return {
       to: tx.to,
       value: tx.value ? BigInt(tx.value) : 0n,
-      data: this.normalizeHexString(tx.data)
+      data: this.normalizeHexString(tx.data),
     };
   }
 
@@ -91,17 +90,16 @@ export class UniswapService {
    * @returns Approval status and transaction hash if approval was needed
    */
   @Tool({
-    name: "uniswap_check_approval",
-    description:
-      `Check if the wallet has enough approval for a token and return the transaction to approve the token.
+    name: 'uniswap_check_approval',
+    description: `Check if the wallet has enough approval for a token and return the transaction to approve the token.
       Token approval is required before swapping tokens on Uniswap.`,
   })
   async checkApproval(
-    walletClient: RadiusWalletInterface, 
-    parameters: CheckApprovalBodySchema
+    walletClient: RadiusWalletInterface,
+    parameters: CheckApprovalBodySchema,
   ): Promise<UniswapToolResult> {
     try {
-      const data = await this.makeRequest<CheckApprovalResponse>("check_approval", {
+      const data = await this.makeRequest<CheckApprovalResponse>('check_approval', {
         token: parameters.token,
         amount: parameters.amount,
         walletAddress: parameters.walletAddress,
@@ -112,23 +110,23 @@ export class UniswapService {
 
       if (!approval) {
         return {
-          status: "approved",
-          message: "Token already has sufficient approval"
+          status: 'approved',
+          message: 'Token already has sufficient approval',
         };
       }
 
       const transaction = await walletClient.sendTransaction(
-        this.convertToRadiusTransaction(approval)
+        this.convertToRadiusTransaction(approval),
       );
 
       return {
-        status: "approved",
+        status: 'approved',
         txHash: transaction.hash,
-        message: "Token approval transaction successful"
+        message: 'Token approval transaction successful',
       };
     } catch (error) {
       throw new TransactionError(
-        `Token approval failed: ${error instanceof Error ? error.message : String(error)}`
+        `Token approval failed: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
@@ -140,22 +138,24 @@ export class UniswapService {
    * @returns Swap quote data
    */
   @Tool({
-    name: "uniswap_get_quote",
-    description: "Get a quote for swapping tokens on Uniswap",
+    name: 'uniswap_get_quote',
+    description: 'Get a quote for swapping tokens on Uniswap',
   })
   async getQuote(
-    walletClient: RadiusWalletInterface, 
-    parameters: GetQuoteParameters
+    walletClient: RadiusWalletInterface,
+    parameters: GetQuoteParameters,
   ): Promise<QuoteResponse> {
     try {
-      return this.makeRequest<QuoteResponse>("quote", {
+      return this.makeRequest<QuoteResponse>('quote', {
         ...parameters,
         tokenInChainId: walletClient.getChain().id,
         tokenOutChainId: parameters.tokenOutChainId ?? walletClient.getChain().id,
         swapper: await walletClient.getAddress(),
       });
     } catch (error) {
-      throw new Error(`Failed to get quote: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Failed to get quote: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -166,38 +166,38 @@ export class UniswapService {
    * @returns Swap transaction result
    */
   @Tool({
-    name: "uniswap_swap_tokens",
-    description: "Swap tokens on Uniswap",
+    name: 'uniswap_swap_tokens',
+    description: 'Swap tokens on Uniswap',
   })
   async swapTokens(
-    walletClient: RadiusWalletInterface, 
-    parameters: GetQuoteParameters
+    walletClient: RadiusWalletInterface,
+    parameters: GetQuoteParameters,
   ): Promise<UniswapToolResult> {
     try {
       // First get a quote for the swap
       const quote = await this.getQuote(walletClient, parameters);
 
       // Then get the swap transaction data
-      const response = await this.makeRequest<SwapResponse>("swap", {
+      const response = await this.makeRequest<SwapResponse>('swap', {
         quote: quote.quote,
       });
 
       // Execute the transaction
       const transaction = await walletClient.sendTransaction(
-        this.convertToRadiusTransaction(response.swap)
+        this.convertToRadiusTransaction(response.swap),
       );
 
       return {
-        status: "success",
+        status: 'success',
         txHash: transaction.hash,
-        message: "Token swap transaction successful",
+        message: 'Token swap transaction successful',
         tokenIn: parameters.tokenIn,
         tokenOut: parameters.tokenOut,
-        amount: parameters.amount
+        amount: parameters.amount,
       };
     } catch (error) {
       throw new TransactionError(
-        `Token swap failed: ${error instanceof Error ? error.message : String(error)}`
+        `Token swap failed: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }

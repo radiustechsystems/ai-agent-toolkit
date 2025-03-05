@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, FormEvent } from "react";
+import { type FormEvent, useState } from 'react';
 
 interface ContentFormProps {
   onSubmit: (prompt: string, creatorAddress: string) => void;
@@ -8,9 +8,9 @@ interface ContentFormProps {
 }
 
 export function ContentForm({ onSubmit, isLoading }: ContentFormProps) {
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState('');
   const [creatorAddress, setCreatorAddress] = useState(
-    process.env.NEXT_PUBLIC_CREATOR_ADDRESS || ""
+    process.env.NEXT_PUBLIC_CREATOR_ADDRESS || '',
   );
 
   const handleSubmit = (e: FormEvent) => {
@@ -23,10 +23,7 @@ export function ContentForm({ onSubmit, isLoading }: ContentFormProps) {
   return (
     <form onSubmit={handleSubmit} className="mb-8">
       <div className="mb-4">
-        <label
-          htmlFor="prompt"
-          className="block text-sm font-medium text-gray-300 mb-2"
-        >
+        <label htmlFor="prompt" className="block text-sm font-medium text-gray-300 mb-2">
           Content Prompt
         </label>
         <textarea
@@ -49,10 +46,7 @@ export function ContentForm({ onSubmit, isLoading }: ContentFormProps) {
       </div>
 
       <div className="mb-6">
-        <label
-          htmlFor="creator"
-          className="block text-sm font-medium text-gray-300 mb-2"
-        >
+        <label htmlFor="creator" className="block text-sm font-medium text-gray-300 mb-2">
           Creator Wallet Address
         </label>
         <input
@@ -88,7 +82,7 @@ export function ContentForm({ onSubmit, isLoading }: ContentFormProps) {
         `}
         disabled={isLoading || !prompt.trim() || !creatorAddress.trim()}
       >
-        {isLoading ? "Generating..." : "Generate Content & Pay Creator"}
+        {isLoading ? 'Generating...' : 'Generate Content & Pay Creator'}
       </button>
     </form>
   );

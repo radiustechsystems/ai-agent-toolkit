@@ -1,131 +1,131 @@
-import { describe, test, expect } from "vitest";
+import { describe, expect, test } from 'vitest';
 import {
-  WalletError,
-  TransactionError,
-  ContractError,
   AddressResolutionError,
-  SigningError,
+  BatchTransactionError,
+  ContractError,
   GasEstimationError,
-  BatchTransactionError
-} from "../errors";
+  SigningError,
+  TransactionError,
+  WalletError,
+} from '../errors';
 
-describe("Error Classes", () => {
-  describe("WalletError", () => {
-    test("should create error with correct properties", () => {
-      const message = "Base wallet error";
+describe('Error Classes', () => {
+  describe('WalletError', () => {
+    test('should create error with correct properties', () => {
+      const message = 'Base wallet error';
       const error = new WalletError(message);
-      
+
       expect(error).toBeInstanceOf(Error);
       expect(error.message).toBe(message);
-      expect(error.name).toBe("WalletError");
+      expect(error.name).toBe('WalletError');
     });
   });
-  
-  describe("TransactionError", () => {
-    test("should create error with message only", () => {
-      const message = "Transaction failed";
+
+  describe('TransactionError', () => {
+    test('should create error with message only', () => {
+      const message = 'Transaction failed';
       const error = new TransactionError(message);
-      
+
       expect(error).toBeInstanceOf(WalletError);
       expect(error.message).toBe(message);
-      expect(error.name).toBe("TransactionError");
+      expect(error.name).toBe('TransactionError');
       expect(error.transactionHash).toBeUndefined();
       expect(error.code).toBeUndefined();
     });
-    
-    test("should create error with hash and code", () => {
-      const message = "Transaction failed";
-      const hash = "0xhash123";
-      const code = "UNPREDICTABLE_GAS_LIMIT";
+
+    test('should create error with hash and code', () => {
+      const message = 'Transaction failed';
+      const hash = '0xhash123';
+      const code = 'UNPREDICTABLE_GAS_LIMIT';
       const error = new TransactionError(message, { hash, code });
-      
+
       expect(error).toBeInstanceOf(WalletError);
       expect(error.message).toBe(message);
       expect(error.transactionHash).toBe(hash);
       expect(error.code).toBe(code);
     });
   });
-  
-  describe("ContractError", () => {
-    test("should create error with contract address", () => {
-      const message = "Contract call failed";
-      const address = "0xcontract123";
+
+  describe('ContractError', () => {
+    test('should create error with contract address', () => {
+      const message = 'Contract call failed';
+      const address = '0xcontract123';
       const error = new ContractError(message, address);
-      
+
       expect(error).toBeInstanceOf(WalletError);
       expect(error.message).toBe(message);
-      expect(error.name).toBe("ContractError");
+      expect(error.name).toBe('ContractError');
       expect(error.contractAddress).toBe(address);
       expect(error.functionName).toBeUndefined();
     });
-    
-    test("should create error with contract address and function name", () => {
-      const message = "Contract call failed";
-      const address = "0xcontract123";
-      const functionName = "transfer";
+
+    test('should create error with contract address and function name', () => {
+      const message = 'Contract call failed';
+      const address = '0xcontract123';
+      const functionName = 'transfer';
       const error = new ContractError(message, address, functionName);
-      
+
       expect(error).toBeInstanceOf(WalletError);
       expect(error.message).toBe(message);
       expect(error.contractAddress).toBe(address);
       expect(error.functionName).toBe(functionName);
     });
   });
-  
-  describe("AddressResolutionError", () => {
-    test("should create error with address", () => {
-      const message = "Cannot resolve ENS name";
-      const address = "user.eth";
+
+  describe('AddressResolutionError', () => {
+    test('should create error with address', () => {
+      const message = 'Cannot resolve ENS name';
+      const address = 'user.eth';
       const error = new AddressResolutionError(message, address);
-      
+
       expect(error).toBeInstanceOf(WalletError);
       expect(error.message).toBe(message);
-      expect(error.name).toBe("AddressResolutionError");
+      expect(error.name).toBe('AddressResolutionError');
       expect(error.address).toBe(address);
     });
   });
-  
-  describe("SigningError", () => {
-    test("should create error with message", () => {
-      const message = "Failed to sign message";
+
+  describe('SigningError', () => {
+    test('should create error with message', () => {
+      const message = 'Failed to sign message';
       const error = new SigningError(message);
-      
+
       expect(error).toBeInstanceOf(WalletError);
       expect(error.message).toBe(message);
-      expect(error.name).toBe("SigningError");
+      expect(error.name).toBe('SigningError');
     });
   });
-  
-  describe("GasEstimationError", () => {
-    test("should create error with message", () => {
-      const message = "Gas estimation failed";
+
+  describe('GasEstimationError', () => {
+    test('should create error with message', () => {
+      const message = 'Gas estimation failed';
       const error = new GasEstimationError(message);
-      
+
       expect(error).toBeInstanceOf(WalletError);
       expect(error.message).toBe(message);
-      expect(error.name).toBe("GasEstimationError");
+      expect(error.name).toBe('GasEstimationError');
     });
   });
-  
-  describe("BatchTransactionError", () => {
-    test("should create error with failed index", () => {
-      const message = "Batch transaction failed";
+
+  describe('BatchTransactionError', () => {
+    test('should create error with failed index', () => {
+      const message = 'Batch transaction failed';
       const failedIndex = 2;
       const error = new BatchTransactionError(message, failedIndex);
-      
+
       expect(error).toBeInstanceOf(WalletError);
       expect(error.message).toBe(message);
-      expect(error.name).toBe("BatchTransactionError");
+      expect(error.name).toBe('BatchTransactionError');
       expect(error.failedIndex).toBe(failedIndex);
       expect(error.previousTransactions).toEqual([]);
     });
-    
-    test("should create error with failed index and previous transactions", () => {
-      const message = "Batch transaction failed";
+
+    test('should create error with failed index and previous transactions', () => {
+      const message = 'Batch transaction failed';
       const failedIndex = 2;
-      const previousTransactions = ["0xtx1", "0xtx2"];
+      const previousTransactions = ['0xtx1', '0xtx2'];
       const error = new BatchTransactionError(message, failedIndex, previousTransactions);
-      
+
       expect(error).toBeInstanceOf(WalletError);
       expect(error.message).toBe(message);
       expect(error.failedIndex).toBe(failedIndex);

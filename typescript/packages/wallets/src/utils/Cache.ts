@@ -9,7 +9,7 @@ export class WalletCache {
    * Creates a new cache instance
    * @param maxAge Maximum age of cache entries in milliseconds (default: 30 seconds)
    */
-  constructor(maxAge: number = 30000) {
+  constructor(maxAge = 30000) {
     this.maxAge = maxAge;
   }
 

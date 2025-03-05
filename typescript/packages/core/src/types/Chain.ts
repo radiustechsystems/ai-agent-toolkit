@@ -5,8 +5,8 @@
 export type Chain = RadiusChain;
 
 export type RadiusChain = {
-  type: "evm";
+  type: 'evm';
   id: number;
 };
 
-export type ChainType = Chain["type"];
+export type ChainType = Chain['type'];

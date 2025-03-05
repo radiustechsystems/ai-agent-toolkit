@@ -1,13 +1,19 @@
-import { type GetToolsParams, type ToolBase, type WalletClientBase, getTools } from "@radiustechsystems/ai-agent-core";
+import {
+  type GetToolsParams,
+  type ToolBase,
+  type WalletClientBase,
+  getTools,
+} from '@radiustechsystems/ai-agent-core';
 
-import { tool } from "@langchain/core/tools";
-import type { z } from "zod";
+import { tool } from '@langchain/core/tools';
+import type { z } from 'zod';
 
-export type GetOnChainToolsParams<TWalletClient extends WalletClientBase> = GetToolsParams<TWalletClient>;
+export type GetOnChainToolsParams<TWalletClient extends WalletClientBase> =
+  GetToolsParams<TWalletClient>;
 
 export async function getOnChainTools<TWalletClient extends WalletClientBase>({
   wallet,
-  plugins
+  plugins,
 }: GetOnChainToolsParams<TWalletClient>) {
   const tools: ToolBase[] = await getTools({ wallet, plugins });
 

@@ -4,7 +4,7 @@
 export class WalletError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "WalletError";
+    this.name = 'WalletError';
   }
 }
 
@@ -14,10 +14,10 @@ export class WalletError extends Error {
 export class TransactionError extends WalletError {
   readonly transactionHash?: string;
   readonly code?: string;
-  
+
   constructor(message: string, options?: { hash?: string; code?: string }) {
     super(message);
-    this.name = "TransactionError";
+    this.name = 'TransactionError';
     this.transactionHash = options?.hash;
     this.code = options?.code;
   }
@@ -29,10 +29,10 @@ export class TransactionError extends WalletError {
 export class ContractError extends WalletError {
   readonly contractAddress: string;
   readonly functionName?: string;
-  
+
   constructor(message: string, address: string, functionName?: string) {
     super(message);
-    this.name = "ContractError";
+    this.name = 'ContractError';
     this.contractAddress = address;
     this.functionName = functionName;
   }
@@ -43,10 +43,10 @@ export class ContractError extends WalletError {
  */
 export class AddressResolutionError extends WalletError {
   readonly address: string;
-  
+
   constructor(message: string, address: string) {
     super(message);
-    this.name = "AddressResolutionError";
+    this.name = 'AddressResolutionError';
     this.address = address;
   }
 }
@@ -57,7 +57,7 @@ export class AddressResolutionError extends WalletError {
 export class SigningError extends WalletError {
   constructor(message: string) {
     super(message);
-    this.name = "SigningError";
+    this.name = 'SigningError';
   }
 }
 
@@ -67,7 +67,7 @@ export class SigningError extends WalletError {
 export class GasEstimationError extends WalletError {
   constructor(message: string) {
     super(message);
-    this.name = "GasEstimationError";
+    this.name = 'GasEstimationError';
   }
 }
 
@@ -77,10 +77,10 @@ export class GasEstimationError extends WalletError {
 export class BatchTransactionError extends WalletError {
   readonly failedIndex: number;
   readonly previousTransactions: string[];
-  
+
   constructor(message: string, failedIndex: number, previousTransactions: string[] = []) {
     super(message);
-    this.name = "BatchTransactionError";
+    this.name = 'BatchTransactionError';
     this.failedIndex = failedIndex;
     this.previousTransactions = previousTransactions;
   }

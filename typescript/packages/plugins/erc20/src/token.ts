@@ -15,24 +15,24 @@ export type ChainSpecificToken = {
 
 export const USDC: Token = {
   decimals: 6,
-  symbol: "USDC",
-  name: "USDC",
+  symbol: 'USDC',
+  name: 'USDC',
   chains: {
-    "1223953": {
+    '1223953': {
       // TODO: Fix this contract address
-      contractAddress: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      contractAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
     },
   },
 };
 
 export const WETH: Token = {
   decimals: 18,
-  symbol: "WETH",
-  name: "Wrapped Ether",
+  symbol: 'WETH',
+  name: 'Wrapped Ether',
   chains: {
-    "1223953": {
+    '1223953': {
       // TODO: Fix this contract address
-      contractAddress: "0x4200000000000000000000000000000000000006",
+      contractAddress: '0x4200000000000000000000000000000000000006',
     },
   },
 };

@@ -10,11 +10,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom right,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
+  background: linear-gradient(to bottom right, transparent, rgb(var(--background-end-rgb)))
     rgb(var(--background-start-rgb));
 }
 
@@ -25,8 +21,8 @@ body {
 }
 
 .payment-marker {
-  fill: #10B981;
-  stroke: #FFFFFF;
+  fill: #10b981;
+  stroke: #ffffff;
   stroke-width: 1px;
   r: 5;
   transition: r 0.3s ease-out, opacity 0.3s ease-out;
@@ -34,11 +30,11 @@ body {
 
 .payment-marker.active {
   r: 8;
-  fill: #F472B6;
+  fill: #f472b6;
 }
 
 .payment-path {
-  stroke: #6366F1;
+  stroke: #6366f1;
   stroke-width: 2;
   stroke-dasharray: 5;
   fill: none;
@@ -46,7 +42,7 @@ body {
 }
 
 .transaction-node {
-  fill: #F472B6;
+  fill: #f472b6;
   r: 6;
   transition: r 0.2s ease-out;
 }
@@ -56,7 +52,7 @@ body {
 }
 
 .transaction-link {
-  stroke: #6366F1;
+  stroke: #6366f1;
   stroke-width: 1.5;
   opacity: 0.6;
 }

@@ -18,22 +18,22 @@
   "files": ["dist/**/*", "README.md", "package.json"],
 
   "scripts": {
-      "build": "tsup",
-      "clean": "rimraf dist",
-      "test": "vitest run --passWithNoTests"
+    "build": "tsup",
+    "clean": "rimraf dist",
+    "test": "vitest run --passWithNoTests"
   },
 
   "dependencies": {
-      "@radiustechsystems/ai-agent-core": "workspace:*",
-      "ai": "^4.1.47"
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "ai": "^4.1.47"
   },
   "peerDependencies": {
-      "@radiustechsystems/ai-agent-core": "workspace:*",
-      "ai": "^4.1.47",
-      "zod": "^3.22.4"
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "ai": "^4.1.47",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-      "zod": "^3.22.4"
+    "zod": "^3.22.4"
   },
 
   "engines": {
@@ -41,7 +41,17 @@
     "pnpm": ">=9"
   },
 
-  "keywords": ["ai", "agent", "adapter", "radius", "vercel", "vercel-ai", "nextjs", "integration", "tools"],
+  "keywords": [
+    "ai",
+    "agent",
+    "adapter",
+    "radius",
+    "vercel",
+    "vercel-ai",
+    "nextjs",
+    "integration",
+    "tools"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"

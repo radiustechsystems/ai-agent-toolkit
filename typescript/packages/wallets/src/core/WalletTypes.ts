@@ -73,8 +73,8 @@ export type RadiusTransaction = {
   options?: RadiusTransactionOptions;
   /** Raw transaction data */
   data?: `0x${string}`;
-  /** 
-   * Optional gas limit for the transaction 
+  /**
+   * Optional gas limit for the transaction
    * If not provided, it will be estimated
    */
   gasLimit?: bigint;
@@ -206,63 +206,63 @@ export interface TransactionSimulationResult {
 export interface RadiusWalletOptions {
   /**
    * Enables batch transaction processing capabilities
-   * @default false 
+   * @default false
    */
   enableBatchTransactions?: boolean;
-  
+
   /**
    * Logger function to capture wallet operations
    */
   logger?: (message: string, data?: Record<string, unknown>) => void;
-  
+
   /**
    * Enable ENS resolution support
    * @default false
    */
   enableENS?: boolean;
-  
+
   /**
    * Custom ENS registry address
    * Default is the mainnet ENS registry
    */
   ensRegistryAddress?: string;
-  
+
   /**
    * Enable transaction status monitoring
    * @default false
    */
   enableTransactionMonitoring?: boolean;
-  
+
   /**
    * Default timeout (ms) for transaction confirmation
    * @default 60000 (1 minute)
    */
   transactionTimeout?: number;
-  
+
   /**
    * Default number of confirmations to wait for
    * @default 1
    */
   confirmations?: number;
-  
+
   /**
    * Enable gas estimation before transactions
    * @default true
    */
   enableGasEstimation?: boolean;
-  
+
   /**
    * Default gas multiplier for estimated gas
    * @default 1.2 (20% buffer)
    */
   gasMultiplier?: number;
-  
+
   /**
    * Enable caching
    * @default true
    */
   enableCaching?: boolean;
-  
+
   /**
    * Maximum cache age in milliseconds
    * @default 30000 (30 seconds)

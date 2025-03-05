@@ -1,18 +1,18 @@
-import { describe, test, expect } from "vitest";
-import { 
+import { describe, expect, test } from 'vitest';
+import {
   CheckApprovalBodySchema,
   GetQuoteParameters,
   Protocol,
   Routing,
-  SwapType
-} from "../uniswap.parameters";
+  SwapType,
+} from '../uniswap.parameters';
 
-describe("uniswap.parameters", () => {
-  test("CheckApprovalBodySchema validates correctly", () => {
+describe('uniswap.parameters', () => {
+  test('CheckApprovalBodySchema validates correctly', () => {
     const input = {
-      token: "0x1234567890123456789012345678901234567890",
-      amount: "1000000000000000000",
-      walletAddress: "0x1234567890123456789012345678901234567890",
+      token: '0x1234567890123456789012345678901234567890',
+      amount: '1000000000000000000',
+      walletAddress: '0x1234567890123456789012345678901234567890',
     };
 
     const result = CheckApprovalBodySchema.schema.safeParse(input);
@@ -22,11 +22,11 @@ describe("uniswap.parameters", () => {
     }
   });
 
-  test("GetQuoteParameters validates with minimal parameters", () => {
+  test('GetQuoteParameters validates with minimal parameters', () => {
     const input = {
-      tokenIn: "0x1234567890123456789012345678901234567890",
-      tokenOut: "0x0987654321098765432109876543210987654321",
-      amount: "1000000000000000000",
+      tokenIn: '0x1234567890123456789012345678901234567890',
+      tokenOut: '0x0987654321098765432109876543210987654321',
+      amount: '1000000000000000000',
       protocols: [Protocol.V3],
     };
 
@@ -41,12 +41,12 @@ describe("uniswap.parameters", () => {
     }
   });
 
-  test("GetQuoteParameters validates with all parameters", () => {
+  test('GetQuoteParameters validates with all parameters', () => {
     const input = {
-      tokenIn: "0x1234567890123456789012345678901234567890",
-      tokenOut: "0x0987654321098765432109876543210987654321",
+      tokenIn: '0x1234567890123456789012345678901234567890',
+      tokenOut: '0x0987654321098765432109876543210987654321',
       tokenOutChainId: 1,
-      amount: "1000000000000000000",
+      amount: '1000000000000000000',
       type: SwapType.EXACT_OUTPUT,
       protocols: [Protocol.V2, Protocol.V3],
       routingPreference: Routing.BEST_PRICE,
@@ -59,7 +59,7 @@ describe("uniswap.parameters", () => {
     }
   });
 
-  test("GetQuoteParameters validates with alternative routing preferences", () => {
+  test('GetQuoteParameters validates with alternative routing preferences', () => {
     const routingOptions = [
       Routing.UNISWAPX,
       Routing.UNISWAPX_V2,
@@ -69,11 +69,11 @@ describe("uniswap.parameters", () => {
       Routing.FASTEST,
     ];
 
-    routingOptions.forEach(routingPreference => {
+    for (const routingPreference of routingOptions) {
       const input = {
-        tokenIn: "0x1234567890123456789012345678901234567890",
-        tokenOut: "0x0987654321098765432109876543210987654321",
-        amount: "1000000000000000000",
+        tokenIn: '0x1234567890123456789012345678901234567890',
+        tokenOut: '0x0987654321098765432109876543210987654321',
+        amount: '1000000000000000000',
         protocols: [Protocol.V3],
         routingPreference,
       };
@@ -83,30 +83,32 @@ describe("uniswap.parameters", () => {
       if (result.success) {
         expect(result.data.routingPreference).toEqual(routingPreference);
       }
-    });
+    }
   });
 
-  test("GetQuoteParameters rejects invalid protocol values", () => {
+  test('GetQuoteParameters rejects invalid protocol values', () => {
     const input = {
-      tokenIn: "0x1234567890123456789012345678901234567890",
-      tokenOut: "0x0987654321098765432109876543210987654321",
-      amount: "1000000000000000000",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      protocols: ["V4" as any], // invalid protocol
+      tokenIn: '0x1234567890123456789012345678901234567890',
+      tokenOut: '0x0987654321098765432109876543210987654321',
+      amount: '1000000000000000000',
+
+      // biome-ignore lint/suspicious/noExplicitAny: Deliberately using an invalid value for testing
+      protocols: ['V4' as any], // invalid protocol
     };
 
     const result = GetQuoteParameters.schema.safeParse(input);
     expect(result.success).toBe(false);
   });
 
-  test("GetQuoteParameters rejects invalid routing preference", () => {
+  test('GetQuoteParameters rejects invalid routing preference', () => {
     const input = {
-      tokenIn: "0x1234567890123456789012345678901234567890",
-      tokenOut: "0x0987654321098765432109876543210987654321",
-      amount: "1000000000000000000",
+      tokenIn: '0x1234567890123456789012345678901234567890',
+      tokenOut: '0x0987654321098765432109876543210987654321',
+      amount: '1000000000000000000',
       protocols: [Protocol.V3],
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      routingPreference: "INVALID_ROUTING" as any,
+
+      // biome-ignore lint/suspicious/noExplicitAny: Deliberately using an invalid value for testing
+      routingPreference: 'INVALID_ROUTING' as any,
     };
 
     const result = GetQuoteParameters.schema.safeParse(input);
