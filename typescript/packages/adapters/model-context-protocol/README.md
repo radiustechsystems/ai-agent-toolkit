@@ -165,7 +165,6 @@ const { listOfTools, toolHandler } = await getOnChainTools({
 
 For examples of how to integrate this adapter with an MCP server, see:
 
-- [Model Context Protocol Example](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/test-examples/model-context-protocol-example.ts) - Simple example demonstrating MCP integration
 - [Vercel AI Micropayments Example](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/examples/micropayments/vercel-ai) (Similar concept, but with Vercel AI SDK)
 
 ## Troubleshooting

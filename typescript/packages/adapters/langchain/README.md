@@ -154,7 +154,6 @@ const tools = await getOnChainTools({
 
 For complete examples integrating this adapter with LangChain, see:
 
-- [LangChain Example](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/test-examples/langchain-example.ts) - Simple example demonstrating LangChain integration
 - [Vercel AI Micropayments Example](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/examples/micropayments/vercel-ai) (Similar concept, but with Vercel AI SDK)
 
 ## Troubleshooting
