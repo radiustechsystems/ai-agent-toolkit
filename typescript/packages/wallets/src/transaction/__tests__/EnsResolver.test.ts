@@ -9,7 +9,7 @@ vi.mock('@radiustechsystems/sdk', () => {
 
   // Mock contract for ENS Registry
   mockContractInstances.set('0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e', {
-    call: vi.fn().mockImplementation((client, method, nameHash) => {
+    call: vi.fn().mockImplementation((_client, _method, nameHash) => {
       if (nameHash === '0x123hash') {
         return '0xresolveraddress';
       }
@@ -19,7 +19,7 @@ vi.mock('@radiustechsystems/sdk', () => {
 
   // Mock contract for ENS Resolver
   mockContractInstances.set('0xresolveraddress', {
-    call: vi.fn().mockImplementation((client, method, nameHash) => {
+    call: vi.fn().mockImplementation((_client, _method, nameHash) => {
       if (nameHash === '0x123hash') {
         return '0xresolvedaddress';
       }
@@ -30,7 +30,7 @@ vi.mock('@radiustechsystems/sdk', () => {
   return {
     Client: vi.fn(),
     Contract: {
-      NewDeployed: vi.fn().mockImplementation((abi, address) => {
+      NewDeployed: vi.fn().mockImplementation((_abi, address) => {
         return (
           mockContractInstances.get(address) || {
             call: vi.fn().mockResolvedValue(null),
@@ -46,6 +46,7 @@ vi.mock('@radiustechsystems/sdk', () => {
 });
 
 describe('EnsResolver', () => {
+  // biome-ignore lint/suspicious/noExplicitAny: Mock client for testing
   let mockClient: any;
   let resolver: EnsResolver;
   let mockCache: WalletCache;

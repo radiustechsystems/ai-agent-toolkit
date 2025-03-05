@@ -236,8 +236,11 @@ export class RadiusWalletClient implements RadiusWalletInterface {
         return { hash: '0x0000000000000000000000000000000000000000000000000000000000000000' };
       }
 
+      // Create a working copy to avoid parameter reassignment
+      let txToSend = { ...transaction };
+
       // Estimate gas if enabled and not explicitly provided
-      if (this.#options.enableGasEstimation !== false && !transaction.gasLimit) {
+      if (this.#options.enableGasEstimation !== false && !txToSend.gasLimit) {
         if (!this.#gasEstimator) {
           this.#gasEstimator = createGasEstimator(
             this.#client,
@@ -246,18 +249,18 @@ export class RadiusWalletClient implements RadiusWalletInterface {
           );
         }
 
-        const estimatedGas = await this.#gasEstimator.estimateGas(transaction);
-        transaction = { ...transaction, gasLimit: estimatedGas };
+        const estimatedGas = await this.#gasEstimator.estimateGas(txToSend);
+        txToSend = { ...txToSend, gasLimit: estimatedGas };
       }
 
       // If batch transactions are enabled, route through the batch implementation
       if (this.#options.enableBatchTransactions) {
-        this.#log('Using batch transaction for single transaction', { transaction });
-        return this.sendBatchOfTransactions([transaction]);
+        this.#log('Using batch transaction for single transaction', { txToSend });
+        return this.sendBatchOfTransactions([txToSend]);
       }
 
       // Standard implementation follows
-      const result = await this.#sendSingleTransaction(transaction);
+      const result = await this.#sendSingleTransaction(txToSend);
 
       // Start monitoring transaction if enabled
       if (this.#options.enableTransactionMonitoring && this.#txMonitor) {

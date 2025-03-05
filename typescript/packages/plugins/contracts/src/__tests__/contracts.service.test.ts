@@ -14,6 +14,7 @@ vi.mock('@radiustechsystems/ai-agent-core', async () => {
   return {
     ...actual,
     Tool: vi.fn().mockImplementation(() => {
+      // biome-ignore lint/suspicious/noExplicitAny: Mock decorator implementation
       return (target: any, propertyKey: string) => {
         // This mock implementation just marks the method as a tool
         target[propertyKey].isTool = true;

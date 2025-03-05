@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events';
+import { EventEmitter } from 'node:events';
 import type { Client } from '@radiustechsystems/sdk';
 import type { TransactionDetails } from '../core/WalletTypes';
 import { TransactionError } from '../utils/errors';
@@ -114,6 +114,7 @@ export class TransactionMonitor {
     event: E,
     listener: TransactionMonitorEvents[E],
   ): void {
+    // biome-ignore lint/suspicious/noExplicitAny: EventEmitter requires this type cast
     this.#emitter.on(event, listener as (...args: any[]) => void);
   }
 
@@ -126,6 +127,7 @@ export class TransactionMonitor {
     event: E,
     listener: TransactionMonitorEvents[E],
   ): void {
+    // biome-ignore lint/suspicious/noExplicitAny: EventEmitter requires this type cast
     this.#emitter.off(event, listener as (...args: any[]) => void);
   }
 
@@ -138,6 +140,7 @@ export class TransactionMonitor {
     event: E,
     listener: TransactionMonitorEvents[E],
   ): void {
+    // biome-ignore lint/suspicious/noExplicitAny: EventEmitter requires this type cast
     this.#emitter.once(event, listener as (...args: any[]) => void);
   }
 
@@ -361,7 +364,7 @@ export class TransactionMonitor {
 
     // Clear all timeout timers
 
-    for (const [hash, tx] of this.#transactions.entries()) {
+    for (const [_hash, tx] of this.#transactions.entries()) {
       if (tx.timer) {
         clearTimeout(tx.timer);
       }

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { z } from 'zod';
-import { PluginBase, ToolBase, WalletClientBase } from '../../classes';
+import { type Balance, PluginBase, ToolBase, WalletClientBase } from '../../classes';
 import type { Chain } from '../../types/Chain';
 import { getTools } from '../getTools';
 
@@ -14,17 +14,26 @@ class MockWalletClient extends WalletClientBase {
     return { type: 'evm', id: 123 };
   }
 
-  async signMessage(): Promise<{ signature: string }> {
+  async signMessage(_message: string): Promise<{ signature: string }> {
     return { signature: '0xMockSignature' };
   }
 
-  async balanceOf(): Promise<any> {
-    return { value: '100' };
+  async balanceOf(_address: string): Promise<Balance> {
+    return {
+      decimals: 18,
+      symbol: 'ETH',
+      name: 'Ethereum',
+      value: '100',
+      inBaseUnits: '100000000000000000000',
+    };
   }
 
   getCoreTools(): ToolBase[] {
     return [
-      new (class extends ToolBase<z.ZodObject<any, any, any>, string> {
+      new (class extends ToolBase<
+        z.ZodObject<{ [key: string]: z.ZodTypeAny }, 'strip', z.ZodTypeAny>,
+        string
+      > {
         constructor() {
           super({
             name: 'core_tool',
@@ -52,7 +61,10 @@ class SupportedPlugin extends PluginBase {
 
   getTools(): ToolBase[] {
     return [
-      new (class extends ToolBase<z.ZodObject<any, any, any>, string> {
+      new (class extends ToolBase<
+        z.ZodObject<{ [key: string]: z.ZodTypeAny }, 'strip', z.ZodTypeAny>,
+        string
+      > {
         constructor() {
           super({
             name: 'supported_tool',
@@ -82,7 +94,10 @@ class UnsupportedPlugin extends PluginBase {
 
   getTools(): ToolBase[] {
     return [
-      new (class extends ToolBase<z.ZodObject<any, any, any>, string> {
+      new (class extends ToolBase<
+        z.ZodObject<{ [key: string]: z.ZodTypeAny }, 'strip', z.ZodTypeAny>,
+        string
+      > {
         constructor() {
           super({
             name: 'unsupported_tool',
@@ -110,7 +125,10 @@ class AsyncPlugin extends PluginBase {
 
   async getTools(): Promise<ToolBase[]> {
     return [
-      new (class extends ToolBase<z.ZodObject<any, any, any>, string> {
+      new (class extends ToolBase<
+        z.ZodObject<{ [key: string]: z.ZodTypeAny }, 'strip', z.ZodTypeAny>,
+        string
+      > {
         constructor() {
           super({
             name: 'async_tool',

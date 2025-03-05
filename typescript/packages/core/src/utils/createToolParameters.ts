@@ -5,10 +5,11 @@ export type ToolParametersStatic<T extends z.ZodSchema> = {
   schema: T;
 };
 
-export function createToolParameters<T extends z.ZodSchema>(schema: T) {
-  // This class is used to hold the schema as a static property
-  class SchemaHolder {
-    static schema = schema;
-  }
-  return SchemaHolder as ToolParametersStatic<T>;
+export function createToolParameters<T extends z.ZodSchema>(schema: T): ToolParametersStatic<T> {
+  // Create a function/constructor with a static schema property
+  const SchemaHolder = function (this: unknown) {} as unknown as ToolParametersStatic<T>;
+  // Add the schema property
+  SchemaHolder.schema = schema;
+
+  return SchemaHolder;
 }

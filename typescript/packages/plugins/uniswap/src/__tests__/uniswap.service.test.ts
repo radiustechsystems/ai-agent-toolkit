@@ -13,22 +13,22 @@ const mockFetch = vi.fn();
 
 // Mock the wallet module instead of defining our own interface
 vi.mock('@radiustechsystems/ai-agent-wallet', () => ({
-  TransactionError: class extends Error {
-    constructor(message: string) {
-      super(message);
-    }
-  },
+  TransactionError: class extends Error {},
 }));
 
 // Use any for the wallet client to bypass type issues without affecting runtime behavior
 
+// biome-ignore lint/suspicious/noExplicitAny: Simplified mock type for testing
 type RadiusWalletInterface = any;
 
 // Mock Tool decorator
 vi.mock('@radiustechsystems/ai-agent-core', () => ({
-  Tool: () => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => descriptor,
+  // biome-ignore lint/suspicious/noExplicitAny: Mock decorator implementation
+  Tool: () => (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) => descriptor,
 
+  // biome-ignore lint/suspicious/noExplicitAny: Mock function implementation
   createToolParameters: (schema: any) => {
+    // biome-ignore lint/complexity/noStaticOnlyClass: Intentional for testing
     return class {
       static schema = schema;
     };

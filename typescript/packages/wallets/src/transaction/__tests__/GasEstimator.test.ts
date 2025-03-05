@@ -126,6 +126,7 @@ describe('GasEstimator', () => {
       set: vi.fn(),
     };
 
+    // biome-ignore lint/suspicious/noExplicitAny: Mock cache for testing
     const estimator = createGasEstimator(mockClient, 1.2, mockCache as any);
 
     // First call should check cache and set it

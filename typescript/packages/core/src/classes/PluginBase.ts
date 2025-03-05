@@ -14,7 +14,7 @@ export abstract class PluginBase<TWalletClient extends WalletClientBase = Wallet
    */
   constructor(
     public readonly name: string,
-    // biome-ignore lint/complexity/noBannedTypes: Object is the correct type, referring to instances of classes
+    // This represents instances of classes that provide tools
     public readonly toolProviders: object[],
   ) {}
 

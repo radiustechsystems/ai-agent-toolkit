@@ -7,6 +7,7 @@ describe('RadiusWalletInterface', () => {
     // This test passes if the file compiles, confirming the interface exists
     // We're just importing the type to ensure it exists
 
+    // biome-ignore lint/correctness/noUnusedVariables: This type is intentionally unused
     type TestType = RadiusWalletInterface;
     // If this compiles, the interface exists
   });

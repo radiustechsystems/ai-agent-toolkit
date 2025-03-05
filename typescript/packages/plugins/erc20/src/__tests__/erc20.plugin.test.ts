@@ -5,6 +5,7 @@ vi.mock('@radiustechsystems/ai-agent-core', () => ({
   PluginBase: class {
     constructor(
       public name: string,
+      // biome-ignore lint/suspicious/noExplicitAny: Mock class for testing
       public toolProviders: any[],
     ) {}
     getTools() {
@@ -43,6 +44,7 @@ describe('ERC20Plugin', () => {
     const plugin = new ERC20Plugin({ tokens: testTokens });
     const mockWalletClient = { getChain: () => ({ id: 1, type: 'evm' }) };
 
+    // biome-ignore lint/suspicious/noExplicitAny: Simplified mock wallet client for testing
     const tools = plugin.getTools(mockWalletClient as any);
     expect(tools).toBeDefined();
     expect(Array.isArray(tools)).toBe(true);

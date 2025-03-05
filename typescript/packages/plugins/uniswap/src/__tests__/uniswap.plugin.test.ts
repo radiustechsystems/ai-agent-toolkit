@@ -5,6 +5,7 @@ vi.mock('@radiustechsystems/ai-agent-core', () => ({
   PluginBase: class {
     constructor(
       public name: string,
+      // biome-ignore lint/suspicious/noExplicitAny: Mock class for testing
       public toolProviders: any[],
     ) {}
     getTools() {
@@ -47,6 +48,7 @@ describe('UniswapPlugin', () => {
     const plugin = new UniswapPlugin(testConfig);
     const mockWalletClient = { getChain: () => ({ id: '1223953', type: 'evm' }) };
 
+    // biome-ignore lint/suspicious/noExplicitAny: Simplified mock wallet client for testing
     const tools = plugin.getTools(mockWalletClient as any);
     expect(tools).toBeDefined();
     expect(Array.isArray(tools)).toBe(true);
@@ -63,6 +65,7 @@ describe('UniswapPlugin', () => {
     // Mock the internal implementation to test our logic directly
     const originalSupportsChain = plugin.supportsChain;
 
+    // biome-ignore lint/suspicious/noExplicitAny: Required for testing functionality with type coercion
     plugin.supportsChain = originalSupportsChain as any;
 
     // Should support Radius testnet

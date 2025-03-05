@@ -19,7 +19,7 @@ export type ToolConfig<TParameters extends z.ZodSchema = z.ZodSchema> = {
  * @template TResult - The return type of the tool's execute method
  */
 
-export abstract class ToolBase<TParameters extends z.ZodSchema = z.ZodSchema, TResult = any> {
+export abstract class ToolBase<TParameters extends z.ZodSchema = z.ZodSchema, TResult = unknown> {
   /** The name of the tool */
   public readonly name: string;
   /** A description of what the tool does */
@@ -54,7 +54,7 @@ export abstract class ToolBase<TParameters extends z.ZodSchema = z.ZodSchema, TR
  * @returns A new Tool instance
  */
 
-export function createTool<TParameters extends z.ZodSchema, TResult = any>(
+export function createTool<TParameters extends z.ZodSchema, TResult = unknown>(
   config: ToolConfig<TParameters>,
   execute: (parameters: z.infer<TParameters>) => TResult | Promise<TResult>,
 ) {

@@ -25,11 +25,9 @@ export class TypedDataSigner {
       const signatureBytes = await account.signMessage(encodedData);
 
       // Convert the Uint8Array to a hex string with 0x prefix
-      const signature =
-        '0x' +
-        Array.from(signatureBytes)
-          .map((b) => b.toString(16).padStart(2, '0'))
-          .join('');
+      const signature = `0x${Array.from(signatureBytes)
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('')}`;
 
       return signature;
     } catch (error) {

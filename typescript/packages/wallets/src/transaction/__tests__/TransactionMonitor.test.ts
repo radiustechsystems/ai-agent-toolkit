@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events';
+import { EventEmitter } from 'node:events';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { type TransactionMonitor, createTransactionMonitor } from '../TransactionMonitor';
 
@@ -7,6 +7,7 @@ vi.mock('@radiustechsystems/sdk', () => ({
 }));
 
 describe('TransactionMonitor', () => {
+  // biome-ignore lint/suspicious/noExplicitAny: Mock client for testing
   let mockClient: any;
   let txMonitor: TransactionMonitor;
 

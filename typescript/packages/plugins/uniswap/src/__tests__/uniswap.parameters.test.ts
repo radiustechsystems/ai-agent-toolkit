@@ -69,7 +69,7 @@ describe('uniswap.parameters', () => {
       Routing.FASTEST,
     ];
 
-    routingOptions.forEach((routingPreference) => {
+    for (const routingPreference of routingOptions) {
       const input = {
         tokenIn: '0x1234567890123456789012345678901234567890',
         tokenOut: '0x0987654321098765432109876543210987654321',
@@ -83,7 +83,7 @@ describe('uniswap.parameters', () => {
       if (result.success) {
         expect(result.data.routingPreference).toEqual(routingPreference);
       }
-    });
+    }
   });
 
   test('GetQuoteParameters rejects invalid protocol values', () => {
@@ -92,6 +92,7 @@ describe('uniswap.parameters', () => {
       tokenOut: '0x0987654321098765432109876543210987654321',
       amount: '1000000000000000000',
 
+      // biome-ignore lint/suspicious/noExplicitAny: Deliberately using an invalid value for testing
       protocols: ['V4' as any], // invalid protocol
     };
 
@@ -106,6 +107,7 @@ describe('uniswap.parameters', () => {
       amount: '1000000000000000000',
       protocols: [Protocol.V3],
 
+      // biome-ignore lint/suspicious/noExplicitAny: Deliberately using an invalid value for testing
       routingPreference: 'INVALID_ROUTING' as any,
     };
 

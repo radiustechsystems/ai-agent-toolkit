@@ -28,8 +28,7 @@ vi.mock('zod', () => {
 vi.mock('@radiustechsystems/ai-agent-core', () => {
   return {
     PluginBase: class MockPluginBase {
-      constructor() {}
-
+      // biome-ignore lint/suspicious/noExplicitAny: Mock property for testing
       supportsChain: any;
     },
     // Mock the createTool function to return an object matching the ToolBase interface
@@ -100,6 +99,7 @@ describe('SendETHPlugin', () => {
     expect(plugin.supportsChain({ type: 'evm', id: 1 })).toBe(true);
     // Need to cast as any to test non-EVM chains since the interface expects "evm" only
 
+    // biome-ignore lint/suspicious/noExplicitAny: Testing with invalid chain type
     expect(plugin.supportsChain({ type: 'other', id: 1 } as any)).toBe(false);
   });
 

@@ -43,6 +43,7 @@ describe('ContractsPlugin', () => {
 
     // Should not support non-EVM chains
 
+    // biome-ignore lint/suspicious/noExplicitAny: Testing with invalid chain type
     expect(plugin.supportsChain({ type: 'other', id: 'radius' } as any)).toBe(false);
   });
 });

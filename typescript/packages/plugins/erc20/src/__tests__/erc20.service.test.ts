@@ -11,11 +11,7 @@ vi.mock('@radiustechsystems/ai-agent-wallet', () => ({
     }
     return BigInt(value.toString().replace('.', ''));
   }),
-  TransactionError: class extends Error {
-    constructor(message: string) {
-      super(message);
-    }
-  },
+  TransactionError: class extends Error {},
   ContractError: class extends Error {
     constructor(message: string, address: string, functionName?: string) {
       super(`${message} (${address}${functionName ? `:${functionName}` : ''})`);
@@ -25,6 +21,7 @@ vi.mock('@radiustechsystems/ai-agent-wallet', () => ({
 
 // Use any for the wallet client to bypass type issues without affecting runtime behavior
 
+// biome-ignore lint/suspicious/noExplicitAny: Simplified mock type for testing
 type RadiusWalletInterface = any;
 
 import { Erc20Service } from '../erc20.service';
@@ -38,9 +35,12 @@ import { USDC, WETH } from '../token';
 
 // Mock Tool decorator
 vi.mock('@radiustechsystems/ai-agent-core', () => ({
-  Tool: () => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => descriptor,
+  // biome-ignore lint/suspicious/noExplicitAny: Mock decorator implementation
+  Tool: () => (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) => descriptor,
 
+  // biome-ignore lint/suspicious/noExplicitAny: Mock function implementation
   createToolParameters: (schema: any) => {
+    // biome-ignore lint/complexity/noStaticOnlyClass: Intentional for testing
     return class {
       static schema = schema;
     };

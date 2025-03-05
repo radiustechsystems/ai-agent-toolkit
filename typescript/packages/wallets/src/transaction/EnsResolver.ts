@@ -70,7 +70,7 @@ export class EnsResolver {
  */
 export function createEnsResolver(
   client: Client,
-  registryAddress?: string,
+  _registryAddress?: string,
   cache?: WalletCache,
 ): EnsResolver {
   return new EnsResolver(client, cache);

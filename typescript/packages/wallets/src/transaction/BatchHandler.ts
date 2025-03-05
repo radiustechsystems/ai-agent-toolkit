@@ -68,6 +68,7 @@ export class BatchTransactionHandler {
    * @returns Transaction in SDK format
    */
 
+  // biome-ignore lint/suspicious/noExplicitAny: Returning SDK-specific transaction format
   #convertToSdkTransaction(tx: RadiusTransaction): any {
     // Extract basic properties
     const { to, value, data, gasLimit, gasPrice, maxFeePerGas, maxPriorityFeePerGas, nonce } = tx;

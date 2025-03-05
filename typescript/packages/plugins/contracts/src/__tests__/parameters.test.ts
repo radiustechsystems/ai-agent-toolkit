@@ -10,6 +10,7 @@ vi.mock('@radiustechsystems/ai-agent-core', () => {
   return {
     createToolParameters: vi.fn((schema) => {
       // Return a class with the schema as a static property
+      // biome-ignore lint/complexity/noStaticOnlyClass: Intentional for testing
       return class MockParameters {
         static schema = schema;
       };

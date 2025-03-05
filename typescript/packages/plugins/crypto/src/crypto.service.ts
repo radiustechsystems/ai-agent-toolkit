@@ -8,12 +8,15 @@ import type { HashDataParameters, ValidateAddressParameters } from './parameters
  * Leverages Radius SDK for crypto operations
  */
 export class CryptoService {
-  constructor() {}
-
   @Tool({
     description: 'Validate if an address is properly formatted and checksummed for Radius',
   })
-  async validateAddress(parameters: ValidateAddressParameters) {
+  async validateAddress(parameters: ValidateAddressParameters): Promise<{
+    isValid: boolean;
+    address: string;
+    bytes?: number[];
+    error?: string;
+  }> {
     try {
       const { address } = parameters;
 
@@ -37,7 +40,15 @@ export class CryptoService {
   @Tool({
     description: 'Generate a Keccak-256 hash of input data',
   })
-  async hashData(wallet: RadiusWalletInterface, parameters: HashDataParameters) {
+  async hashData(
+    wallet: RadiusWalletInterface,
+    parameters: HashDataParameters,
+  ): Promise<{
+    hash?: string;
+    bytes?: number[];
+    success: boolean;
+    error?: string;
+  }> {
     try {
       const { data, encoding } = parameters;
 

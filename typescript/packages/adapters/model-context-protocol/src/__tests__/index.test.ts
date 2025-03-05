@@ -1,4 +1,5 @@
 import {
+  type Balance,
   type Chain,
   PluginBase,
   ToolBase,
@@ -33,12 +34,18 @@ class MockWalletClient extends WalletClientBase {
     return { type: 'evm', id: 123 };
   }
 
-  async signMessage(): Promise<{ signature: string }> {
+  async signMessage(_message: string): Promise<{ signature: string }> {
     return { signature: '0xMockSignature' };
   }
 
-  async balanceOf(): Promise<any> {
-    return { value: '100' };
+  async balanceOf(_address: string): Promise<Balance> {
+    return {
+      decimals: 18,
+      symbol: 'ETH',
+      name: 'Ethereum',
+      value: '100',
+      inBaseUnits: '100000000000000000000',
+    };
   }
 
   getCoreTools(): ToolBase[] {
@@ -46,7 +53,10 @@ class MockWalletClient extends WalletClientBase {
   }
 }
 
-class MockTool extends ToolBase<z.ZodObject<any, any, any>, Record<string, unknown>> {
+class MockTool extends ToolBase<
+  z.ZodObject<{ param: z.ZodString }, 'strip', z.ZodTypeAny>,
+  Record<string, unknown>
+> {
   constructor(name: string) {
     super({
       name,

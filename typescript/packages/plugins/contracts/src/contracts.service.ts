@@ -11,8 +11,6 @@ import type {
  * Note: Only includes methods that are fully supported by the current wallet interface
  */
 export class ContractsService {
-  constructor() {}
-
   @Tool({
     description: 'Call a read-only method on a smart contract and return the result',
   })

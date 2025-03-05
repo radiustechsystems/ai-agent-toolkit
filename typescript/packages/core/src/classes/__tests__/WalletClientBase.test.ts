@@ -22,7 +22,7 @@ class TestWalletClient extends WalletClientBase {
     };
   }
 
-  async balanceOf(address: string): Promise<Balance> {
+  async balanceOf(_address: string): Promise<Balance> {
     return {
       decimals: 18,
       symbol: 'TEST',
@@ -67,9 +67,9 @@ describe('WalletClientBase', () => {
 
       expect(Array.isArray(tools)).toBe(true);
       expect(tools.length).toBe(4);
-      tools.forEach((tool) => {
+      for (const tool of tools) {
         expect(tool).toBeInstanceOf(ToolBase);
-      });
+      }
     });
 
     test('should include get_address tool', () => {

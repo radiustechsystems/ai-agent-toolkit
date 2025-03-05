@@ -9,7 +9,9 @@
       "node_modules/**/*",
       "**/dist/**/*",
       "**/node_modules/**/*",
-      "examples/**/*"
+      "examples/**/*",
+      ".turbo/**/*",
+      "**/.turbo/**/*"
     ]
   },
   "linter": {

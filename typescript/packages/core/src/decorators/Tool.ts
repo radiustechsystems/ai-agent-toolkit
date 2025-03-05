@@ -18,7 +18,8 @@ export type StoredToolMetadata = {
   walletClient?: {
     index: number;
   };
-  target: Function;
+  // biome-ignore lint/suspicious/noExplicitAny: Required for compatibility with various method signatures
+  target: any;
 };
 
 export type StoredToolMetadataMap = Map<string, StoredToolMetadata>;
@@ -27,21 +28,24 @@ export const toolMetadataKey = Symbol('radius:tool');
 
 export function Tool(params: ToolDecoratorParams) {
   return (
-    target: any,
+    target: object,
     propertyKey: string | symbol,
-
+    // biome-ignore lint/suspicious/noExplicitAny: Required for compatibility with various method signatures
     descriptor: TypedPropertyDescriptor<any>,
   ) => {
     // Store the original method
     const originalMethod = descriptor.value;
+
+    if (!originalMethod) {
+      throw new Error(`Method ${String(propertyKey)} has no value in its descriptor`);
+    }
 
     // Get the parameter types using the design:paramtypes metadata
     const paramTypes = Reflect.getMetadata('design:paramtypes', target, propertyKey);
 
     if (!paramTypes) {
       throw new Error(
-        `No parameter type metadata found for ${String(propertyKey)}. ` +
-          'Ensure TypeScript is configured with emitDecoratorMetadata: true',
+        `No parameter type metadata found for ${String(propertyKey)}. Ensure TypeScript is configured with emitDecoratorMetadata: true`,
       );
     }
 
@@ -51,8 +55,7 @@ export function Tool(params: ToolDecoratorParams) {
 
     if (parametersIndex === -1) {
       throw new Error(
-        `Method ${String(propertyKey)} must have a parameters argument ` +
-          'created with createToolParameters',
+        `Method ${String(propertyKey)} must have a parameters argument created with createToolParameters`,
       );
     }
 
@@ -94,12 +97,19 @@ export function Tool(params: ToolDecoratorParams) {
   };
 }
 
-function isWalletClientParameter(param: any): boolean {
-  if (!param || !param.prototype) return false;
+function isWalletClientParameter(param: unknown): boolean {
+  if (!param || typeof param !== 'function' || !('prototype' in param)) return false;
   if (param === WalletClientBase) return true;
   return param.prototype instanceof WalletClientBase;
 }
 
-function isParametersParameter(param: any): boolean {
-  return param?.prototype?.constructor?.schema != null;
+function isParametersParameter(param: unknown): boolean {
+  return (
+    param != null &&
+    typeof param === 'function' &&
+    'prototype' in param &&
+    param.prototype &&
+    typeof param.prototype === 'object' &&
+    param.prototype.constructor?.schema != null
+  );
 }

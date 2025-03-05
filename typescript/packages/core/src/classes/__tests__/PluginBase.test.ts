@@ -4,7 +4,7 @@ import { type StoredToolMetadataMap, toolMetadataKey } from '../../decorators/To
 import type { Chain } from '../../types/Chain';
 import { PluginBase } from '../PluginBase';
 import { ToolBase } from '../ToolBase';
-import { WalletClientBase } from '../WalletClientBase';
+import { type Balance, WalletClientBase } from '../WalletClientBase';
 
 // Mock WalletClientBase
 class MockWalletClient extends WalletClientBase {
@@ -14,12 +14,18 @@ class MockWalletClient extends WalletClientBase {
   getChain(): Chain {
     return { type: 'evm', id: 1 };
   }
-  signMessage(): Promise<{ signature: string }> {
+  signMessage(_message: string): Promise<{ signature: string }> {
     return Promise.resolve({ signature: '0xsig' });
   }
 
-  balanceOf(): Promise<any> {
-    return Promise.resolve({});
+  balanceOf(_address: string): Promise<Balance> {
+    return Promise.resolve({
+      decimals: 18,
+      symbol: 'ETH',
+      name: 'Ethereum',
+      value: '1.0',
+      inBaseUnits: '1000000000000000000',
+    });
   }
 }
 
@@ -32,10 +38,6 @@ class TestPlugin extends PluginBase {
 
 // Mock tool provider class with decorated methods
 class MockToolProvider {
-  constructor() {
-    // This constructor is intentionally empty
-  }
-
   mockMethod() {
     return 'mock result';
   }
@@ -110,7 +112,7 @@ describe('PluginBase', () => {
       parameters: {
         index: 0,
 
-        schema: z.object({}) as z.ZodObject<any>,
+        schema: z.object({}) as z.ZodObject<{ [key: string]: z.ZodTypeAny }, 'strip', z.ZodTypeAny>,
       },
       target: MockToolProvider.prototype.mockMethod,
     });

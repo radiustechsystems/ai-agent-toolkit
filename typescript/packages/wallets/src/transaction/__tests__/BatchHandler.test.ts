@@ -3,13 +3,15 @@ import { BatchTransactionHandler, createBatchHandler } from '../BatchHandler';
 
 // Mock the Radius SDK components
 vi.mock('@radiustechsystems/sdk', () => {
-  const mockExecuteContractMethod = vi.fn().mockImplementation((client, account, functionName) => {
-    // Simulate failure for a specific method
-    if (functionName === 'failingMethod') {
-      return Promise.reject(new Error('Method execution failed'));
-    }
-    return Promise.resolve({ txHash: { hex: () => `0xcontract-${functionName}-hash` } });
-  });
+  const mockExecuteContractMethod = vi
+    .fn()
+    .mockImplementation((_client, _account, functionName) => {
+      // Simulate failure for a specific method
+      if (functionName === 'failingMethod') {
+        return Promise.reject(new Error('Method execution failed'));
+      }
+      return Promise.resolve({ txHash: { hex: () => `0xcontract-${functionName}-hash` } });
+    });
 
   return {
     Account: vi.fn(),
@@ -32,14 +34,16 @@ vi.mock('@radiustechsystems/sdk', () => {
 });
 
 describe('BatchTransactionHandler', () => {
+  // biome-ignore lint/suspicious/noExplicitAny: Mock client for testing
   let mockClient: any;
 
+  // biome-ignore lint/suspicious/noExplicitAny: Mock account for testing
   let mockAccount: any;
   let batchHandler: BatchTransactionHandler;
 
   beforeEach(() => {
     mockClient = {
-      send: vi.fn().mockImplementation((account, to, value) => {
+      send: vi.fn().mockImplementation((_account, to, value) => {
         // Simulate failure for specific address
         if (to.toHex && to.toHex() === '0xfailure') {
           return Promise.reject(new Error('Transaction failed'));
