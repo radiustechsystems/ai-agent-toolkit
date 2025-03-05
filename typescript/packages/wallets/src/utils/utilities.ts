@@ -1,16 +1,19 @@
 import { isRadiusChain, radiusTestnetBase } from "../chain/RadiusChain";
 
 /**
- * Validates that the provided chain ID is supported
- * @param chainId Chain ID to validate
- * @throws Error if the chain is not supported
+ * Checks if the provided chain ID is for Radius and logs a warning if not
+ * @param chainId Chain ID to check
+ * @returns true if the chain is Radius, false otherwise
  */
-export function validateChain(chainId: number): void {
+export function checkChain(chainId: number): boolean {
   if (!isRadiusChain(chainId)) {
-    throw new Error(
-      `Chain ${chainId} is not supported. This toolkit only supports the Radius testnet.`
+    console.warn(
+      `Chain ${chainId} is not for Radius.
+      This toolkit is optimized for Radius and may not work as expected on other chains.`
     );
+    return false;
   }
+  return true;
 }
 
 /**
@@ -19,7 +22,7 @@ export function validateChain(chainId: number): void {
  * @returns Token info (symbol, name, decimals)
  */
 export function getChainToken(chainId: number) {
-  // Currently only supporting Radius testnet
+  // Currently only supporting Radius
   if (chainId === radiusTestnetBase.id) {
     return {
       symbol: radiusTestnetBase.nativeCurrency.symbol,

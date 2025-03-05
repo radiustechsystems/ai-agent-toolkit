@@ -44,12 +44,12 @@ export function getRadiusChainConfig(config: RadiusChainConfig): RadiusChain {
   }
 }
 
-// Helper to validate if a chain ID is the Radius testnet
+// Helper to validate if a chain ID is a valid Radius chain
 export function isRadiusChain(chainId: number): boolean {
   return chainId === radiusTestnetBase.id
 }
 
-// Get the Radius testnet chain ID
+// Get the Radius chain ID
 export function getRadiusChainId(): number {
   return radiusTestnetBase.id
 }

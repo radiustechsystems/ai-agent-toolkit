@@ -39,19 +39,6 @@ export class ContractError extends WalletError {
 }
 
 /**
- * Error thrown when chain validation fails
- */
-export class ChainValidationError extends WalletError {
-  readonly chainId: number;
-  
-  constructor(message: string, chainId: number) {
-    super(message);
-    this.name = "ChainValidationError";
-    this.chainId = chainId;
-  }
-}
-
-/**
  * Error thrown when address resolution fails
  */
 export class AddressResolutionError extends WalletError {

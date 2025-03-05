@@ -26,7 +26,7 @@ import {
 import { RadiusWalletInterface } from "./RadiusWalletInterface";
 import { radiusTestnetBase } from "../chain/RadiusChain";
 import { Signature } from "@radiustechsystems/ai-agent-core";
-import { validateChain, getChainToken } from "../utils/utilities";
+import { checkChain, getChainToken } from "../utils/utilities";
 import { validateWalletConfig } from "../utils/helpers";
 
 /**
@@ -62,7 +62,6 @@ import {
   TransactionError,
   BatchTransactionError,
   AddressResolutionError,
-  ChainValidationError,
   SigningError
 } from "../utils/errors";
 import {
@@ -308,9 +307,9 @@ export class RadiusWalletClient implements RadiusWalletInterface {
     }
 
     try {
-      // Validate chain before proceeding
+      // Check and log warning if not on Radius chain
       const chainId = await this.#client.chainID();
-      validateChain(Number(chainId));
+      checkChain(Number(chainId));
       
       this.#log("Processing batch of transactions", { count: transactions.length });
       
@@ -457,9 +456,9 @@ export class RadiusWalletClient implements RadiusWalletInterface {
     const { to, abi, functionName, args, value, gasLimit } = transaction;
     
     try {
-      // Validate chain before proceeding
+      // Check and log warning if not on Radius chain
       const chainId = await this.#client.chainID();
-      validateChain(Number(chainId));
+      checkChain(Number(chainId));
       
       // Resolve the recipient address (handles ENS names if enabled)
       const resolvedTo = await this.resolveAddress(to);
@@ -513,8 +512,7 @@ export class RadiusWalletClient implements RadiusWalletInterface {
       throw new TransactionError("Invalid transaction: Either both abi and functionName must be provided, or neither");
     } catch (error) {
       if (error instanceof TransactionError || 
-          error instanceof AddressResolutionError || 
-          error instanceof ChainValidationError) {
+          error instanceof AddressResolutionError) {
         throw error;
       }
       

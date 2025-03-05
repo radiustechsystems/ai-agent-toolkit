@@ -3,7 +3,6 @@ import {
   WalletError,
   TransactionError,
   ContractError,
-  ChainValidationError,
   AddressResolutionError,
   SigningError,
   GasEstimationError,
@@ -70,19 +69,6 @@ describe("Error Classes", () => {
       expect(error.message).toBe(message);
       expect(error.contractAddress).toBe(address);
       expect(error.functionName).toBe(functionName);
-    });
-  });
-  
-  describe("ChainValidationError", () => {
-    test("should create error with chain ID", () => {
-      const message = "Unsupported chain";
-      const chainId = 1234;
-      const error = new ChainValidationError(message, chainId);
-      
-      expect(error).toBeInstanceOf(WalletError);
-      expect(error.message).toBe(message);
-      expect(error.name).toBe("ChainValidationError");
-      expect(error.chainId).toBe(chainId);
     });
   });
   
