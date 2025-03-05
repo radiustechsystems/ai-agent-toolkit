@@ -4,7 +4,6 @@ import { type UniswapConfig } from "./types/UniswapCtorParams";
 import { UniswapService } from "./uniswap.service";
 
 // Define supported chains where Uniswap is available
-// Currently only Radius testnet is supported
 const SUPPORTED_CHAINS = [radiusTestnetBase];
 
 /**

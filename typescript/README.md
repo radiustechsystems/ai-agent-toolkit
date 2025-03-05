@@ -57,12 +57,6 @@ pnpm add @radiustechsystems/ai-agent-plugin-uniswap
 # etc.
 ```
 
-## Quick Links
-
-- [Radius Docs](https://docs.radiustech.xyz/)
-- [Testnet Access](https://docs.radiustech.xyz/radius-testnet-access)
-- [GitHub Issues](https://github.com/radiustechsystems/ai-agent-toolkit/issues)
-
 ## Usage
 
 ### Using the Complete Toolkit
@@ -170,7 +164,7 @@ cp .env.example .env.local
 ANTHROPIC_API_KEY=your_anthropic_api_key_here  # Required for Claude AI models
 
 # Radius Configuration
-NEXT_PUBLIC_RPC_PROVIDER_URL=your_radius_testnet_rpc_url_here  # Radius testnet RPC URL
+NEXT_PUBLIC_RPC_PROVIDER_URL=your_radius_rpc_url_here  # Radius RPC URL
 WALLET_PRIVATE_KEY=your_service_wallet_private_key_here        # Private key for service wallet that sends base payments (must be funded)
 
 # Agent Wallet Addresses (for RECEIVING payments)

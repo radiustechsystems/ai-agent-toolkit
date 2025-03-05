@@ -1,16 +1,16 @@
 import { describe, test, expect, vi } from "vitest";
-import { validateChain, getChainToken } from "../utilities";
+import { checkChain, getChainToken } from "../utilities";
 
 // Mock the chain imports
-vi.mock("../../chain/radius-chain", () => {
+vi.mock("../../chain/RadiusChain", () => {
   return {
-    isRadiusChain: vi.fn((chainId: number) => chainId === 234),
+    isRadiusChain: vi.fn((chainId: number) => chainId === 1223953),
     radiusTestnetBase: {
-      id: 234,
+      id: 1223953,
       name: "Radius Testnet",
       nativeCurrency: {
-        name: "Radius Token",
-        symbol: "RAD",
+        name: "ETH",
+        symbol: "ETH",
         decimals: 18
       }
     }
@@ -18,15 +18,21 @@ vi.mock("../../chain/radius-chain", () => {
 });
 
 describe("utilities", () => {
-  describe("validateChain", () => {
-    test("should not throw for supported chain", () => {
-      expect(() => validateChain(1223953)).not.toThrow();
+  describe("checkChain", () => {
+    test("should return true for Radius chain", () => {
+      const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      expect(checkChain(1223953)).toBe(true);
+      expect(consoleSpy).not.toHaveBeenCalled();
+      consoleSpy.mockRestore();
     });
     
-    test("should throw for unsupported chain", () => {
-      expect(() => validateChain(1)).toThrow(
-        "Chain 1 is not supported. This toolkit only supports the Radius testnet."
+    test("should return false and log warning for non-Radius chain", () => {
+      const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      expect(checkChain(1)).toBe(false);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining("Chain 1 is not for Radius")
       );
+      consoleSpy.mockRestore();
     });
   });
   
