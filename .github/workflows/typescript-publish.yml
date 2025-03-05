@@ -15,6 +15,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Important for getting correct version info
 
       - name: Extract version from tag
         id: extract_version
@@ -50,19 +52,54 @@ jobs:
         working-directory: typescript
         run: pnpm test
       
-      - name: Update version in package.json
+      - name: Update versions in all package.json files
         working-directory: typescript
         run: |
-          # Use jq to update the version in package.json
+          # Update version in root package.json
           jq '.version = "${{ steps.extract_version.outputs.version }}"' package.json > package.json.tmp
           mv package.json.tmp package.json
+          
+          # Find all package.json files in the packages directory
+          find ./packages -name 'package.json' -not -path "*/node_modules/*" | while read pkg; do
+            echo "Updating version in $pkg"
+            
+            # Update version in each package.json
+            jq '.version = "${{ steps.extract_version.outputs.version }}"' $pkg > $pkg.tmp
+            mv $pkg.tmp $pkg
+          done
       
-      - name: Build package
+      - name: Build all packages
         working-directory: typescript
-        run: pnpm build:libs:prod
+        run: pnpm build:all:prod
       
-      - name: Publish to NPM
+      - name: Publish packages in order
         working-directory: typescript
-        run: npm publish --provenance --access public
+        run: |
+          # Function to publish a package
+          publish_package() {
+            local pkg_dir=$1
+            echo "Publishing package in $pkg_dir"
+            cd "$pkg_dir"
+            npm publish --provenance --access public
+            cd - > /dev/null
+          }
+          
+          # Publish packages in dependency order
+          publish_package "./packages/core"
+          publish_package "./packages/wallets"
+          
+          # Publish adapters
+          publish_package "./packages/adapters/langchain"
+          publish_package "./packages/adapters/model-context-protocol"
+          publish_package "./packages/adapters/vercel-ai"
+          
+          # Publish plugins
+          publish_package "./packages/plugins/contracts"
+          publish_package "./packages/plugins/crypto"
+          publish_package "./packages/plugins/erc20"
+          publish_package "./packages/plugins/uniswap"
+          
+          # Finally publish the umbrella package
+          publish_package "."
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
