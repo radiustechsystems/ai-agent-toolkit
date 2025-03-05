@@ -1,10 +1,10 @@
-import { Tool } from "@radiustechsystems/ai-agent-core";
-import { RadiusWalletInterface } from "@radiustechsystems/ai-agent-wallet";
-import {
+import { Tool } from '@radiustechsystems/ai-agent-core';
+import type { RadiusWalletInterface } from '@radiustechsystems/ai-agent-wallet';
+import type {
   CallContractParameters,
   ExecuteContractParameters,
-  SimulateContractParameters
-} from "./parameters";
+  SimulateContractParameters,
+} from './parameters';
 
 /**
  * Service class for interacting with smart contracts
@@ -14,7 +14,7 @@ export class ContractsService {
   constructor() {}
 
   @Tool({
-    description: "Call a read-only method on a smart contract and return the result",
+    description: 'Call a read-only method on a smart contract and return the result',
   })
   async callContract(walletClient: RadiusWalletInterface, parameters: CallContractParameters) {
     try {
@@ -24,7 +24,7 @@ export class ContractsService {
         functionName: parameters.functionName,
         args: parameters.args || [],
       });
-      
+
       // Return the result value (could be any type)
       return result.value;
     } catch (error) {
@@ -33,9 +33,12 @@ export class ContractsService {
   }
 
   @Tool({
-    description: "Execute a state-changing method on a smart contract (requires transaction)",
+    description: 'Execute a state-changing method on a smart contract (requires transaction)',
   })
-  async executeContract(walletClient: RadiusWalletInterface, parameters: ExecuteContractParameters) {
+  async executeContract(
+    walletClient: RadiusWalletInterface,
+    parameters: ExecuteContractParameters,
+  ) {
     try {
       const hash = await walletClient.sendTransaction({
         to: parameters.contractAddress,
@@ -45,7 +48,7 @@ export class ContractsService {
         // Convert value to BigInt if it's provided as string
         value: parameters.value ? BigInt(parameters.value) : undefined,
       });
-      
+
       return hash.hash;
     } catch (error) {
       throw Error(`Failed to execute contract: ${error}`);
@@ -53,9 +56,12 @@ export class ContractsService {
   }
 
   @Tool({
-    description: "Simulate a contract interaction without submitting a transaction",
+    description: 'Simulate a contract interaction without submitting a transaction',
   })
-  async simulateContract(walletClient: RadiusWalletInterface, parameters: SimulateContractParameters) {
+  async simulateContract(
+    walletClient: RadiusWalletInterface,
+    parameters: SimulateContractParameters,
+  ) {
     try {
       // Use the wallet's simulateTransaction method
       const result = await walletClient.simulateTransaction({
@@ -63,18 +69,18 @@ export class ContractsService {
         abi: parameters.abi,
         functionName: parameters.functionName,
         args: parameters.args || [],
-        value: parameters.value ? BigInt(parameters.value) : undefined
+        value: parameters.value ? BigInt(parameters.value) : undefined,
       });
-      
+
       return {
         success: true,
         result: result.returnValue,
-        gasEstimate: result.gasUsed.toString()
+        gasEstimate: result.gasUsed.toString(),
       };
     } catch (error) {
       return {
         success: false,
-        error: `Simulation failed: ${error}`
+        error: `Simulation failed: ${error}`,
       };
     }
   }

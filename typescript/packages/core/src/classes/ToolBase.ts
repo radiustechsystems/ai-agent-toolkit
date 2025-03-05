@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import type { z } from 'zod';
 
 /**
  * Configuration interface for creating a Tool
@@ -18,7 +18,7 @@ export type ToolConfig<TParameters extends z.ZodSchema = z.ZodSchema> = {
  * @template TParameters - The Zod schema type for the tool's parameters
  * @template TResult - The return type of the tool's execute method
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export abstract class ToolBase<TParameters extends z.ZodSchema = z.ZodSchema, TResult = any> {
   /** The name of the tool */
   public readonly name: string;
@@ -53,7 +53,7 @@ export abstract class ToolBase<TParameters extends z.ZodSchema = z.ZodSchema, TR
  * @param execute - The function to be called when the tool is executed
  * @returns A new Tool instance
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export function createTool<TParameters extends z.ZodSchema, TResult = any>(
   config: ToolConfig<TParameters>,
   execute: (parameters: z.infer<TParameters>) => TResult | Promise<TResult>,

@@ -1,6 +1,6 @@
-import type { PluginBase } from "../classes/PluginBase";
-import type { ToolBase } from "../classes/ToolBase";
-import type { WalletClientBase } from "../classes/WalletClientBase";
+import type { PluginBase } from '../classes/PluginBase';
+import type { ToolBase } from '../classes/ToolBase';
+import type { WalletClientBase } from '../classes/WalletClientBase';
 
 export type GetToolsParams<TWalletClient extends WalletClientBase> = {
   wallet: TWalletClient;
@@ -9,7 +9,7 @@ export type GetToolsParams<TWalletClient extends WalletClientBase> = {
 
 export async function getTools<TWalletClient extends WalletClientBase>({
   wallet,
-  plugins = []
+  plugins = [],
 }: GetToolsParams<TWalletClient>) {
   const tools: ToolBase[] = [];
 
@@ -20,7 +20,7 @@ export async function getTools<TWalletClient extends WalletClientBase>({
     if (!plugin.supportsChain(chain)) {
       console.warn(
         `Plugin ${plugin.name} does not support ${chain.type}${
-          "id" in chain ? ` chain id ${chain.id}` : ""
+          'id' in chain ? ` chain id ${chain.id}` : ''
         }. Skipping.`,
       );
     }

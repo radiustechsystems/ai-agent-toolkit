@@ -1,4 +1,4 @@
-import { isRadiusChain, radiusTestnetBase } from "../chain/RadiusChain";
+import { isRadiusChain, radiusTestnetBase } from '../chain/RadiusChain';
 
 /**
  * Checks if the provided chain ID is for Radius and logs a warning if not
@@ -9,7 +9,7 @@ export function checkChain(chainId: number): boolean {
   if (!isRadiusChain(chainId)) {
     console.warn(
       `Chain ${chainId} is not for Radius.
-      This toolkit is optimized for Radius and may not work as expected on other chains.`
+      This toolkit is optimized for Radius and may not work as expected on other chains.`,
     );
     return false;
   }
@@ -33,8 +33,8 @@ export function getChainToken(chainId: number) {
 
   // Default to ETH if unknown
   return {
-    symbol: "ETH",
-    name: "ETH",
+    symbol: 'ETH',
+    name: 'ETH',
     decimals: 18,
   };
 }

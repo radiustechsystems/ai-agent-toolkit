@@ -1,6 +1,6 @@
-import { Client } from "@radiustechsystems/sdk";
-import { AddressResolutionError } from "../utils/errors";
-import { WalletCache } from "../utils/Cache";
+import type { Client } from '@radiustechsystems/sdk';
+import { WalletCache } from '../utils/Cache';
+import { AddressResolutionError } from '../utils/errors';
 
 /**
  * Simplified service for working with ENS addresses
@@ -8,20 +8,17 @@ import { WalletCache } from "../utils/Cache";
 export class EnsResolver {
   #client: Client;
   #cache?: WalletCache;
-  
+
   /**
    * Creates a new ENS resolver
    * @param client Radius SDK client
    * @param cache Optional cache instance
    */
-  constructor(
-    client: Client,
-    cache?: WalletCache
-  ) {
+  constructor(client: Client, cache?: WalletCache) {
     this.#client = client;
     this.#cache = cache;
   }
-  
+
   /**
    * Resolves an address or ENS name
    * Only supports address format validation, not actual ENS resolution
@@ -33,7 +30,7 @@ export class EnsResolver {
     if (/^0x[a-fA-F0-9]{40}$/.test(name)) {
       return name.toLowerCase() as `0x${string}`;
     }
-    
+
     // Check cache first
     if (this.#cache) {
       const cached = this.#cache.get<string>(WalletCache.createEnsKey(name));
@@ -41,14 +38,14 @@ export class EnsResolver {
         return cached as `0x${string}`;
       }
     }
-    
+
     // We no longer support actual ENS resolution to avoid blockchain dependencies
     throw new AddressResolutionError(
-      "Cannot resolve ENS name. Direct ENS resolution requires blockchain dependencies.",
-      name
+      'Cannot resolve ENS name. Direct ENS resolution requires blockchain dependencies.',
+      name,
     );
   }
-  
+
   /**
    * Checks if an address can be resolved
    * @param nameOrAddress ENS name or address
@@ -74,7 +71,7 @@ export class EnsResolver {
 export function createEnsResolver(
   client: Client,
   registryAddress?: string,
-  cache?: WalletCache
+  cache?: WalletCache,
 ): EnsResolver {
   return new EnsResolver(client, cache);
 }

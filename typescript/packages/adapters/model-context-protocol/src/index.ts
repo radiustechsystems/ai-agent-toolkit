@@ -1,15 +1,21 @@
-import { type GetToolsParams, type ToolBase, type WalletClientBase, getTools } from "@radiustechsystems/ai-agent-core";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import {
+  type GetToolsParams,
+  type ToolBase,
+  type WalletClientBase,
+  getTools,
+} from '@radiustechsystems/ai-agent-core';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 
-export type GetOnChainToolsParams<TWalletClient extends WalletClientBase> = GetToolsParams<TWalletClient>;
+export type GetOnChainToolsParams<TWalletClient extends WalletClientBase> =
+  GetToolsParams<TWalletClient>;
 
 export async function getOnChainTools<TWalletClient extends WalletClientBase>({
   wallet,
-  plugins
+  plugins,
 }: GetOnChainToolsParams<TWalletClient>) {
   const tools: ToolBase[] = await getTools<TWalletClient>({
     wallet,
-    plugins
+    plugins,
   });
 
   return {
@@ -18,7 +24,7 @@ export async function getOnChainTools<TWalletClient extends WalletClientBase>({
         return {
           name: tool.name,
           description: tool.description,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
           inputSchema: zodToJsonSchema(tool.parameters),
         };
       });
@@ -35,7 +41,7 @@ export async function getOnChainTools<TWalletClient extends WalletClientBase>({
       return {
         content: [
           {
-            type: "text",
+            type: 'text',
             text: JSON.stringify(result),
           },
         ],

@@ -15,11 +15,7 @@
   },
 
   "sideEffects": false,
-  "files": [
-    "dist/**",
-    "README.md",
-    "package.json"
-  ],
+  "files": ["dist/**", "README.md", "package.json"],
 
   "scripts": {
     "build": "tsup",
@@ -48,7 +44,17 @@
     "pnpm": ">=9"
   },
 
-  "keywords": ["ai", "agent", "plugin", "radius", "contracts", "smart-contracts", "ethereum", "solidity", "web3"],
+  "keywords": [
+    "ai",
+    "agent",
+    "plugin",
+    "radius",
+    "contracts",
+    "smart-contracts",
+    "ethereum",
+    "solidity",
+    "web3"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"

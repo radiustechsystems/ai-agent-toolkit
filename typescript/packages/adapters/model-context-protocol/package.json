@@ -15,11 +15,7 @@
   },
 
   "sideEffects": false,
-  "files": [
-    "dist/**/*",
-    "README.md",
-    "package.json"
-  ],
+  "files": ["dist/**/*", "README.md", "package.json"],
 
   "scripts": {
     "build": "tsup",

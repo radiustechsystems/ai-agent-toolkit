@@ -1,6 +1,6 @@
-import { z } from "zod";
-import type { Chain } from "../types/Chain";
-import { type ToolBase, createTool } from "./ToolBase";
+import { z } from 'zod';
+import type { Chain } from '../types/Chain';
+import { type ToolBase, createTool } from './ToolBase';
 
 export type Signature = {
   signature: string;
@@ -24,36 +24,36 @@ export abstract class WalletClientBase {
     return [
       createTool(
         {
-          name: "get_address",
-          description: "Get the address of the wallet",
-          parameters: z.object({})
+          name: 'get_address',
+          description: 'Get the address of the wallet',
+          parameters: z.object({}),
         },
-        () => this.getAddress()
+        () => this.getAddress(),
       ),
       createTool(
         {
-          name: "get_chain",
-          description: "Get the chain of the wallet",
-          parameters: z.object({})
+          name: 'get_chain',
+          description: 'Get the chain of the wallet',
+          parameters: z.object({}),
         },
-        () => this.getChain()
+        () => this.getChain(),
       ),
       createTool(
         {
-          name: "get_balance",
-          description: "Get the balance of an address",
-          parameters: z.object({ address: z.string() })
+          name: 'get_balance',
+          description: 'Get the balance of an address',
+          parameters: z.object({ address: z.string() }),
         },
-        (parameters) => this.balanceOf(parameters.address)
+        (parameters) => this.balanceOf(parameters.address),
       ),
       createTool(
         {
-          name: "sign_message",
-          description: "Sign a message with the wallet",
-          parameters: z.object({ message: z.string() })
+          name: 'sign_message',
+          description: 'Sign a message with the wallet',
+          parameters: z.object({ message: z.string() }),
         },
-        (parameters) => this.signMessage(parameters.message)
-      )
+        (parameters) => this.signMessage(parameters.message),
+      ),
     ];
   }
 }

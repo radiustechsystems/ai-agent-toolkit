@@ -1,1 +1,1 @@
-export * from "./Chain";
+export * from './Chain';

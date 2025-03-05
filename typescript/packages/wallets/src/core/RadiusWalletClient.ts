@@ -1,72 +1,55 @@
-import { 
+import {
+  ABI,
   Account,
   Address,
   Client,
-  ABI,
-  withPrivateKey,
-  withLogger,
-  NewContract,
   Hash,
-  Signer
-} from "@radiustechsystems/sdk";
+  NewContract,
+  type Signer,
+  withLogger,
+  withPrivateKey,
+} from '@radiustechsystems/sdk';
 
-import { z } from "zod";
-import { ToolBase, createTool } from "@radiustechsystems/ai-agent-core";
+import { type ToolBase, createTool } from '@radiustechsystems/ai-agent-core';
+import { z } from 'zod';
 
+import type {
+  BalanceInfo,
+  RadiusReadRequest,
+  RadiusReadResult,
+  RadiusTransaction,
+  RadiusTypedData,
+  RadiusWalletConfig,
+  RadiusWalletOptions,
+} from './WalletTypes';
+
+import type { Signature } from '@radiustechsystems/ai-agent-core';
+import { radiusTestnetBase } from '../chain/RadiusChain';
+import { validateWalletConfig } from '../utils/helpers';
+import { checkChain, getChainToken } from '../utils/utilities';
+import type { RadiusWalletInterface } from './RadiusWalletInterface';
+
+import { type BatchTransactionHandler, createBatchHandler } from '../transaction/BatchHandler';
+import { type EnsResolver, createEnsResolver } from '../transaction/EnsResolver';
+import { type GasEstimator, createGasEstimator } from '../transaction/GasEstimator';
 import {
-  type RadiusReadRequest,
-  type RadiusReadResult,
-  type RadiusTransaction,
-  type RadiusTypedData,
-  type RadiusWalletOptions,
-  type BalanceInfo,
-  type RadiusWalletConfig
-} from "./WalletTypes";
-
-import { RadiusWalletInterface } from "./RadiusWalletInterface";
-import { radiusTestnetBase } from "../chain/RadiusChain";
-import { Signature } from "@radiustechsystems/ai-agent-core";
-import { checkChain, getChainToken } from "../utils/utilities";
-import { validateWalletConfig } from "../utils/helpers";
-
+  type TransactionMonitor,
+  createTransactionMonitor,
+} from '../transaction/TransactionMonitor';
+import { type TypedDataSigner, createTypedDataSigner } from '../transaction/TypedDataSigner';
 /**
  * Unified wallet client implementation using the Radius SDK.
  * Supports both standard and smart wallet functionality based on configuration options.
  */
 // Import new services
-import { 
-  createCache, 
-  WalletCache 
-} from "../utils/Cache";
-import { 
-  createTransactionMonitor, 
-  TransactionMonitor 
-} from "../transaction/TransactionMonitor";
-import { 
-  createGasEstimator, 
-  GasEstimator 
-} from "../transaction/GasEstimator";
-import { 
-  createEnsResolver, 
-  EnsResolver 
-} from "../transaction/EnsResolver";
-import { 
-  createTypedDataSigner, 
-  TypedDataSigner 
-} from "../transaction/TypedDataSigner";
-import { 
-  createBatchHandler, 
-  BatchTransactionHandler 
-} from "../transaction/BatchHandler";
+import { WalletCache, createCache } from '../utils/Cache';
 import {
-  TransactionError,
-  BatchTransactionError,
   AddressResolutionError,
-  SigningError
-} from "../utils/errors";
-import {
-  formatUnits
-} from "../utils/helpers";
+  BatchTransactionError,
+  SigningError,
+  TransactionError,
+} from '../utils/errors';
+import { formatUnits } from '../utils/helpers';
 
 export class RadiusWalletClient implements RadiusWalletInterface {
   #account: Account;
@@ -74,7 +57,7 @@ export class RadiusWalletClient implements RadiusWalletInterface {
   #address: Address;
   #options: RadiusWalletOptions;
   #signer: Signer;
-  
+
   // Advanced services
   #cache?: WalletCache;
   #txMonitor?: TransactionMonitor;
@@ -85,35 +68,34 @@ export class RadiusWalletClient implements RadiusWalletInterface {
 
   /**
    * Creates a new RadiusWalletClient
-   * @param account Radius SDK Account 
+   * @param account Radius SDK Account
    * @param client Radius SDK Client
    * @param options Configuration options
    */
-  constructor(
-    account: Account, 
-    client: Client,
-    options: RadiusWalletOptions = {}
-  ) {
+  constructor(account: Account, client: Client, options: RadiusWalletOptions = {}) {
     this.#account = account;
     this.#client = client;
     // Get address from account - account.address is a method, not a property
     this.#address = account.address();
     this.#options = options;
-    
+
     // Create a complete Signer implementation that wraps the Account
     // This is necessary because Account doesn't fully implement the Signer interface
-    
+
     // Pre-fetch the chain ID since Signer.chainID() must be synchronous
     // Use Radius testnet ID as a fallback
     let cachedChainId = BigInt(radiusTestnetBase.id);
-    
+
     // Start an async call to get the real chain ID, but don't block construction
-    client.chainID().then(id => {
-      cachedChainId = id;
-    }).catch(e => {
-      console.error("Failed to get chainID", e);
-    });
-    
+    client
+      .chainID()
+      .then((id) => {
+        cachedChainId = id;
+      })
+      .catch((e) => {
+        console.error('Failed to get chainID', e);
+      });
+
     this.#signer = {
       address: () => account.address(),
       signMessage: (message) => account.signMessage(message),
@@ -121,37 +103,33 @@ export class RadiusWalletClient implements RadiusWalletInterface {
       // Return the cached chainId synchronously as required by the interface
       chainID: () => cachedChainId,
       // Create a simple hash implementation for transactions
-      hash: () => new Hash(new Uint8Array(32).fill(1))
+      hash: () => new Hash(new Uint8Array(32).fill(1)),
     };
-    
+
     // Initialize services if enabled
     if (options.enableCaching !== false) {
       this.#cache = createCache(options.maxCacheAge);
     }
-    
+
     if (options.enableENS) {
-      this.#ensResolver = createEnsResolver(
-        client, 
-        options.ensRegistryAddress,
-        this.#cache
-      );
+      this.#ensResolver = createEnsResolver(client, options.ensRegistryAddress, this.#cache);
     }
-    
+
     if (options.enableTransactionMonitoring) {
       this.#txMonitor = createTransactionMonitor(client, {
         confirmations: options.confirmations,
         timeout: options.transactionTimeout,
-        pollingInterval: 5000
+        pollingInterval: 5000,
       });
     }
-    
-    this.#log("Wallet initialized", { 
+
+    this.#log('Wallet initialized', {
       address: this.getAddress(),
       batchEnabled: !!options.enableBatchTransactions,
       ensEnabled: !!options.enableENS,
       cacheEnabled: options.enableCaching !== false,
       monitoringEnabled: !!options.enableTransactionMonitoring,
-      gasEstimationEnabled: options.enableGasEstimation !== false
+      gasEstimationEnabled: options.enableGasEstimation !== false,
     });
   }
 
@@ -161,7 +139,7 @@ export class RadiusWalletClient implements RadiusWalletInterface {
    */
   getChain() {
     return {
-      type: "evm" as const,
+      type: 'evm' as const,
       id: radiusTestnetBase.id,
     };
   }
@@ -185,21 +163,23 @@ export class RadiusWalletClient implements RadiusWalletInterface {
       if (this.#options.enableENS && this.#ensResolver) {
         return await this.#ensResolver.resolveAddress(address);
       }
-      
+
       // Basic validation for hex addresses
       if (/^0x[a-fA-F0-9]{40}$/.test(address)) {
         return address.toLowerCase() as `0x${string}`;
       }
-      
-      // eslint-disable-next-line max-len
-      throw new AddressResolutionError(`Cannot resolve address: ${address}. ENS resolution is ${this.#options.enableENS ? "enabled but failed" : "disabled"}`, address);
+
+      throw new AddressResolutionError(
+        `Cannot resolve address: ${address}. ENS resolution is ${this.#options.enableENS ? 'enabled but failed' : 'disabled'}`,
+        address,
+      );
     } catch (error) {
       if (error instanceof AddressResolutionError) {
         throw error;
       }
       throw new AddressResolutionError(
         `Address resolution failed: ${error instanceof Error ? error.message : String(error)}`,
-        address
+        address,
       );
     }
   }
@@ -211,11 +191,13 @@ export class RadiusWalletClient implements RadiusWalletInterface {
    */
   async signMessage(message: string): Promise<Signature> {
     try {
-      this.#log("Signing message", { message });
+      this.#log('Signing message', { message });
       const signature = await this.#account.signMessage(message);
-      return { signature: typeof signature === "string" ? signature : signature.toString() };
+      return { signature: typeof signature === 'string' ? signature : signature.toString() };
     } catch (error) {
-      throw new Error(`Failed to sign message: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Failed to sign message: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -226,17 +208,17 @@ export class RadiusWalletClient implements RadiusWalletInterface {
    */
   async signTypedData(data: RadiusTypedData): Promise<Signature> {
     try {
-      this.#log("Signing typed data", { domain: data.domain });
-      
+      this.#log('Signing typed data', { domain: data.domain });
+
       if (!this.#typedDataSigner) {
         this.#typedDataSigner = createTypedDataSigner();
       }
-      
+
       const signature = await this.#typedDataSigner.signTypedData(this.#account, data);
       return { signature };
     } catch (error) {
       throw new SigningError(
-        `Failed to sign typed data: ${error instanceof Error ? error.message : String(error)}`
+        `Failed to sign typed data: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
@@ -251,47 +233,44 @@ export class RadiusWalletClient implements RadiusWalletInterface {
       // If transaction has the simulate flag, only simulate without sending
       if (transaction.simulate) {
         await this.simulateTransaction(transaction);
-        return { hash: "0x0000000000000000000000000000000000000000000000000000000000000000" };
+        return { hash: '0x0000000000000000000000000000000000000000000000000000000000000000' };
       }
-      
+
       // Estimate gas if enabled and not explicitly provided
       if (this.#options.enableGasEstimation !== false && !transaction.gasLimit) {
         if (!this.#gasEstimator) {
           this.#gasEstimator = createGasEstimator(
-            this.#client, 
+            this.#client,
             this.#options.gasMultiplier,
-            this.#options.enableCaching ? this.#cache : undefined
+            this.#options.enableCaching ? this.#cache : undefined,
           );
         }
-        
+
         const estimatedGas = await this.#gasEstimator.estimateGas(transaction);
         transaction = { ...transaction, gasLimit: estimatedGas };
       }
-      
+
       // If batch transactions are enabled, route through the batch implementation
       if (this.#options.enableBatchTransactions) {
-        this.#log("Using batch transaction for single transaction", { transaction });
+        this.#log('Using batch transaction for single transaction', { transaction });
         return this.sendBatchOfTransactions([transaction]);
       }
-      
+
       // Standard implementation follows
       const result = await this.#sendSingleTransaction(transaction);
-      
+
       // Start monitoring transaction if enabled
       if (this.#options.enableTransactionMonitoring && this.#txMonitor) {
-        this.#txMonitor.monitorTransaction(
-          result.hash,
-          {
-            confirmations: this.#options.confirmations,
-            timeout: this.#options.transactionTimeout
-          }
-        );
+        this.#txMonitor.monitorTransaction(result.hash, {
+          confirmations: this.#options.confirmations,
+          timeout: this.#options.transactionTimeout,
+        });
       }
-      
+
       return result;
     } catch (error) {
       throw new TransactionError(
-        `Transaction failed: ${error instanceof Error ? error.message : String(error)}`
+        `Transaction failed: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
@@ -303,26 +282,26 @@ export class RadiusWalletClient implements RadiusWalletInterface {
    */
   async sendBatchOfTransactions(transactions: RadiusTransaction[]): Promise<{ hash: string }> {
     if (transactions.length === 0) {
-      throw new BatchTransactionError("Cannot send an empty batch of transactions", 0, []);
+      throw new BatchTransactionError('Cannot send an empty batch of transactions', 0, []);
     }
 
     try {
       // Check and log warning if not on Radius chain
       const chainId = await this.#client.chainID();
       checkChain(Number(chainId));
-      
-      this.#log("Processing batch of transactions", { count: transactions.length });
-      
+
+      this.#log('Processing batch of transactions', { count: transactions.length });
+
       // Estimate gas for each transaction if enabled
       if (this.#options.enableGasEstimation !== false) {
         if (!this.#gasEstimator) {
           this.#gasEstimator = createGasEstimator(
-            this.#client, 
+            this.#client,
             this.#options.gasMultiplier,
-            this.#options.enableCaching ? this.#cache : undefined
+            this.#options.enableCaching ? this.#cache : undefined,
           );
         }
-        
+
         // Add gas estimates to each transaction that doesn't have it
         for (let i = 0; i < transactions.length; i++) {
           if (!transactions[i].gasLimit) {
@@ -331,36 +310,33 @@ export class RadiusWalletClient implements RadiusWalletInterface {
           }
         }
       }
-      
+
       // Create batch handler if needed
       if (!this.#batchHandler) {
         this.#batchHandler = createBatchHandler(this.#client, this.#account);
       }
-      
+
       // Execute the batch using the batch handler
       const result = await this.#batchHandler.executeTrueBatch(transactions);
-      
+
       // Start monitoring the transaction if enabled
       if (this.#options.enableTransactionMonitoring && this.#txMonitor) {
-        this.#txMonitor.monitorTransaction(
-          result.hash,
-          {
-            confirmations: this.#options.confirmations,
-            timeout: this.#options.transactionTimeout
-          }
-        );
+        this.#txMonitor.monitorTransaction(result.hash, {
+          confirmations: this.#options.confirmations,
+          timeout: this.#options.transactionTimeout,
+        });
       }
-      
+
       return result;
     } catch (error) {
       if (error instanceof BatchTransactionError) {
         throw error;
       }
-      
+
       throw new BatchTransactionError(
         `Batch transaction failed: ${error instanceof Error ? error.message : String(error)}`,
         0,
-        []
+        [],
       );
     }
   }
@@ -373,47 +349,47 @@ export class RadiusWalletClient implements RadiusWalletInterface {
     return [
       createTool(
         {
-          name: "get_address",
-          description: "Get the address of the wallet",
-          parameters: z.object({})
+          name: 'get_address',
+          description: 'Get the address of the wallet',
+          parameters: z.object({}),
         },
-        () => this.getAddress()
+        () => this.getAddress(),
       ),
       createTool(
         {
-          name: "get_chain",
-          description: "Get the chain of the wallet",
-          parameters: z.object({})
+          name: 'get_chain',
+          description: 'Get the chain of the wallet',
+          parameters: z.object({}),
         },
-        () => this.getChain()
+        () => this.getChain(),
       ),
       createTool(
         {
-          name: "get_balance",
-          description: "Get the balance of an address",
-          parameters: z.object({ address: z.string() })
+          name: 'get_balance',
+          description: 'Get the balance of an address',
+          parameters: z.object({ address: z.string() }),
         },
-        (parameters) => this.balanceOf(parameters.address)
+        (parameters) => this.balanceOf(parameters.address),
       ),
       createTool(
         {
-          name: "sign_message",
-          description: "Sign a message with the wallet",
-          parameters: z.object({ message: z.string() })
+          name: 'sign_message',
+          description: 'Sign a message with the wallet',
+          parameters: z.object({ message: z.string() }),
         },
-        (parameters) => this.signMessage(parameters.message)
+        (parameters) => this.signMessage(parameters.message),
       ),
       createTool(
         {
-          name: "simulate_transaction",
-          description: "Simulate a transaction to check if it would succeed",
+          name: 'simulate_transaction',
+          description: 'Simulate a transaction to check if it would succeed',
           parameters: z.object({
             to: z.string(),
             value: z.optional(z.string()),
             functionName: z.optional(z.string()),
             args: z.optional(z.array(z.any())),
-            abi: z.optional(z.array(z.any()))
-          })
+            abi: z.optional(z.array(z.any())),
+          }),
         },
         async (parameters) => {
           const { to, value, functionName, args, abi } = parameters;
@@ -423,26 +399,26 @@ export class RadiusWalletClient implements RadiusWalletInterface {
             functionName,
             args,
             abi,
-            simulate: true
+            simulate: true,
           });
-        }
+        },
       ),
       createTool(
         {
-          name: "resolve_address",
-          description: "Resolve an ENS name to an address",
-          parameters: z.object({ name: z.string() })
+          name: 'resolve_address',
+          description: 'Resolve an ENS name to an address',
+          parameters: z.object({ name: z.string() }),
         },
-        (parameters) => this.resolveAddress(parameters.name)
+        (parameters) => this.resolveAddress(parameters.name),
       ),
       createTool(
         {
-          name: "get_transaction_status",
-          description: "Check the status of a transaction",
-          parameters: z.object({ hash: z.string() })
+          name: 'get_transaction_status',
+          description: 'Check the status of a transaction',
+          parameters: z.object({ hash: z.string() }),
         },
-        (parameters) => this.getTransactionDetails(parameters.hash)
-      )
+        (parameters) => this.getTransactionDetails(parameters.hash),
+      ),
     ];
   }
 
@@ -452,72 +428,68 @@ export class RadiusWalletClient implements RadiusWalletInterface {
    * @returns Transaction hash
    */
   async #sendSingleTransaction(transaction: RadiusTransaction): Promise<{ hash: string }> {
-    // eslint-disable-next-line max-len
     const { to, abi, functionName, args, value, gasLimit } = transaction;
-    
+
     try {
       // Check and log warning if not on Radius chain
       const chainId = await this.#client.chainID();
       checkChain(Number(chainId));
-      
+
       // Resolve the recipient address (handles ENS names if enabled)
       const resolvedTo = await this.resolveAddress(to);
-      
-      this.#log("Sending transaction", { 
+
+      this.#log('Sending transaction', {
         to: resolvedTo,
-        functionName, 
+        functionName,
         value: value?.toString(),
-        gasLimit: gasLimit?.toString()
+        gasLimit: gasLimit?.toString(),
       });
-      
+
       // Simple ETH transfer (no contract interaction)
       if (!abi && !functionName) {
         const toAddress = new Address(resolvedTo);
-        
+
         // Use our properly implemented Signer interface
-        
+
         // Use SDK's send method
-        const receipt = await this.#client.send(
-          this.#signer, 
-          toAddress, 
-          value || BigInt(0)
-        );
-        
+        const receipt = await this.#client.send(this.#signer, toAddress, value || BigInt(0));
+
         // Extract the hash from the Receipt class's txHash property
         // The Receipt class in the SDK stores the transaction hash in txHash, not hash
         return { hash: receipt.txHash.hex() };
       }
-      
+
       // Contract interaction
       if (abi && functionName) {
         // Create ABI instance from the JSON string
         const abiInstance = new ABI(JSON.stringify(abi));
-        
+
         // Create contract instance using the NewContract function
         const contract = NewContract(new Address(resolvedTo), abiInstance);
-        
+
         // Execute contract method
         const receipt = await contract.execute(
           this.#client,
           this.#signer,
           functionName,
-          ...(args || [])
+          ...(args || []),
         );
-        
+
         // Extract the hash from the Receipt class's txHash property
         // The Receipt class in the SDK stores the transaction hash in txHash, not hash
         return { hash: receipt.txHash.hex() };
       }
-      
-      throw new TransactionError("Invalid transaction: Either both abi and functionName must be provided, or neither");
+
+      throw new TransactionError(
+        'Invalid transaction: Either both abi and functionName must be provided, or neither',
+      );
     } catch (error) {
-      if (error instanceof TransactionError || 
-          error instanceof AddressResolutionError) {
+      if (error instanceof TransactionError || error instanceof AddressResolutionError) {
         throw error;
       }
-      
+
       throw new TransactionError(
-        `Transaction failed: ${error instanceof Error ? error.message : String(error)}`
+        `Transaction failed: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
@@ -529,104 +501,104 @@ export class RadiusWalletClient implements RadiusWalletInterface {
    */
   async read(request: RadiusReadRequest): Promise<RadiusReadResult> {
     const { address, functionName, args, abi } = request;
-    
+
     try {
-      this.#log("Reading contract data", { request });
-      
+      this.#log('Reading contract data', { request });
+
       // Check cache first if enabled
       if (this.#options.enableCaching && this.#cache) {
         const cacheKey = WalletCache.createContractReadKey(address, functionName, args || []);
         const cached = this.#cache.get<unknown>(cacheKey);
-        
+
         if (cached !== undefined) {
-          this.#log("Cache hit for contract read", { request, cacheKey });
-          return { 
+          this.#log('Cache hit for contract read', { request, cacheKey });
+          return {
             value: cached,
-            success: true 
+            success: true,
           };
         }
       }
-      
+
       // Create ABI instance
       const abiInstance = new ABI(JSON.stringify(abi));
-      
+
       // Create contract instance
       const contract = NewContract(new Address(address), abiInstance);
-      
+
       // Call contract method
       const result = await contract.call(this.#client, functionName, ...(args || []));
-      
+
       // Cache the result if caching is enabled
       if (this.#options.enableCaching && this.#cache) {
         const cacheKey = WalletCache.createContractReadKey(address, functionName, args || []);
         this.#cache.set(cacheKey, result);
       }
-      
-      return { 
+
+      return {
         value: result,
-        success: true 
+        success: true,
       };
     } catch (error) {
       return {
         value: null,
         success: false,
-        error: `Contract read failed: ${error instanceof Error ? error.message : String(error)}`
+        error: `Contract read failed: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   }
-  
+
   /**
    * Simulates a transaction without sending it
    * @param transaction Transaction to simulate
    * @returns Simulation result
    */
   async simulateTransaction(
-    transaction: RadiusTransaction
-  ): Promise<import("./WalletTypes").TransactionSimulationResult> {
+    transaction: RadiusTransaction,
+  ): Promise<import('./WalletTypes').TransactionSimulationResult> {
     try {
-      this.#log("Simulating transaction", { transaction });
-      
+      this.#log('Simulating transaction', { transaction });
+
       if (!this.#gasEstimator) {
         this.#gasEstimator = createGasEstimator(
-          this.#client, 
+          this.#client,
           this.#options.gasMultiplier,
-          this.#options.enableCaching ? this.#cache : undefined
+          this.#options.enableCaching ? this.#cache : undefined,
         );
       }
-      
+
       return await this.#gasEstimator.simulateTransaction(transaction);
     } catch (error) {
       return {
         success: false,
         gasUsed: BigInt(0),
-        error: `Simulation failed: ${error instanceof Error ? error.message : String(error)}`
+        error: `Simulation failed: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   }
-  
+
   /**
    * Gets a transaction receipt and details
    * @param hash Transaction hash
    * @returns Transaction details
    */
-  async getTransactionDetails(hash: string): Promise<import("./WalletTypes").TransactionDetails> {
+  async getTransactionDetails(hash: string): Promise<import('./WalletTypes').TransactionDetails> {
     try {
       if (!this.#txMonitor) {
         this.#txMonitor = createTransactionMonitor(this.#client, {
           confirmations: this.#options.confirmations,
-          timeout: this.#options.transactionTimeout
+          timeout: this.#options.transactionTimeout,
         });
       }
-      
+
       return await this.#txMonitor.getTransactionDetails(hash);
     } catch (error) {
       throw new TransactionError(
         `Failed to get transaction details: ${error instanceof Error ? error.message : String(error)}`,
-        { hash }
+        { hash },
       );
     }
   }
-  
+
   /**
    * Waits for a transaction to be confirmed
    * @param hash Transaction hash to wait for
@@ -634,26 +606,26 @@ export class RadiusWalletClient implements RadiusWalletInterface {
    * @returns Transaction details once confirmed
    */
   async waitForTransaction(
-    hash: string, 
-    confirmations?: number
-  ): Promise<import("./WalletTypes").TransactionDetails> {
+    hash: string,
+    confirmations?: number,
+  ): Promise<import('./WalletTypes').TransactionDetails> {
     try {
       if (!this.#txMonitor) {
         this.#txMonitor = createTransactionMonitor(this.#client, {
           confirmations: this.#options.confirmations,
-          timeout: this.#options.transactionTimeout
+          timeout: this.#options.transactionTimeout,
         });
       }
-      
+
       return await this.#txMonitor.waitForTransaction(
-        hash, 
-        confirmations || this.#options.confirmations, 
-        this.#options.transactionTimeout
+        hash,
+        confirmations || this.#options.confirmations,
+        this.#options.transactionTimeout,
       );
     } catch (error) {
       throw new TransactionError(
         `Failed waiting for transaction: ${error instanceof Error ? error.message : String(error)}`,
-        { hash }
+        { hash },
       );
     }
   }
@@ -667,39 +639,39 @@ export class RadiusWalletClient implements RadiusWalletInterface {
     try {
       // Resolve the address if it's an ENS name
       const resolvedAddress = await this.resolveAddress(address);
-      
+
       // Check cache first if enabled
       if (this.#options.enableCaching && this.#cache) {
         const cacheKey = WalletCache.createBalanceKey(resolvedAddress);
         const cached = this.#cache.get<BalanceInfo>(cacheKey);
-        
+
         if (cached !== undefined) {
-          this.#log("Cache hit for balance check", { address, cacheKey });
+          this.#log('Cache hit for balance check', { address, cacheKey });
           return cached;
         }
       }
-      
+
       const addr = new Address(resolvedAddress);
-      
+
       // Use SDK's balanceAt method (correct method name per SDK)
       let balance: bigint;
       try {
         balance = await this.#client.balanceAt(addr);
       } catch (error) {
         // Fallback to a default value if method fails
-        this.#log("Warning: balanceAt method failed, using zero balance", { error });
+        this.#log('Warning: balanceAt method failed, using zero balance', { error });
         balance = BigInt(0);
       }
-      
-      this.#log("Retrieved balance", { address: resolvedAddress, balance: balance.toString() });
-      
+
+      this.#log('Retrieved balance', { address: resolvedAddress, balance: balance.toString() });
+
       // Get chain token info
       const chainId = await this.#client.chainID();
       const token = getChainToken(Number(chainId));
-      
+
       // Use our utility for consistent formatting
       const formattedBalance = formatUnits(balance, token.decimals);
-      
+
       // Format to match the expected return structure
       const result: BalanceInfo = {
         value: formattedBalance,
@@ -708,19 +680,21 @@ export class RadiusWalletClient implements RadiusWalletInterface {
         name: token.name,
         inBaseUnits: balance.toString(),
       };
-      
+
       // Cache the result if caching is enabled
       if (this.#options.enableCaching && this.#cache) {
         const cacheKey = WalletCache.createBalanceKey(resolvedAddress);
         this.#cache.set(cacheKey, result);
       }
-      
+
       return result;
     } catch (error) {
-      throw new Error(`Failed to get balance: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Failed to get balance: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
-  
+
   /**
    * Disposes of any resources used by the wallet
    * Should be called when the wallet is no longer needed
@@ -730,15 +704,15 @@ export class RadiusWalletClient implements RadiusWalletInterface {
     if (this.#txMonitor) {
       this.#txMonitor.dispose();
     }
-    
+
     // Clear cache
     if (this.#cache) {
       this.#cache.clear();
     }
-    
-    this.#log("Wallet resources disposed");
+
+    this.#log('Wallet resources disposed');
   }
-  
+
   /**
    * Internal logging method
    * @param message Log message
@@ -760,8 +734,8 @@ export class RadiusWalletClient implements RadiusWalletInterface {
  */
 export async function createRadiusWallet(
   config: RadiusWalletConfig,
-  enableBatchTransactions: boolean = false,
-  logger?: (message: string, data?: Record<string, unknown>) => void
+  enableBatchTransactions = false,
+  logger?: (message: string, data?: Record<string, unknown>) => void,
 ): Promise<RadiusWalletInterface> {
   // Validate configuration
   validateWalletConfig(config);
@@ -774,38 +748,38 @@ export async function createRadiusWallet(
         // Use provided logger if available
         if (logger) {
           logger(message, data);
-        } 
+        }
         // Fall back to debug logging
-        else if (process.env.DEBUG === "true") {
+        else if (process.env.DEBUG === 'true') {
           console.log(`[Radius] ${message}`, data);
         }
-      })
+      }),
     );
-    
+
     // Create account with private key
-    const account = await Account.New(
-      withPrivateKey(config.privateKey, client)
-    );
-    
+    const account = await Account.New(withPrivateKey(config.privateKey, client));
+
     // Create wallet with all the new features enabled
-    return new RadiusWalletClient(account, client, { 
+    return new RadiusWalletClient(account, client, {
       // Basic features
       enableBatchTransactions,
       logger,
-      
+
       // Advanced features
       enableENS: true,
       enableCaching: true,
       enableGasEstimation: true,
       enableTransactionMonitoring: true,
-      
+
       // Default configurations
       gasMultiplier: 1.2,
       confirmations: 1,
       transactionTimeout: 60000,
-      maxCacheAge: 30000
+      maxCacheAge: 30000,
     });
   } catch (error) {
-    throw new Error(`Failed to create Radius wallet: ${error instanceof Error ? error.message : String(error)}`);
+    throw new Error(
+      `Failed to create Radius wallet: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 }

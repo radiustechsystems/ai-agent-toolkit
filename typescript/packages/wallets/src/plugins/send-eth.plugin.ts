@@ -1,15 +1,15 @@
-import { Chain, PluginBase, createTool } from "@radiustechsystems/ai-agent-core";
-import { z } from "zod";
-import { RadiusWalletInterface } from "../core/RadiusWalletInterface";
-import { parseEther } from "../utils/helpers";
-import { getChainToken } from "../utils/utilities";
+import { type Chain, PluginBase, createTool } from '@radiustechsystems/ai-agent-core';
+import { z } from 'zod';
+import type { RadiusWalletInterface } from '../core/RadiusWalletInterface';
+import { parseEther } from '../utils/helpers';
+import { getChainToken } from '../utils/utilities';
 
 export class SendETHPlugin extends PluginBase<RadiusWalletInterface> {
   constructor() {
-    super("sendETH", []);
+    super('sendETH', []);
   }
 
-  supportsChain = (chain: Chain) => chain.type === "evm";
+  supportsChain = (chain: Chain) => chain.type === 'evm';
 
   getTools(walletClient: RadiusWalletInterface) {
     const sendTool = createTool(
@@ -18,7 +18,8 @@ export class SendETHPlugin extends PluginBase<RadiusWalletInterface> {
         description: `Send ${getChainToken(walletClient.getChain().id).symbol} to an address.`,
         parameters: sendETHParametersSchema,
       },
-      (parameters: z.infer<typeof sendETHParametersSchema>) => sendETHMethod(walletClient, parameters),
+      (parameters: z.infer<typeof sendETHParametersSchema>) =>
+        sendETHMethod(walletClient, parameters),
     );
     return [sendTool];
   }
@@ -27,8 +28,8 @@ export class SendETHPlugin extends PluginBase<RadiusWalletInterface> {
 export const sendETH = () => new SendETHPlugin();
 
 const sendETHParametersSchema = z.object({
-  to: z.string().describe("The address to send ETH to"),
-  amount: z.string().describe("The amount of ETH to send"),
+  to: z.string().describe('The address to send ETH to'),
+  amount: z.string().describe('The amount of ETH to send'),
 });
 
 async function sendETHMethod(
