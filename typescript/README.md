@@ -19,7 +19,7 @@ A TypeScript implementation for integrating [Radius](https://radiustech.xyz/) ca
 
 ## Installation
 
-### Option 1: Complete Toolkit (Recommended)
+### Option 1: Complete Toolkit Package
 
 Install the complete toolkit package which automatically installs all adapters and plugins as dependencies:
 
@@ -33,7 +33,7 @@ Or using npm:
 npm install @radiustechsystems/ai-agent-toolkit
 ```
 
-This single command will install all packages in the toolkit, making them available for import.
+This single command will install all packages in the toolkit, but you'll still need to import directly from each individual package (see Usage section below).
 
 ### Option 2: Individual Packages
 
@@ -59,25 +59,17 @@ pnpm add @radiustechsystems/ai-agent-plugin-uniswap
 
 ## Usage
 
-### Using the Complete Toolkit
+### Installing the Complete Toolkit
 
-When using the complete toolkit package, you can import everything from a single entry point:
+When using the complete toolkit package, you still need to import directly from individual packages:
 
 ```typescript
-// Import everything from the umbrella package
-import { 
-  // Core types and interfaces
-  PluginBase, ToolBase,
-  
-  // Wallet functionality
-  createRadiusWallet, sendETH,
-  
-  // Adapter for Vercel AI
-  getOnChainTools,
-  
-  // Plugins
-  erc20, USDC, uniswap
-} from "@radiustechsystems/ai-agent-toolkit";
+// Import from individual packages (recommended approach)
+import { PluginBase, ToolBase } from "@radiustechsystems/ai-agent-core";
+import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet";
+import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai";
+import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20";
+import { uniswap } from "@radiustechsystems/ai-agent-plugin-uniswap";
 
 // Create a wallet
 const wallet = await createRadiusWallet({
@@ -107,20 +99,37 @@ const result = await generateText({
 });
 ```
 
-### Using Individual Packages
+The complete toolkit package (`@radiustechsystems/ai-agent-toolkit`) installs all individual packages as dependencies, but you should import directly from each specific package to use their functionality.
 
-When installing individual packages, import directly from each package:
+#### Alternative: Using Namespaces
+
+You can also use the namespace approach, which is supported but less common:
 
 ```typescript
-// Import from individual packages
-import { PluginBase, ToolBase } from "@radiustechsystems/ai-agent-core";
-import { createRadiusWallet, sendETH } from "@radiustechsystems/ai-agent-wallet";
-import { getOnChainTools } from "@radiustechsystems/ai-agent-adapter-vercel-ai";
-import { erc20, USDC } from "@radiustechsystems/ai-agent-plugin-erc20";
-import { uniswap } from "@radiustechsystems/ai-agent-plugin-uniswap";
+// Import namespaces from the umbrella package
+import { Core, Wallet, VercelAI, ERC20, Uniswap } from "@radiustechsystems/ai-agent-toolkit";
 
-// The rest of the code is the same
+// Create a wallet
+const wallet = await Wallet.createRadiusWallet({
+  rpcUrl: process.env.RPC_PROVIDER_URL,
+  privateKey: process.env.WALLET_PRIVATE_KEY
+});
+
+// Configure tools for Vercel AI
+const tools = await VercelAI.getOnChainTools({
+  wallet,
+  plugins: [
+    Wallet.sendETH(),
+    ERC20.erc20({ tokens: [ERC20.USDC] }),
+    Uniswap.uniswap({
+      baseUrl: process.env.UNISWAP_BASE_URL,
+      apiKey: process.env.UNISWAP_API_KEY,
+    })
+  ]
+});
 ```
+
+This namespace approach works but direct imports are generally preferred for better IDE support and tree-shaking.
 
 ### Examples
 
