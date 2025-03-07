@@ -1,84 +1,92 @@
 # Radius AI Agent SDK - LangChain Web3 Example
 
-Example implementation of a LangChain agent interacting with Web3.py using the Radius AI Agent SDK.
+This example demonstrates how to integrate LangChain agents with Web3.py using the Radius AI Agent SDK, enabling AI agents to interact with blockchain functionalities through natural language.
 
-## Installation
+## Key Features
 
-```bash
-pip install radius-ai-agent-sdk-example-langchain-web3
-```
+- **LangChain Integration**: Creates AI agents with blockchain capabilities
+- **Web3.py Interaction**: Connects to Radius for high-performance blockchain operations
+- **Wallet Management**: Safe handling of digital assets through EVMWalletClient
+- **ERC20 Integration**: Token interactions through the ERC20 plugin
+- **Interactive CLI**: Test blockchain operations through conversation
 
 ## Prerequisites
 
 - Python >=3.10
-- langchain >=0.3.2
-- langchain-openai >=0.2.14
-- python-dotenv >=1.0.1
-- web3 >=6.20.3
-- radius-ai-agent-sdk >=0.1.0
-- radius-ai-agent-sdk-wallet-evm >=0.1.0
-- radius-ai-agent-sdk-wallet-web3 >=0.1.0
-- radius-ai-agent-sdk-plugin-erc20 >=0.1.0
-- radius-ai-agent-sdk-adapter-langchain >=0.1.0
+- An OpenAI API key for LLM access
+- A Radius wallet with ETH (obtain from the [Radius faucet](https://testnet.tryradi.us/dashboard/faucet))
+- Radius RPC endpoint URL
 
-## Features
-
-- Complete example of LangChain integration
-- Web3.py interaction examples
-- EVM wallet integration
-- Smart contract interactions
-- Transaction handling
-- Environment configuration
-- Async operation examples
-
-## Development Setup
-
-### 1. Clone the Repository
+## Installation
 
 ```bash
+# Install directly from PyPI
+pip install radius-ai-agent-sdk-example-langchain-web3
+
+# Or install from the repository
 git clone git@github.com:radiustechsystems/ai-agent-toolkit.git
 cd ai-agent-toolkit/python/examples/langchain/web3
-```
-
-### 2. Install Development Dependencies
-
-```bash
 pip install -e ".[dev]"
 ```
 
-### 3. Configure Environment
+## Setup
+
+1. Configure your environment variables:
 
 ```bash
 cp .env.template .env
-# Edit .env with your configuration
 ```
 
-### 4. Run the Example
+2. Edit the `.env` file with your credentials:
+
+```
+# AI API Keys
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Radius Configuration
+RPC_PROVIDER_URL=your_radius_rpc_url_here
+WALLET_PRIVATE_KEY=your_wallet_private_key_here
+```
+
+## Running the Example
 
 ```bash
 python example.py
 ```
 
-## Testing
+This will start an interactive CLI where you can test blockchain operations through natural language, such as:
 
-Run tests with pytest:
+- "What's my ETH balance?"
+- "Transfer 0.01 ETH to 0x1234..."
+- "Check my USDC balance"
 
-```bash
-pytest
+## How It Works
+
+The example configures a LangChain agent with Radius tools:
+
+```python
+from radius_adapters.langchain import get_on_chain_tools
+from radius_plugins.erc20 import erc20, ERC20PluginOptions
+from radius_wallets.evm import send_eth
+from radius_wallets.web3 import Web3EVMWalletClient
+
+# Initialize tools with web3 wallet
+tools = get_on_chain_tools(
+    wallet=Web3EVMWalletClient(w3),
+    plugins=[
+        send_eth(),
+        erc20(options=ERC20PluginOptions(tokens=[USDC]))
+    ],
+)
 ```
 
-## Documentation
+## Learn More
 
-For detailed documentation:
-
-- [API Documentation](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/examples/langchain/web3/README.md)
-- [Examples](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python/examples)
-- [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md)
-
-## Support
-
-For issues and feature requests, please use our [issue tracker](https://github.com/radiustechsystems/ai-agent-toolkit/issues).
+- [Radius Documentation](https://docs.tryradi.us)
+- [AI Agent Toolkit](https://github.com/radiustechsystems/ai-agent-toolkit)
+- [LangChain Documentation](https://python.langchain.com/docs/get_started)
+- [Web3.py Documentation](https://web3py.readthedocs.io/)
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/LICENSE).
