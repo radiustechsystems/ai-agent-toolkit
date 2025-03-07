@@ -1,0 +1,1 @@
+# Initialize test package for the Web3 wallet
