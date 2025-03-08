@@ -1,4 +1,3 @@
-import pytest
 from radius_plugins.erc20.token import Token, ChainSpecificToken, get_tokens_for_network, USDC
 
 

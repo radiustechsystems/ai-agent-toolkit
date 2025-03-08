@@ -1,9 +1,6 @@
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate
@@ -17,6 +14,9 @@ from radius_plugins.erc20.token import USDC
 from radius_plugins.erc20 import erc20, ERC20PluginOptions
 from radius_wallets.evm import send_eth
 from radius_wallets.web3 import Web3EVMWalletClient
+
+# Load environment variables
+load_dotenv()
 
 # Initialize Web3 and account
 w3 = Web3(Web3.HTTPProvider(os.getenv("RPC_PROVIDER_URL")))

@@ -1,8 +1,7 @@
 import pytest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock
 from radius_plugins.erc20.service import Erc20Service
 from radius_plugins.erc20.token import Token
-from radius_wallets.evm import EVMWalletClient
 
 
 class MockEVMWalletClient:

@@ -2,9 +2,6 @@ import os
 from dotenv import load_dotenv
 from radius_plugins.erc20.token import USDC
 
-# Load environment variables
-load_dotenv()
-
 from radius_plugins.erc20 import ERC20PluginOptions, erc20
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_tool_calling_agent
@@ -17,6 +14,9 @@ from eth_account import Account
 from radius_adapters.langchain import get_on_chain_tools
 from radius_plugins.uniswap import uniswap, UniswapPluginOptions
 from radius_wallets.web3 import Web3EVMWalletClient
+
+# Load environment variables
+load_dotenv()
 
 # Initialize Web3 and account
 # Connect to Radius

@@ -1,9 +1,8 @@
 import pytest
 import json
-from unittest.mock import patch, AsyncMock, MagicMock, PropertyMock
+from unittest.mock import patch, AsyncMock
 from radius_plugins.uniswap.service import UniswapService
-from radius_plugins.uniswap.parameters import SwapType, Protocol
-from radius_wallets.evm import EVMWalletClient
+from radius_plugins.uniswap.parameters import Protocol
 
 
 class MockResponse:

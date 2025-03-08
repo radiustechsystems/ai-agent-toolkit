@@ -1,7 +1,6 @@
 """
 Tests for utility functions in the Radius AI Agent SDK.
 """
-import pytest
 from radius.utils.snake_case import snake_case
 
 

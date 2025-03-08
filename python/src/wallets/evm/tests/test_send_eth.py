@@ -2,9 +2,8 @@
 Tests for the SendETH plugin.
 """
 import pytest
-from unittest.mock import Mock, patch
-from decimal import Decimal
-from typing import Dict, cast
+from unittest.mock import Mock
+from typing import cast
 
 from radius_wallets.evm.send_eth import (
     SendETHPlugin,

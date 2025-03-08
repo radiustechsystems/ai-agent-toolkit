@@ -1,5 +1,3 @@
-import pytest
-from unittest.mock import Mock, patch, AsyncMock
 from radius.types.chain import Chain
 from radius_plugins.uniswap import UniswapPlugin, UniswapPluginOptions
 

@@ -29,9 +29,6 @@ pip install langchain langchain-core
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate
@@ -41,6 +38,9 @@ from eth_account import Account
 from radius_adapters.langchain import get_on_chain_tools
 from radius_wallets.evm import send_eth
 from radius_wallets.web3 import Web3EVMWalletClient
+
+# Load environment variables
+load_dotenv()
 
 # 1. Setup Web3 and wallet
 w3 = Web3(Web3.HTTPProvider(os.getenv("RPC_PROVIDER_URL")))

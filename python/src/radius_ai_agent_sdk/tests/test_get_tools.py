@@ -1,12 +1,10 @@
 """
 Tests for the get_tools utility function.
 """
-import pytest
 from unittest.mock import Mock, patch
-from typing import List
 
 from radius.utils.get_tools import get_tools
-from radius.classes.tool_base import ToolBase, create_tool
+from radius.classes.tool_base import create_tool
 from tests.conftest import MockWalletClient, MockPlugin, TestParameters
 
 

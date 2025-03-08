@@ -1,4 +1,3 @@
-import pytest
 from radius_plugins.erc20 import erc20, ERC20Plugin, ERC20PluginOptions
 from radius_plugins.erc20.token import Token
 from radius.types.chain import Chain

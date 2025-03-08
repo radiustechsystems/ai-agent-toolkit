@@ -173,7 +173,6 @@ class Web3EVMWalletClient(EVMWalletClient):
         resolved_address = self.resolve_address(address)
         balance_wei = self._web3.eth.get_balance(resolved_address)
 
-        chain_id = self._web3.eth.chain_id
         decimals = 18  # ETH decimals
         symbol = "ETH"
         name = "Ether"

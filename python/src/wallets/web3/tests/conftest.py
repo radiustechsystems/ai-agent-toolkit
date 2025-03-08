@@ -2,9 +2,9 @@
 Pytest configuration for the Web3 wallet tests.
 """
 import pytest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import MagicMock
 from web3 import Web3
-from web3.types import TxReceipt, HexBytes, Wei
+from web3.types import HexBytes, Wei
 
 from radius_wallets.web3 import Web3Options, Web3EVMWalletClient
 

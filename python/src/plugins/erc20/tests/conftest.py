@@ -2,7 +2,6 @@
 Pytest configuration for the ERC20 plugin tests.
 """
 import pytest
-from radius_plugins.erc20.token import Token
 
 
 @pytest.fixture
