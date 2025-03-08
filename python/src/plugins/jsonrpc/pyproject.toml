@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "radius-ai-agent-sdk-plugin-jsonrpc"
-version = "0.1.0"
+version = "1.0.0"
 description = "Radius plugin for JSON-RPC"
 authors = [{name = "Matt Dionis", email = "matt.dionis@radiustechnologysystems.com"}]
 readme = "README.md"
@@ -22,7 +22,7 @@ classifiers = [
 ]
 dependencies = [
     "aiohttp>=3.8.6",
-    "radius-ai-agent-sdk>=0.1.0",
+    "radius-ai-agent-sdk>=1.0.0",
 ]
 
 [project.urls]

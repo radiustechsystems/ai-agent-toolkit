@@ -1,84 +1,100 @@
 # Radius AI Agent SDK - LangChain Uniswap Example
 
-Example implementation of a LangChain agent interacting with Uniswap using the Radius AI Agent SDK.
+This example demonstrates how to build AI agents that can interact with the Uniswap decentralized exchange using LangChain and the Radius AI Agent SDK. It showcases how to execute token swaps, check approvals, and get quotes through natural language.
 
-## Installation
+## Key Features
 
-```bash
-pip install radius-ai-agent-sdk-example-langchain-uniswap
-```
+- **DEX Integration**: Connect AI agents to Uniswap's powerful trading capabilities
+- **Token Swap Flows**: Complete token swap workflow from approval to execution
+- **LangChain Tools**: Predefined tools for Uniswap operations
+- **Instant Settlement**: Leverage Radius for near-instant transaction finality
+- **Interactive Testing**: CLI interface for testing Uniswap operations
 
 ## Prerequisites
 
 - Python >=3.10
-- langchain >=0.3.2
-- langchain-openai >=0.2.14
-- python-dotenv >=1.0.1
-- web3 >=6.20.3
-- radius-ai-agent-sdk >=0.1.0
-- radius-ai-agent-sdk-wallet-evm >=0.1.0
-- radius-ai-agent-sdk-wallet-web3 >=0.1.0
-- radius-ai-agent-sdk-plugin-erc20 >=0.1.0
-- radius-ai-agent-sdk-adapter-langchain >=0.1.0
-- radius-ai-agent-sdk-plugin-uniswap >=0.1.0
+- An OpenAI API key for LLM access
+- A Radius wallet with ETH (obtain from the [Radius faucet](https://testnet.tryradi.us/dashboard/faucet))
+- Uniswap API key
+- Radius RPC endpoint URL
 
-## Features
-
-- Complete example of LangChain integration
-- Uniswap interaction examples
-- EVM wallet integration
-- Token swaps and liquidity management
-- Environment configuration
-- Async operation examples
-
-## Development Setup
-
-### 1. Clone the Repository
+## Installation
 
 ```bash
+# Install directly from PyPI
+pip install radius-ai-agent-sdk-example-langchain-uniswap
+
+# Or install from the repository
 git clone git@github.com:radiustechsystems/ai-agent-toolkit.git
 cd ai-agent-toolkit/python/examples/langchain/uniswap
-```
-
-### 2. Install Development Dependencies
-
-```bash
 pip install -e ".[dev]"
 ```
 
-### 3. Configure Environment
+## Setup
+
+1. Configure your environment variables:
 
 ```bash
 cp .env.template .env
-# Edit .env with your configuration
 ```
 
-### 4. Run the Example
+2. Edit the `.env` file with your credentials:
+
+```
+# AI API Keys
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Radius Configuration
+BASE_RPC_URL=your_radius_rpc_url_here
+WALLET_PRIVATE_KEY=your_wallet_private_key_here
+
+# Uniswap Configuration
+UNISWAP_API_KEY=your_uniswap_api_key_here
+UNISWAP_BASE_URL=https://trade-api.gateway.uniswap.org/v1
+```
+
+## Running the Example
 
 ```bash
 python example.py
 ```
 
-## Testing
+This will start an interactive CLI where you can test Uniswap operations through natural language, such as:
 
-Run tests with pytest:
+- "Check if I have enough USDC approval for Uniswap"
+- "Get a quote to swap 1 WETH for USDC"
+- "Swap 0.1 WETH for USDC"
 
-```bash
-pytest
+## How It Works
+
+The example configures a LangChain agent with Radius and Uniswap tools:
+
+```python
+from radius_adapters.langchain import get_on_chain_tools
+from radius_plugins.erc20 import erc20, ERC20PluginOptions
+from radius_plugins.uniswap import uniswap, UniswapPluginOptions
+from radius_wallets.web3 import Web3EVMWalletClient
+
+# Initialize tools with web3 wallet and Uniswap plugin
+tools = get_on_chain_tools(
+    wallet=Web3EVMWalletClient(w3),
+    plugins=[
+        erc20(options=ERC20PluginOptions(tokens=[USDC])),
+        uniswap(options=UniswapPluginOptions(
+            api_key=uniswap_api_key,
+            base_url=uniswap_base_url
+        )),
+    ],
+)
 ```
 
-## Documentation
+## Learn More
 
-For detailed documentation:
-
-- [API Documentation](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/examples/langchain/uniswap/README.md)
-- [Examples](https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/python/examples)
-- [Changelog](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md)
-
-## Support
-
-For issues and feature requests, please use our [issue tracker](https://github.com/radiustechsystems/ai-agent-toolkit/issues).
+- [Radius Documentation](https://docs.tryradi.us)
+- [AI Agent Toolkit](https://github.com/radiustechsystems/ai-agent-toolkit)
+- [Uniswap Documentation](https://docs.uniswap.org/)
+- [LangChain Documentation](https://python.langchain.com/docs/get_started)
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/LICENSE).

@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from radius.classes.plugin_base import PluginBase
 from .service import JSONRpcService
 
+__version__ = "1.0.0"
+
 
 @dataclass
 class JSONRpcPluginOptions:

@@ -1,0 +1,1 @@
+# Initialize tests package for JSON-RPC plugin

@@ -1,0 +1,1 @@
+# Initialize tests package for ERC20 plugin

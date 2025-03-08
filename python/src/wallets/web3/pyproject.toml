@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "radius-ai-agent-sdk-wallet-web3"
-version = "0.1.0"
+version = "1.0.0"
 description = "Radius AI Agent SDK Web3 wallet implementation"
 authors = [{name = "Matt Dionis", email = "matt.dionis@radiustechnologysystems.com"}]
 readme = "README.md"
@@ -21,9 +21,9 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "radius-ai-agent-sdk>=0.1.0",
+    "radius-ai-agent-sdk>=1.0.0",
     "web3>=6.20.3",
-    "radius-ai-agent-sdk-wallet-evm>=0.1.0",
+    "radius-ai-agent-sdk-wallet-evm>=1.0.0",
 ]
 
 [project.urls]
