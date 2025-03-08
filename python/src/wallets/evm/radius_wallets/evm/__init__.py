@@ -6,6 +6,8 @@ from .evm_wallet_client import EVMWalletClient
 from .evm_smart_wallet_client import EVMSmartWalletClient
 from .send_eth import SendETHPlugin, send_eth
 
+__version__ = "1.0.0"
+
 __all__ = [
     "EVMTransaction",
     "EVMReadRequest",

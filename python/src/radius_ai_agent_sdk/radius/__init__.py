@@ -5,6 +5,8 @@ from .utils.snake_case import snake_case
 from .utils.get_tools import get_tools
 from .types.chain import Chain, EvmChain
 
+__version__ = "1.0.0"
+
 __all__ = [
     # Classes
     "ToolBase",

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "radius-ai-agent-sdk"
-version = "0.1.0"
+version = "1.0.0"
 description = "Radius AI Agent SDK is an open-source framework for connecting AI agents to the Radius network"
 authors = [{name = "Matt Dionis", email = "matt.dionis@radiustechnologysystems.com"}]
 readme = "README.md"
@@ -34,7 +34,7 @@ Issues = "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
 Changelog = "https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md"
 
 [tool.setuptools]
-packages = ["radius"]
+packages = ["radius", "radius.classes", "radius.decorators", "radius.types", "radius.utils"]
 
 [tool.pytest.ini_options]
 addopts = [

@@ -6,6 +6,8 @@ from radius.types.chain import Chain
 from .service import Erc20Service
 from .token import Token, get_tokens_for_network
 
+__version__ = "1.0.0"
+
 
 @dataclass
 class ERC20PluginOptions:

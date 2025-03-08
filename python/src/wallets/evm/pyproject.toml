@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "radius-ai-agent-sdk-wallet-evm"
-version = "0.1.0"
+version = "1.0.0"
 description = "Radius AI Agent SDK EVM wallet implementation"
 authors = [{name = "Matt Dionis", email = "matt.dionis@radiustechnologysystems.com"}]
 readme = "README.md"
@@ -21,7 +21,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "radius-ai-agent-sdk>=0.1.0",
+    "radius-ai-agent-sdk>=1.0.0",
     "evmchains>=0.1.3",
     "typing-extensions>=4.12.2",
 ]

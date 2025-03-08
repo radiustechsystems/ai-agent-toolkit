@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "radius-ai-agent-sdk-adapter-langchain"
-version = "0.1.0"
+version = "1.0.0"
 description = "Radius adapter for LangChain"
 authors = [{name = "Matt Dionis", email = "matt.dionis@radiustechnologysystems.com"}]
 readme = "README.md"
@@ -21,7 +21,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
-    "radius-ai-agent-sdk>=0.1.0",
+    "radius-ai-agent-sdk>=1.0.0",
     "langchain>=0.3.14",
 ]
 
@@ -33,7 +33,7 @@ Issues = "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
 Changelog = "https://github.com/radiustechsystems/ai-agent-toolkit/blob/main/python/CHANGELOG.md"
 
 [tool.setuptools]
-packages = ["radius_adapters.langchain"]
+packages = ["radius_adapters.langchain", "radius_adapters.langchain.__tests__"]
 
 [tool.pytest.ini_options]
 addopts = [
