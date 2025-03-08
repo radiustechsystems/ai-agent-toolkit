@@ -2,11 +2,10 @@
 Tests for the PluginBase class and related functionality.
 """
 import pytest
-import asyncio
-from unittest.mock import patch, Mock
+from unittest.mock import Mock
 
 from radius.classes.plugin_base import PluginBase
-from radius.decorators.tool import Tool, TOOL_METADATA_KEY
+from radius.decorators.tool import Tool
 from tests.conftest import MockPlugin, MockWalletClient, TestParameters
 
 
@@ -114,7 +113,6 @@ def test_execute_tool():
 async def test_execute_async_tool():
     """Test executing an async tool."""
     # Use the mock plugin's async tool
-    wallet = MockWalletClient()
     
     # Get an async response directly from the provider method
     plugin = MockPlugin()

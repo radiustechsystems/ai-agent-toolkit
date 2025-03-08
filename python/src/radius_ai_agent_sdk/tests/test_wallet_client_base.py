@@ -2,7 +2,7 @@
 Tests for the WalletClientBase class and related functionality.
 """
 import pytest
-from radius.classes.wallet_client_base import WalletClientBase, EmptyParams, BalanceParams
+from radius.classes.wallet_client_base import EmptyParams, BalanceParams
 from tests.conftest import MockWalletClient
 
 

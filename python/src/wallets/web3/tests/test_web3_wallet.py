@@ -4,7 +4,6 @@ Tests for the Web3EVMWalletClient implementation.
 import pytest
 from unittest.mock import MagicMock, patch
 from web3 import Web3
-from web3.types import HexBytes
 
 from radius_wallets.evm import EVMWalletClient
 from radius_wallets.web3 import Web3EVMWalletClient
