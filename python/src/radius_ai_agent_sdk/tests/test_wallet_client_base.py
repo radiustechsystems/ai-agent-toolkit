@@ -3,6 +3,7 @@ Tests for the WalletClientBase class and related functionality.
 """
 import pytest
 from radius.classes.wallet_client_base import WalletClientBase, EmptyParams, BalanceParams
+from tests.conftest import MockWalletClient
 
 
 def test_wallet_client_core_tools(mock_wallet_client):
@@ -94,7 +95,8 @@ def test_wallet_client_methods(mock_wallet_client):
     
     # Test sign_message
     sig = mock_wallet_client.sign_message("test message")
-    assert sig == {"signature": "sig_test mess"}
+    # The MockWalletClient implementation takes the first 10 chars of the message
+    assert sig == {"signature": "sig_test messa"}
     
     # Test balance_of
     balance = mock_wallet_client.balance_of("0xsomeaddress")
@@ -109,17 +111,7 @@ def test_wallet_client_with_custom_chain():
     """Test wallet client with a custom chain."""
     # Create wallet client with custom chain
     custom_chain = {"type": "evm", "id": 100}
-    wallet = WalletClientBase.__new__(WalletClientBase)
-    wallet.get_chain = lambda: custom_chain
-    wallet.get_address = lambda: "0xcustom"
-    wallet.sign_message = lambda msg: {"signature": f"sig_{msg[:5]}"}
-    wallet.balance_of = lambda addr: {
-        "decimals": 18,
-        "symbol": "CUSTOM",
-        "name": "Custom Token",
-        "value": "10.0",
-        "in_base_units": "10000000000000000000"
-    }
+    wallet = MockWalletClient(address="0xcustom", chain=custom_chain)
     
     # Verify chain
     assert wallet.get_chain() == custom_chain

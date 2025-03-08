@@ -28,7 +28,7 @@ class TestERC20Plugin:
         assert plugin is not None
         assert isinstance(plugin, ERC20Plugin)
         assert plugin.name == "erc20"
-        assert len(plugin.services) == 1
+        assert len(plugin.tool_providers) == 1
     
     def test_supports_chain(self):
         """Test the supports_chain method of the plugin."""
@@ -66,4 +66,4 @@ class TestERC20Plugin:
         # Check plugin
         assert plugin is not None
         assert plugin.name == "erc20"
-        assert plugin.services[0] is not None
+        assert plugin.tool_providers[0] is not None

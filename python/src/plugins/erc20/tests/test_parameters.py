@@ -151,7 +151,7 @@ class TestParameters:
         # Valid parameters
         params = TransferFromParameters(
             tokenAddress="0x1234567890123456789012345678901234567890",
-            from_="0xabcdef1234567890abcdef1234567890abcdef12",
+            **{"from": "0xabcdef1234567890abcdef1234567890abcdef12"},
             to="0x9876543210abcdef9876543210abcdef98765432",
             amount="1000000000000000000",
         )

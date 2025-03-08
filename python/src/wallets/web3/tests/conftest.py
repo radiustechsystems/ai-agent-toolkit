@@ -20,27 +20,30 @@ def mock_web3():
     w3.eth.chain_id = 1
     w3.eth.default_account = "0xmockeddefaultaccount"
     w3.eth.default_local_account = MagicMock()
-    w3.eth.default_local_account.sign_message.return_value = MagicMock(signature=b"0xmockedsignature")
+    w3.eth.default_local_account.sign_message.return_value = MagicMock(signature=b"0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef")
     
     # Mock the get_balance method
     w3.eth.get_balance = lambda address: Wei(1500000000000000000)  # 1.5 ETH
     
     # Mock the to_hex method
-    w3.to_hex = lambda data: "0xmockedsignature"
+    w3.to_hex = lambda data: "0x1234567890abcdef"
     
     # Mock send_transaction and wait_for_transaction_receipt
-    w3.eth.send_transaction = MagicMock(return_value=HexBytes("0xmockedtxhash"))
+    # Use a valid hex string for HexBytes
+    mock_tx_hash = "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+    w3.eth.send_transaction = MagicMock(return_value=HexBytes(mock_tx_hash))
     w3.eth.wait_for_transaction_receipt = MagicMock(return_value={
-        "transactionHash": HexBytes("0xmockedtxhash"),
+        "transactionHash": HexBytes(mock_tx_hash),
         "status": 1
     })
     
     # Mock contract functionality
     w3.eth.contract = MagicMock()
     
-    # Mock ENS
+    # Mock ENS with a valid hex address
     w3.ens = MagicMock()
-    w3.ens.address = MagicMock(return_value="0xmockedensdomain")
+    valid_address = "0x1234567890123456789012345678901234567890"
+    w3.ens.address = MagicMock(return_value=valid_address)
     
     return w3
 
@@ -50,8 +53,8 @@ def mock_web3_options():
     """Fixture that provides mock Web3Options for testing."""
     return Web3Options(
         paymaster={
-            "address": "0xmockedpaymasteraddress",
-            "input": "0xmockedpaymasterinput"
+            "address": None,
+            "input": None
         }
     )
 

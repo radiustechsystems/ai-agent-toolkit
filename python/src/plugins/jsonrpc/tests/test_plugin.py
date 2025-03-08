@@ -16,7 +16,7 @@ class TestJSONRpcPlugin:
         assert plugin is not None
         assert isinstance(plugin, JSONRpcPlugin)
         assert plugin.name == "jsonrpc"
-        assert len(plugin.services) == 1
+        assert len(plugin.tool_providers) == 1
     
     def test_endpoint_configuration(self):
         """Test that the endpoint is properly configured."""
@@ -28,7 +28,7 @@ class TestJSONRpcPlugin:
         plugin = jsonrpc(options)
         
         # Check that the service has the correct endpoint
-        assert plugin.services[0].endpoint == test_endpoint
+        assert plugin.tool_providers[0].endpoint == test_endpoint
     
     def test_supports_chain(self):
         """Test the supports_chain method of the plugin."""
@@ -55,4 +55,4 @@ class TestJSONRpcPlugin:
         # Check plugin
         assert plugin is not None
         assert plugin.name == "jsonrpc"
-        assert plugin.services[0] is not None
+        assert plugin.tool_providers[0] is not None

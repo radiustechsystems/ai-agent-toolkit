@@ -2,7 +2,6 @@
 Tests for the Tool decorator and related functionality.
 """
 import pytest
-from typing import Dict, Any
 
 from radius.decorators.tool import Tool, TOOL_METADATA_KEY, validate_decorator_parameters
 from radius.classes.wallet_client_base import WalletClientBase
@@ -17,7 +16,7 @@ def test_tool_decorator_basic():
             "description": "A test tool",
             "parameters_schema": TestParameters
         })
-        def test_tool(self, params: Dict[str, Any]):
+        def test_tool(self, params: dict):
             return {"result": f"Tool executed with {params}"}
     
     # Create an instance
@@ -40,7 +39,7 @@ def test_tool_decorator_with_custom_name():
             "description": "A tool with custom name",
             "parameters_schema": TestParameters
         })
-        def test_tool(self, params: Dict[str, Any]):
+        def test_tool(self, params: dict):
             return {"result": "Executed"}
     
     # Create an instance
@@ -56,7 +55,7 @@ def test_tool_decorator_with_custom_name():
 def test_validate_decorator_parameters_basic():
     """Test the validate_decorator_parameters function with a valid method."""
     # Create a test method with the right signature
-    def test_method(self, params: Dict[str, Any]):
+    def test_method(self, params: dict):
         pass
     
     # Validate parameters
@@ -70,7 +69,7 @@ def test_validate_decorator_parameters_basic():
 def test_validate_decorator_parameters_with_wallet():
     """Test validate_decorator_parameters with a method that has a wallet parameter."""
     # Create a test method with wallet and params
-    def test_method(self, params: Dict[str, Any], wallet_client: WalletClientBase):
+    def test_method(self, params: dict, wallet_client: WalletClientBase):
         pass
     
     # Validate parameters
@@ -106,7 +105,7 @@ def test_validate_decorator_parameters_invalid_no_dict():
 def test_validate_decorator_parameters_invalid_too_many():
     """Test validate_decorator_parameters with a method that has too many parameters."""
     # Create a test method with too many parameters
-    def test_method(self, param1: Dict[str, Any], param2: WalletClientBase, param3: str, param4: int):
+    def test_method(self, param1: dict, param2: WalletClientBase, param3: str, param4: int):
         pass
     
     # Validation should fail
@@ -125,7 +124,7 @@ def test_tool_execution_in_class_context():
             "description": "A test tool that uses instance state",
             "parameters_schema": TestParameters
         })
-        def test_tool(self, params: Dict[str, Any]):
+        def test_tool(self, params: dict):
             return {"result": f"Value: {self.value}, Params: {params}"}
     
     # Create an instance
@@ -146,7 +145,7 @@ def test_tool_execution_with_wallet_client():
             "description": "A tool that uses a wallet client",
             "parameters_schema": TestParameters
         })
-        def test_tool(self, params: Dict[str, Any], wallet_client: WalletClientBase):
+        def test_tool(self, params: dict, wallet_client: WalletClientBase):
             return {
                 "wallet_address": wallet_client.get_address(),
                 "params": params
