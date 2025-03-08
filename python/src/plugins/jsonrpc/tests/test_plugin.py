@@ -1,6 +1,4 @@
-import pytest
 from radius_plugins.jsonrpc import jsonrpc, JSONRpcPlugin, JSONRpcPluginOptions
-from radius.types.chain import Chain
 
 
 class TestJSONRpcPlugin:

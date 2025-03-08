@@ -123,7 +123,7 @@ class UniswapService:
             }
             
             # Debug log the request parameters
-            print(f"\nRequest parameters for quote:")
+            print("\nRequest parameters for quote:")
             print(json.dumps(request_params, indent=2))
             
             return await self.make_request("quote", request_params)
@@ -160,7 +160,7 @@ class UniswapService:
                 swap_params["permitData"] = permit_data
                 swap_params["signature"] = str(signature["signature"])
 
-            print(f"\nRequest parameters for swap:")
+            print("\nRequest parameters for swap:")
             print(json.dumps(swap_params, indent=2))
             
             response = await self.make_request("swap", swap_params)

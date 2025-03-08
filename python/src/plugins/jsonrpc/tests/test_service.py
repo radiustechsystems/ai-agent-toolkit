@@ -1,6 +1,6 @@
 import pytest
 import json
-from unittest.mock import patch, AsyncMock, MagicMock
+from unittest.mock import patch, AsyncMock
 from radius_plugins.jsonrpc.service import JSONRpcService
 
 

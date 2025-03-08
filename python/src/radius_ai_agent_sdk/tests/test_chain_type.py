@@ -1,7 +1,6 @@
 """
 Tests for the Chain type definitions.
 """
-import pytest
 from typing import cast
 from radius.types.chain import EvmChain, Chain
 

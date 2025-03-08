@@ -1,6 +1,5 @@
-import pytest
 from unittest.mock import Mock, patch
-from typing import List, Dict, Any
+from typing import Dict, Any
 from pydantic import BaseModel
 from langchain_core.tools import BaseTool
 

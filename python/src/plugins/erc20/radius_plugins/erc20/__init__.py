@@ -8,6 +8,8 @@ from .token import Token, get_tokens_for_network
 
 __version__ = "1.0.0"
 
+__all__ = ["Token", "get_tokens_for_network", "ERC20Plugin", "ERC20PluginOptions", "erc20"]
+
 
 @dataclass
 class ERC20PluginOptions:

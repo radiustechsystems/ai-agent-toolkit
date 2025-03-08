@@ -1,9 +1,8 @@
 """
 Tests for the EVMWalletClient class.
 """
-import pytest
-from typing import Dict, cast
-from unittest.mock import Mock, MagicMock
+from typing import cast
+from unittest.mock import Mock
 
 from radius.types.chain import EvmChain
 from radius_wallets.evm import EVMWalletClient, EVMTransaction, EVMReadRequest, EVMTypedData

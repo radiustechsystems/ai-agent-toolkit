@@ -1,8 +1,7 @@
 """
 Tests for the EVM wallet types.
 """
-import pytest
-from typing import cast, Dict, Any
+from typing import Dict, Any
 from eth_typing import HexStr
 
 from radius_wallets.evm.types import (

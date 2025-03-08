@@ -3,11 +3,10 @@ Tests for the PluginBase class and related functionality.
 """
 import pytest
 import asyncio
-from typing import Dict, Any, List
+from typing import Dict, Any
 from unittest.mock import patch, Mock
 
 from radius.classes.plugin_base import PluginBase
-from radius.classes.tool_base import ToolBase, create_tool
 from radius.decorators.tool import Tool, TOOL_METADATA_KEY
 from tests.conftest import MockPlugin, MockWalletClient, TestParameters
 
@@ -142,9 +141,6 @@ async def test_execute_async_tool():
         wallet_client={"index": None},
         parameters={"index": 1}
     ))
-    
-    # Execute the tool (will return a coroutine)
-    coro = provider.async_test_tool({"param1": "async"})
     
     # Test handling of coroutine result
     with patch("inspect.iscoroutine", return_value=True):

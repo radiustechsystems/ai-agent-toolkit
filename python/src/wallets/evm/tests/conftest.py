@@ -3,7 +3,6 @@ Pytest configuration for the EVM wallet tests.
 """
 import pytest
 from typing import Dict, Any, List, cast
-from unittest.mock import Mock
 
 from radius.types.chain import EvmChain
 from radius_wallets.evm import EVMWalletClient, EVMSmartWalletClient

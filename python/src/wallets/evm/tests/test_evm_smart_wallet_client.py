@@ -1,7 +1,6 @@
 """
 Tests for the EVMSmartWalletClient class.
 """
-import pytest
 from typing import List, cast
 from unittest.mock import Mock
 

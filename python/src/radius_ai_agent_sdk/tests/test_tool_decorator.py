@@ -3,7 +3,6 @@ Tests for the Tool decorator and related functionality.
 """
 import pytest
 from typing import Dict, Any
-from pydantic import BaseModel
 
 from radius.decorators.tool import Tool, TOOL_METADATA_KEY, validate_decorator_parameters
 from radius.classes.wallet_client_base import WalletClientBase
