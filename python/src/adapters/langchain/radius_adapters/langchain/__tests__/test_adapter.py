@@ -26,6 +26,21 @@ class MockWallet(WalletClientBase):
     
     def get_core_tools(self):
         return []
+        
+    def get_address(self):
+        return "0x1234567890123456789012345678901234567890"
+        
+    def sign_message(self, message):
+        return {"signature": "0x1234"}
+        
+    def balance_of(self, address):
+        return {
+            "decimals": 18,
+            "symbol": "ETH",
+            "name": "Ethereum",
+            "value": "1.5",
+            "in_base_units": "1500000000000000000"
+        }
 
 
 class MockPlugin(PluginBase):

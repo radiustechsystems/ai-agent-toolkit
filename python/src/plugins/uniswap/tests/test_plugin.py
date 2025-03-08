@@ -17,10 +17,10 @@ class TestUniswapPlugin:
         # Check plugin properties
         assert self.plugin is not None
         assert self.plugin.name == "uniswap"
-        assert len(self.plugin.services) == 1
+        assert len(self.plugin.tool_providers) == 1
         
         # Check service properties
-        service = self.plugin.services[0]
+        service = self.plugin.tool_providers[0]
         assert service.api_key == self.test_api_key
         assert service.base_url == self.test_base_url
 
@@ -35,12 +35,12 @@ class TestUniswapPlugin:
         plugin2 = UniswapPlugin(options2)
         
         # Check base URLs (should normalize trailing slashes)
-        assert plugin1.services[0].base_url == "https://example.com/api"
-        assert plugin2.services[0].base_url == "https://example.com/api"  # trailing slash removed
+        assert plugin1.tool_providers[0].base_url == "https://example.com/api"
+        assert plugin2.tool_providers[0].base_url == "https://example.com/api"  # trailing slash removed
         
         # Check API keys
-        assert plugin1.services[0].api_key == "key1"
-        assert plugin2.services[0].api_key == "key2"
+        assert plugin1.tool_providers[0].api_key == "key1"
+        assert plugin2.tool_providers[0].api_key == "key2"
 
     def test_supports_chain_valid(self):
         """Test the supports_chain method with valid chains."""
@@ -60,7 +60,7 @@ class TestUniswapPlugin:
 
     def test_chain_id_map(self):
         """Test the chain ID mapping in the service."""
-        service = self.plugin.services[0]
+        service = self.plugin.tool_providers[0]
         
         # Check Radius chain ID mapping
         assert 1223953 in service.chain_id_map
