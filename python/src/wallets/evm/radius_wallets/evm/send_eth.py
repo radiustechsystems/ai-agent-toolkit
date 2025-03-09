@@ -62,6 +62,9 @@ def send_eth_method(wallet_client: EVMWalletClient, parameters: Dict[str, str]) 
     try:
         # Convert amount to Wei (1 ETH = 10^18 Wei)
         amount = int(Decimal(parameters["amount"]) * Decimal("1e18"))
+        
+        # Let the wallet client handle gas parameters
+        # The Web3EVMWalletClient implementation will handle gas estimation
         tx = wallet_client.send_transaction(
             {
                 "to": parameters["to"],
@@ -71,7 +74,11 @@ def send_eth_method(wallet_client: EVMWalletClient, parameters: Dict[str, str]) 
         return tx["hash"]
     except Exception as error:
         chain_token = get_chain_token(wallet_client.get_chain()["id"])
-        raise Exception(f"Failed to send {chain_token['symbol']}: {str(error)}")
+        # Check if it's the proofOfAuthorityData issue
+        error_str = str(error)
+        if "proofOfAuthorityData" in error_str:
+            raise Exception(f"Failed to send {chain_token['symbol']}: Radius chain transaction error: {error_str}. Make sure you're using the correct Radius RPC endpoint.")
+        raise Exception(f"Failed to send {chain_token['symbol']}: {error_str}")
 
 def get_chain_token(chain_id: int) -> Dict[str, str | int]:
     """

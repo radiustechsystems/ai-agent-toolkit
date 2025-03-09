@@ -106,12 +106,51 @@ class Web3EVMWalletClient(EVMWalletClient):
                 "value": Wei(transaction.get("value", 0)),
                 "data": transaction.get("data", HexStr("")),
             }
+            
+            # Add gas parameters from transaction if provided, otherwise use defaults
+            if transaction.get("gas"):
+                tx_params["gas"] = transaction["gas"]
+            else:
+                # Try to estimate gas first
+                try:
+                    gas_estimate = self._web3.eth.estimate_gas({
+                        "from": self._web3.eth.default_account,
+                        "to": to_checksum_address(to_address),
+                        "value": Wei(transaction.get("value", 0)),
+                        "data": transaction.get("data", HexStr(""))
+                    })
+                    # Add 20% buffer
+                    tx_params["gas"] = int(gas_estimate * 1.2)
+                except Exception:
+                    # Fallback to safe default for simple transfers
+                    tx_params["gas"] = 21000
+                    
+            # Add gas price parameter
+            if transaction.get("gasPrice"):
+                tx_params["gasPrice"] = transaction["gasPrice"]
+            else:
+                try:
+                    # Try to get current gas price
+                    gas_price = self._web3.eth.gas_price
+                    if gas_price == 0:
+                        # If gas price is 0, use a safe minimum
+                        gas_price = self._web3.to_wei('1', 'gwei')
+                    tx_params["gasPrice"] = gas_price
+                except Exception:
+                    # Fallback to safe default
+                    tx_params["gasPrice"] = self._web3.to_wei('1', 'gwei')
 
             if paymaster_address and paymaster_input:
                 raise NotImplementedError("Paymaster not supported")
 
-            tx_hash = self._web3.eth.send_transaction(tx_params)
-            return self._wait_for_receipt(HexStr(tx_hash.hex()))
+            try:
+                tx_hash = self._web3.eth.send_transaction(tx_params)
+                return self._wait_for_receipt(HexStr(tx_hash.hex()))
+            except Exception as e:
+                # Check if it's the proofOfAuthorityData issue
+                if "proofOfAuthorityData" in str(e):
+                    raise ValueError(f"Radius chain transaction error: {str(e)}. Make sure you're using the correct Radius RPC endpoint.")
+                raise
 
         # Contract call
         function_name = transaction.get("functionName")
@@ -141,6 +180,25 @@ class Web3EVMWalletClient(EVMWalletClient):
             "chainId": self._web3.eth.chain_id,
             "value": Wei(transaction.get("value", 0)),
         }
+        
+        # Add gas parameters from transaction if provided, otherwise use defaults
+        if transaction.get("gas"):
+            tx_params["gas"] = transaction["gas"]
+            
+        # Add gas price parameter
+        if transaction.get("gasPrice"):
+            tx_params["gasPrice"] = transaction["gasPrice"]
+        else:
+            try:
+                # Try to get current gas price
+                gas_price = self._web3.eth.gas_price
+                if gas_price == 0:
+                    # If gas price is 0, use a safe minimum
+                    gas_price = self._web3.to_wei('1', 'gwei')
+                tx_params["gasPrice"] = gas_price
+            except Exception:
+                # Fallback to safe default
+                tx_params["gasPrice"] = self._web3.to_wei('1', 'gwei')
 
         if paymaster_address and paymaster_input:
             raise NotImplementedError("Paymaster not supported")
@@ -152,9 +210,14 @@ class Web3EVMWalletClient(EVMWalletClient):
         tx["nonce"] = self._web3.eth.get_transaction_count(self._web3.eth.default_account)
         
         # Send the transaction
-        tx_hash = self._web3.eth.send_transaction(tx)
-
-        return self._wait_for_receipt(HexStr(tx_hash.hex()))
+        try:
+            tx_hash = self._web3.eth.send_transaction(tx)
+            return self._wait_for_receipt(HexStr(tx_hash.hex()))
+        except Exception as e:
+            # Check if it's the proofOfAuthorityData issue
+            if "proofOfAuthorityData" in str(e):
+                raise ValueError(f"Radius chain transaction error: {str(e)}. Make sure you're using the correct Radius RPC endpoint.")
+            raise
 
     def read(self, request: EVMReadRequest) -> EVMReadResult:
         """Read data from a smart contract."""
