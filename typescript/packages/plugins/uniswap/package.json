@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-plugin-uniswap",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Uniswap integration plugin for the Radius AI Agent Toolkit",
 
   "main": "./dist/index.js",
