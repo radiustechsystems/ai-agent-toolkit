@@ -31,7 +31,7 @@ import {
   ConvertToBaseUnitParameters,
   GetTokenInfoBySymbolParameters,
 } from '../erc20.parameters';
-import { RAD, USDC } from '../token';
+import { RADUSD, USDC } from '../token';
 
 // Mock Tool decorator
 vi.mock('@radiustechsystems/ai-agent-core', () => ({
@@ -51,7 +51,7 @@ describe('Erc20Service', () => {
   let service: Erc20Service;
   let mockWalletClient: RadiusWalletInterface;
 
-  const testTokens = [USDC, RAD];
+  const testTokens = [USDC, RADUSD];
 
   // Set up mock wallet client
   beforeEach(() => {

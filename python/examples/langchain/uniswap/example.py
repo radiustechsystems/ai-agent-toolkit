@@ -14,13 +14,13 @@ from langchain.agents import AgentExecutor, create_tool_calling_agent
 from radius_plugins.uniswap import uniswap, UniswapPluginOptions
 from radius_wallets.web3 import Web3EVMWalletClient
 
-# Define RAD token for Radius testnet
-RAD: Token = {
+# Define RADUSD token for Radius testnet
+RADUSD: Token = {
     "decimals": 18,
-    "symbol": "RAD",
+    "symbol": "RADUSD",
     "name": "Radius Token",
     "chains": {
-        1223953: {"contractAddress": "0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E"}
+        1223953: {"contractAddress": "0x9aeEa4f3025940dBdbf6863C7e16a23Ea95272a4"}
     },
 }
 
@@ -69,9 +69,9 @@ def main():
 1. Check token approvals using uniswap_check_approval
    Example: "Check if I have enough USDC approval for Uniswap"
 2. Get swap quotes using uniswap_get_quote
-   Example: "Get a quote to swap 1 RAD for USDC"
+   Example: "Get a quote to swap 1 RADUSD for USDC"
 3. Execute token swaps using uniswap_swap_tokens
-   Example: "Swap 0.1 RAD for USDC"
+   Example: "Swap 0.1 RADUSD for USDC"
 
 For testing purposes, use small amounts.
 
@@ -81,7 +81,7 @@ When users ask for token swaps:
 3. Finally execute the swap using uniswap_swap_tokens
 
 Always use base units (wei) for amounts. For example:
-- 1 RAD = 1000000000000000000 (18 decimals)
+- 1 RADUSD = 1000000000000000000 (18 decimals)
 - 1 USDC = 1000000 (6 decimals)"""),
             ("placeholder", "{chat_history}"),
             ("human", "{input}"),
@@ -100,7 +100,7 @@ Always use base units (wei) for amounts. For example:
         tools = get_on_chain_tools(
             wallet=wallet_client,
             plugins=[
-                erc20(options=ERC20PluginOptions(tokens=[USDC, RAD])),
+                erc20(options=ERC20PluginOptions(tokens=[USDC, RADUSD])),
                 uniswap(options=UniswapPluginOptions(
                     api_key=uniswap_api_key,
                     base_url=uniswap_base_url
@@ -115,14 +115,14 @@ Always use base units (wei) for amounts. For example:
     print("\nUniswap Plugin Test Interface")
     print("Example commands:")
     print("1. Check if I have enough USDC approval for Uniswap")
-    print("2. Get a quote to swap 1 RAD for USDC")
-    print("3. Swap 0.1 RAD for USDC")
+    print("2. Get a quote to swap 1 RADUSD for USDC")
+    print("3. Swap 0.1 RADUSD for USDC")
     print("\nTestnet token addresses:")
     # These are standard Radius-deployed testnet tokens
-    print("- RAD: 0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E")
+    print("- RADUSD: 0x9aeEa4f3025940dBdbf6863C7e16a23Ea95272a4")
     print("- USDC: 0x51fCe89b9f6D4c530698f181167043e1bB4abf89")
     print("\nTest amounts:")
-    print("- 0.01 RAD = 10000000000000000 wei")
+    print("- 0.01 RADUSD = 10000000000000000 wei")
     print("- 10 USDC = 10000000 units")
 
     agent = create_tool_calling_agent(llm, tools, prompt)

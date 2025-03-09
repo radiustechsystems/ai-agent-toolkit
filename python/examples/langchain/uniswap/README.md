@@ -62,8 +62,8 @@ python example.py
 This will start an interactive CLI where you can test Uniswap operations through natural language, such as:
 
 - "Check if I have enough USDC approval for Uniswap"
-- "Get a quote to swap 1 RAD for USDC"
-- "Swap 0.1 RAD for USDC"
+- "Get a quote to swap 1 RADUSD for USDC"
+- "Swap 0.1 RADUSD for USDC"
 
 ## How It Works
 
@@ -79,7 +79,7 @@ from radius_wallets.web3 import Web3EVMWalletClient
 tools = get_on_chain_tools(
     wallet=Web3EVMWalletClient(w3),
     plugins=[
-        erc20(options=ERC20PluginOptions(tokens=[USDC, RAD])),
+        erc20(options=ERC20PluginOptions(tokens=[USDC, RADUSD])),
         uniswap(options=UniswapPluginOptions(
             api_key=uniswap_api_key,
             base_url=uniswap_base_url

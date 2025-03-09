@@ -45,7 +45,7 @@ vi.mock('@radiustechsystems/ai-agent-core', () => {
 
 vi.mock('../../utils/utilities', () => ({
   getChainToken: vi.fn(() => ({
-    symbol: 'RAD',
+    symbol: 'RADUSD',
     name: 'Radius Token',
     decimals: 18,
   })),
@@ -71,7 +71,7 @@ describe('SendETHPlugin', () => {
     balanceOf: vi.fn().mockResolvedValue({
       value: '1.0',
       decimals: 18,
-      symbol: 'RAD',
+      symbol: 'RADUSD',
       name: 'Radius Token',
       inBaseUnits: '1000000000000000000',
     }),
@@ -108,7 +108,7 @@ describe('SendETHPlugin', () => {
     const tools = plugin.getTools(mockWalletClient as RadiusWalletInterface);
 
     expect(tools).toHaveLength(1);
-    expect(tools[0].name).toBe('send_RAD');
+    expect(tools[0].name).toBe('send_RADUSD');
     expect(tools[0].parameters).toBeDefined();
   });
 
@@ -147,6 +147,6 @@ describe('SendETHPlugin', () => {
         to: '0xrecipient',
         amount: '1.0',
       }),
-    ).rejects.toThrow('Failed to send RAD: Error: Transaction failed');
+    ).rejects.toThrow('Failed to send RADUSD: Error: Transaction failed');
   });
 });

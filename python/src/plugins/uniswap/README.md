@@ -119,9 +119,9 @@ Gets a quote for swapping tokens.
 ```python
 try:
     quote_params = {
-        "tokenIn": "0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E",   # RAD on Radius testnet
+        "tokenIn": "0x9aeEa4f3025940dBdbf6863C7e16a23Ea95272a4",   # RADUSD on Radius testnet
         "tokenOut": "0x51fCe89b9f6D4c530698f181167043e1bB4abf89",  # USDC on Radius testnet
-        "amount": "1000000000000000000",  # 1 RAD (18 decimals)
+        "amount": "1000000000000000000",  # 1 RADUSD (18 decimals)
         "type": "EXACT_INPUT",
         "protocols": ["V3"]
     }
@@ -150,9 +150,9 @@ Executes a token swap on Uniswap.
 ```python
 try:
     swap_params = {
-        "tokenIn": "0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E",   # RAD on Radius testnet
+        "tokenIn": "0x9aeEa4f3025940dBdbf6863C7e16a23Ea95272a4",   # RADUSD on Radius testnet
         "tokenOut": "0x51fCe89b9f6D4c530698f181167043e1bB4abf89",  # USDC on Radius testnet
-        "amount": "1000000000000000000",  # 1 RAD (18 decimals)
+        "amount": "1000000000000000000",  # 1 RADUSD (18 decimals)
         "type": "EXACT_INPUT",
         "protocols": ["V3"]
     }
