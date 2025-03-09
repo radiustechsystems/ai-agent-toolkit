@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * This script replaces all "workspace:*" references in package.json dependencies 
+ * This script replaces all "workspace:*" references in package.json dependencies
  * with the actual version number of the package before publishing.
- * 
+ *
  * It processes the current package.json and can optionally process all packages
  * in the workspace.
  */
@@ -27,7 +27,7 @@ function replaceWorkspaceReferences(packageJsonPath) {
   console.log(`Processing ${packageJsonPath}`);
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
   const { name, version } = packageJson;
-  
+
   // Store version for reference by other packages
   if (name) {
     packagesVersions[name] = version;
@@ -35,28 +35,30 @@ function replaceWorkspaceReferences(packageJsonPath) {
 
   let hasWorkspaceDeps = false;
   const sections = ['dependencies', 'peerDependencies', 'devDependencies', 'optionalDependencies'];
-  
+
   // Process each dependency section
-  sections.forEach(section => {
+  for (const section of sections) {
     if (packageJson[section]) {
-      Object.keys(packageJson[section]).forEach(dep => {
+      for (const dep of Object.keys(packageJson[section])) {
         if (packageJson[section][dep] === 'workspace:*') {
           // Get the version from package mappings or use this package's version
           const depVersion = packagesVersions[dep] || version;
-          console.log(`Replacing workspace:* reference for ${dep} with version ${depVersion} in ${section}`);
+          console.log(
+            `Replacing workspace:* reference for ${dep} with version ${depVersion} in ${section}`,
+          );
           packageJson[section][dep] = depVersion;
           hasWorkspaceDeps = true;
         }
-      });
+      }
     }
-  });
+  }
 
   if (hasWorkspaceDeps) {
     // Write the updated package.json back to disk
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
     console.log(`Updated ${packageJsonPath} with resolved workspace references`);
   }
-  
+
   return { name, version };
 }
 
@@ -64,37 +66,37 @@ function replaceWorkspaceReferences(packageJsonPath) {
 function findAllPackageJsonFiles() {
   // First, locate the workspace root
   const workspaceRoot = path.resolve(process.cwd(), '.');
-  
+
   // Define packages directory based on pnpm workspace structure
   const packagesDir = path.join(workspaceRoot, 'packages');
-  
+
   const packageJsonFiles = [];
-  
+
   // Find all package.json files in packages directory
   function findPackageJsonFilesRecursive(dir) {
     const items = fs.readdirSync(dir);
-    
+
     for (const item of items) {
       const itemPath = path.join(dir, item);
       const stat = fs.statSync(itemPath);
-      
+
       if (stat.isDirectory() && item !== 'node_modules' && item !== 'dist') {
         // Check if this directory has a package.json
         const packageJsonPath = path.join(itemPath, 'package.json');
         if (fs.existsSync(packageJsonPath)) {
           packageJsonFiles.push(packageJsonPath);
         }
-        
+
         // Continue recursively searching
         findPackageJsonFilesRecursive(itemPath);
       }
     }
   }
-  
+
   if (fs.existsSync(packagesDir)) {
     findPackageJsonFilesRecursive(packagesDir);
   }
-  
+
   return packageJsonFiles;
 }
 
@@ -102,24 +104,24 @@ function findAllPackageJsonFiles() {
 async function main() {
   if (processAllPackages) {
     console.log('Processing all packages in workspace');
-    
+
     // First pass: collect version information from all packages
     const packageJsonFiles = findAllPackageJsonFiles();
-    
-    packageJsonFiles.forEach(packageJsonPath => {
+
+    for (const packageJsonPath of packageJsonFiles) {
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
       if (packageJson.name && packageJson.version) {
         packagesVersions[packageJson.name] = packageJson.version;
       }
-    });
-    
+    }
+
     console.log('Collected versions:', packagesVersions);
-    
+
     // Second pass: replace workspace references
-    packageJsonFiles.forEach(packageJsonPath => {
+    for (const packageJsonPath of packageJsonFiles) {
       replaceWorkspaceReferences(packageJsonPath);
-    });
-    
+    }
+
     // Process the root package.json last
     const rootPackageJsonPath = path.resolve(process.cwd(), 'package.json');
     replaceWorkspaceReferences(rootPackageJsonPath);
@@ -130,7 +132,7 @@ async function main() {
   }
 }
 
-main().catch(error => {
+main().catch((error) => {
   console.error('Error processing workspace references:', error);
   process.exit(1);
 });
