@@ -25,14 +25,13 @@ export const USDC: Token = {
   },
 };
 
-export const WETH: Token = {
+export const RAD: Token = {
   decimals: 18,
-  symbol: 'WETH',
-  name: 'Wrapped Ether',
+  symbol: 'RAD',
+  name: 'Radius Token',
   chains: {
     '1223953': {
-      // TODO: Fix this contract address
-      contractAddress: '0x4200000000000000000000000000000000000006',
+      contractAddress: '0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E',
     },
   },
 };

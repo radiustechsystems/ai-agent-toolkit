@@ -91,7 +91,7 @@ Checks if a wallet has enough token approval for a swap.
 ```python
 try:
     approval_status = await check_approval_tool.execute({
-        "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",  # USDC
+        "token": "0x51fCe89b9f6D4c530698f181167043e1bB4abf89",  # USDC on Radius testnet
         "amount": "1000000",  # 1 USDC (6 decimals)
         "walletAddress": "0xefbf7a6fa61a1602eb7630c92e79e5b6e63909e1"
     })
@@ -119,9 +119,9 @@ Gets a quote for swapping tokens.
 ```python
 try:
     quote_params = {
-        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",  # WETH
-        "tokenOut": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",  # USDC
-        "amount": "1000000000000000000",  # 1 WETH (18 decimals)
+        "tokenIn": "0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E",   # RAD on Radius testnet
+        "tokenOut": "0x51fCe89b9f6D4c530698f181167043e1bB4abf89",  # USDC on Radius testnet
+        "amount": "1000000000000000000",  # 1 RAD (18 decimals)
         "type": "EXACT_INPUT",
         "protocols": ["V3"]
     }
@@ -150,9 +150,9 @@ Executes a token swap on Uniswap.
 ```python
 try:
     swap_params = {
-        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",  # WETH
-        "tokenOut": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",  # USDC
-        "amount": "1000000000000000000",  # 1 WETH (18 decimals)
+        "tokenIn": "0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E",   # RAD on Radius testnet
+        "tokenOut": "0x51fCe89b9f6D4c530698f181167043e1bB4abf89",  # USDC on Radius testnet
+        "amount": "1000000000000000000",  # 1 RAD (18 decimals)
         "type": "EXACT_INPUT",
         "protocols": ["V3"]
     }
