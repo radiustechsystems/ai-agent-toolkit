@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-toolkit",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "TypeScript AI Agent Toolkit for integrating AI agents with the Radius Platform for smart contracts, automation, and payments",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -31,15 +31,15 @@
     "test": "pnpm turbo test"
   },
   "dependencies": {
-    "@radiustechsystems/ai-agent-adapter-langchain": "workspace:*",
-    "@radiustechsystems/ai-agent-adapter-model-context-protocol": "workspace:*",
-    "@radiustechsystems/ai-agent-adapter-vercel-ai": "workspace:*",
-    "@radiustechsystems/ai-agent-core": "workspace:*",
-    "@radiustechsystems/ai-agent-plugin-contracts": "workspace:*",
-    "@radiustechsystems/ai-agent-plugin-crypto": "workspace:*",
-    "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
-    "@radiustechsystems/ai-agent-plugin-uniswap": "workspace:*",
-    "@radiustechsystems/ai-agent-wallet": "workspace:*"
+    "@radiustechsystems/ai-agent-adapter-langchain": "1.0.2",
+    "@radiustechsystems/ai-agent-adapter-model-context-protocol": "1.0.2",
+    "@radiustechsystems/ai-agent-adapter-vercel-ai": "1.0.2",
+    "@radiustechsystems/ai-agent-core": "1.0.2",
+    "@radiustechsystems/ai-agent-plugin-contracts": "1.0.2",
+    "@radiustechsystems/ai-agent-plugin-crypto": "1.0.2",
+    "@radiustechsystems/ai-agent-plugin-erc20": "1.0.2",
+    "@radiustechsystems/ai-agent-plugin-uniswap": "1.0.2",
+    "@radiustechsystems/ai-agent-wallet": "1.0.2"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
@@ -78,6 +78,7 @@
   },
   "license": "MIT",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "linkDirectory": false
   }
 }
