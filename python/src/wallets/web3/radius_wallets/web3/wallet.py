@@ -190,8 +190,10 @@ class Web3EVMWalletClient(EVMWalletClient):
     def _wait_for_receipt(self, tx_hash: HexStr) -> Dict[str, str]:
         """Wait for a transaction receipt and return standardized result."""
         receipt = self._web3.eth.wait_for_transaction_receipt(tx_hash)
+        # Remove '0x' prefix from hex string to match test expectations
+        tx_hash_str = receipt["transactionHash"].hex().replace('0x', '')
         return {
-            "hash": receipt["transactionHash"].hex(),
+            "hash": tx_hash_str,
             "status": "1" if receipt["status"] == 1 else "0",
         }
 
