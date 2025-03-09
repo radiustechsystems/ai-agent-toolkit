@@ -23,6 +23,8 @@
     "build:all:prod": "cross-env NODE_ENV=production pnpm build:all",
     "replace-workspace-refs": "node scripts/replace-workspace-refs.js",
     "replace-workspace-refs:all": "node scripts/replace-workspace-refs.js --all",
+    "add-prepublish-scripts": "node scripts/add-prepublish-scripts.js",
+    "prepare-publish": "pnpm add-prepublish-scripts && pnpm build:all:prod && pnpm replace-workspace-refs:all",
     "prepublishOnly": "pnpm build:all:prod && pnpm replace-workspace-refs:all",
     "clean:dist": "pnpm rimraf \"**/dist\" --glob",
     "clean:node_modules": "pnpm rimraf \"**/node_modules\" --glob",

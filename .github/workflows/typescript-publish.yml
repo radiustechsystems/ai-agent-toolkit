@@ -68,6 +68,10 @@ jobs:
             mv $pkg.tmp $pkg
           done
       
+      - name: Add prepublish scripts to all packages
+        working-directory: typescript
+        run: pnpm add-prepublish-scripts
+      
       - name: Build all packages
         working-directory: typescript
         run: pnpm build:all:prod
