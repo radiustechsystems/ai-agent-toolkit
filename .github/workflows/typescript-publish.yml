@@ -68,9 +68,17 @@ jobs:
             mv $pkg.tmp $pkg
           done
       
+      - name: Add prepublish scripts to all packages
+        working-directory: typescript
+        run: pnpm add-prepublish-scripts
+      
       - name: Build all packages
         working-directory: typescript
         run: pnpm build:all:prod
+      
+      - name: Replace workspace references in all packages
+        working-directory: typescript
+        run: pnpm replace-workspace-refs:all
       
       - name: Publish packages in order
         working-directory: typescript
@@ -80,13 +88,6 @@ jobs:
             local pkg_dir=$1
             echo "Publishing package in $pkg_dir"
             cd "$pkg_dir"
-            
-            # If this is the umbrella package, run the replace-workspace-refs script for all packages
-            if [ "$pkg_dir" = "." ]; then
-              echo "Running replace-workspace-refs script for all packages in workspace"
-              pnpm replace-workspace-refs:all
-            fi
-            
             npm publish --provenance --access public
             cd - > /dev/null
           }
