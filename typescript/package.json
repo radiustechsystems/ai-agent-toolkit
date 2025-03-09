@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-toolkit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "TypeScript AI Agent Toolkit for integrating AI agents with the Radius Platform for smart contracts, automation, and payments",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -13,7 +13,7 @@
     }
   },
   "type": "module",
-  "files": ["dist", "LICENSE", "README.md", "CHANGELOG.md"],
+  "files": ["dist", "scripts", "LICENSE", "README.md", "CHANGELOG.md"],
   "scripts": {
     "build": "pnpm build:all",
     "build:libs": "pnpm turbo --filter \"./packages/**\" build",
@@ -21,7 +21,9 @@
     "build:umbrella": "tsup",
     "build:all": "pnpm build:libs && pnpm build:umbrella",
     "build:all:prod": "cross-env NODE_ENV=production pnpm build:all",
-    "prepublishOnly": "pnpm build:all:prod",
+    "replace-workspace-refs": "node scripts/replace-workspace-refs.js",
+    "replace-workspace-refs:all": "node scripts/replace-workspace-refs.js --all",
+    "prepublishOnly": "pnpm build:all:prod && pnpm replace-workspace-refs:all",
     "clean:dist": "pnpm rimraf \"**/dist\" --glob",
     "clean:node_modules": "pnpm rimraf \"**/node_modules\" --glob",
     "lint": "biome check .",
@@ -79,17 +81,6 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public",
-    "linkDirectory": false,
-    "dependencies": {
-      "@radiustechsystems/ai-agent-adapter-langchain": "1.0.2",
-      "@radiustechsystems/ai-agent-adapter-model-context-protocol": "1.0.2",
-      "@radiustechsystems/ai-agent-adapter-vercel-ai": "1.0.2",
-      "@radiustechsystems/ai-agent-core": "1.0.2",
-      "@radiustechsystems/ai-agent-plugin-contracts": "1.0.2",
-      "@radiustechsystems/ai-agent-plugin-crypto": "1.0.2",
-      "@radiustechsystems/ai-agent-plugin-erc20": "1.0.2",
-      "@radiustechsystems/ai-agent-plugin-uniswap": "1.0.2",
-      "@radiustechsystems/ai-agent-wallet": "1.0.2"
-    }
+    "linkDirectory": false
   }
 }
