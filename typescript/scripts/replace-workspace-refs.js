@@ -8,9 +8,9 @@
  * in the workspace.
  */
 
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -55,7 +55,7 @@ function replaceWorkspaceReferences(packageJsonPath) {
 
   if (hasWorkspaceDeps) {
     // Write the updated package.json back to disk
-    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
+    fs.writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
     console.log(`Updated ${packageJsonPath} with resolved workspace references`);
   }
 
