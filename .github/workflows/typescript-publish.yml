@@ -80,6 +80,13 @@ jobs:
             local pkg_dir=$1
             echo "Publishing package in $pkg_dir"
             cd "$pkg_dir"
+            
+            # If this is the umbrella package, run the replace-workspace-refs script
+            if [ "$pkg_dir" = "." ]; then
+              echo "Running replace-workspace-refs script for umbrella package"
+              pnpm replace-workspace-refs
+            fi
+            
             npm publish --provenance --access public
             cd - > /dev/null
           }
