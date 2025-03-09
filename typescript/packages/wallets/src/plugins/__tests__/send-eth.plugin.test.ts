@@ -108,7 +108,7 @@ describe('SendETHPlugin', () => {
     const tools = plugin.getTools(mockWalletClient as RadiusWalletInterface);
 
     expect(tools).toHaveLength(1);
-    expect(tools[0].name).toBe('send_RAD');
+    expect(tools[0].name).toBe('send_RADUSD');
     expect(tools[0].parameters).toBeDefined();
   });
 
