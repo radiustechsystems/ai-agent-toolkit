@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-adapter-langchain",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "LangChain adapter for the Radius AI Agent Toolkit",
 
   "main": "./dist/index.js",
