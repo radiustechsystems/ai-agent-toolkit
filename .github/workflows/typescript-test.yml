@@ -7,55 +7,49 @@ on:
     branches: [ main ]
 
 jobs:
-  changes:
-    name: Detect Changes
+  test:
+    name: TypeScript Tests
     runs-on: ubuntu-latest
-    outputs:
-      typescript: ${{ steps.filter.outputs.typescript }}
     steps:
       - uses: actions/checkout@v4
+      
+      # Check if typescript files changed
       - uses: dorny/paths-filter@v2
         id: filter
         with:
           filters: |
             typescript:
               - 'typescript/**'
-
-  test:
-    name: Test
-    needs: changes
-    if: ${{ needs.changes.outputs.typescript == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
       
+      # Run tests only if typescript files changed
       - name: Setup Node.js
+        if: steps.filter.outputs.typescript == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
       
       - name: Setup pnpm
+        if: steps.filter.outputs.typescript == 'true'
         uses: pnpm/action-setup@v2
         with:
           version: '9'
       
       - name: Install dependencies
+        if: steps.filter.outputs.typescript == 'true'
         working-directory: typescript
         run: pnpm install
       
       - name: Build project
+        if: steps.filter.outputs.typescript == 'true'
         working-directory: typescript
         run: pnpm build
       
       - name: Run tests
+        if: steps.filter.outputs.typescript == 'true'
         working-directory: typescript
         run: pnpm test
         
-  skip:
-    name: Test Skipped
-    needs: changes
-    if: ${{ needs.changes.outputs.typescript != 'true' }}
-    runs-on: ubuntu-latest
-    steps:
+      # Skip message (not displayed as a separate job)
       - name: Skip tests
+        if: steps.filter.outputs.typescript != 'true'
         run: echo "No TypeScript changes detected. Skipping tests."

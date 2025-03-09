@@ -7,13 +7,13 @@ on:
     branches: [ main ]
 
 jobs:
-  changes:
-    name: Detect Changes
+  lint:
+    name: Python Lint
     runs-on: ubuntu-latest
-    outputs:
-      python: ${{ steps.filter.outputs.python }}
     steps:
       - uses: actions/checkout@v4
+      
+      # Check if python files changed
       - uses: dorny/paths-filter@v2
         id: filter
         with:
@@ -21,34 +21,26 @@ jobs:
             python:
               - 'python/**'
 
-  lint:
-    name: Lint
-    needs: changes
-    if: ${{ needs.changes.outputs.python == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
+      # Run lint only if python files changed
       - name: Set up Python
+        if: steps.filter.outputs.python == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
           cache: 'pip'
 
       - name: Install dependencies
+        if: steps.filter.outputs.python == 'true'
         run: |
           python -m pip install --upgrade pip
           pip install ruff
 
       - name: Run linters
+        if: steps.filter.outputs.python == 'true'
         working-directory: python
         run: ruff check .
-
-  skip:
-    name: Lint Skipped
-    needs: changes
-    if: ${{ needs.changes.outputs.python != 'true' }}
-    runs-on: ubuntu-latest
-    steps:
+        
+      # Skip message (not displayed as a separate job)
       - name: Skip lint
+        if: steps.filter.outputs.python != 'true'
         run: echo "No Python changes detected. Skipping lint."

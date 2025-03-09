@@ -7,13 +7,13 @@ on:
     branches: [ main ]
 
 jobs:
-  changes:
-    name: Detect Changes
+  test:
+    name: Python Tests
     runs-on: ubuntu-latest
-    outputs:
-      python: ${{ steps.filter.outputs.python }}
     steps:
       - uses: actions/checkout@v4
+      
+      # Check if python files changed
       - uses: dorny/paths-filter@v2
         id: filter
         with:
@@ -21,21 +21,16 @@ jobs:
             python:
               - 'python/**'
 
-  test:
-    name: Test
-    needs: changes
-    if: ${{ needs.changes.outputs.python == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
+      # Run tests only if python files changed
       - name: Set up Python
+        if: steps.filter.outputs.python == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
           cache: 'pip'
 
       - name: Install dependencies
+        if: steps.filter.outputs.python == 'true'
         run: |
           python -m pip install --upgrade pip
           pip install pytest pytest-asyncio
@@ -67,38 +62,41 @@ jobs:
           pip install -e .
 
       - name: Run SDK tests
+        if: steps.filter.outputs.python == 'true'
         working-directory: python/src/radius_ai_agent_sdk
         run: pytest tests/
 
       - name: Run ERC20 plugin tests
+        if: steps.filter.outputs.python == 'true'
         working-directory: python/src/plugins/erc20
         run: pytest tests/
 
       - name: Run JSONRPC plugin tests
+        if: steps.filter.outputs.python == 'true'
         working-directory: python/src/plugins/jsonrpc
         run: pytest tests/
 
       - name: Run Langchain adapter tests
+        if: steps.filter.outputs.python == 'true'
         working-directory: python/src/adapters/langchain
         run: pytest radius_adapters/langchain/__tests__/
       
       - name: Run Uniswap plugin tests
+        if: steps.filter.outputs.python == 'true'
         working-directory: python/src/plugins/uniswap
         run: pytest tests/
       
       - name: Run EVM wallet tests
+        if: steps.filter.outputs.python == 'true'
         working-directory: python/src/wallets/evm
         run: pytest tests/
       
       - name: Run Web3 wallet tests
+        if: steps.filter.outputs.python == 'true'
         working-directory: python/src/wallets/web3
         run: pytest tests/
-
-  skip:
-    name: Test Skipped
-    needs: changes
-    if: ${{ needs.changes.outputs.python != 'true' }}
-    runs-on: ubuntu-latest
-    steps:
+      
+      # Skip message (not displayed as a separate job)
       - name: Skip tests
+        if: steps.filter.outputs.python != 'true'
         run: echo "No Python changes detected. Skipping tests."
