@@ -31,15 +31,15 @@
     "test": "pnpm turbo test"
   },
   "dependencies": {
-    "@radiustechsystems/ai-agent-adapter-langchain": "1.0.2",
-    "@radiustechsystems/ai-agent-adapter-model-context-protocol": "1.0.2",
-    "@radiustechsystems/ai-agent-adapter-vercel-ai": "1.0.2",
-    "@radiustechsystems/ai-agent-core": "1.0.2",
-    "@radiustechsystems/ai-agent-plugin-contracts": "1.0.2",
-    "@radiustechsystems/ai-agent-plugin-crypto": "1.0.2",
-    "@radiustechsystems/ai-agent-plugin-erc20": "1.0.2",
-    "@radiustechsystems/ai-agent-plugin-uniswap": "1.0.2",
-    "@radiustechsystems/ai-agent-wallet": "1.0.2"
+    "@radiustechsystems/ai-agent-adapter-langchain": "workspace:*",
+    "@radiustechsystems/ai-agent-adapter-model-context-protocol": "workspace:*",
+    "@radiustechsystems/ai-agent-adapter-vercel-ai": "workspace:*",
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "@radiustechsystems/ai-agent-plugin-contracts": "workspace:*",
+    "@radiustechsystems/ai-agent-plugin-crypto": "workspace:*",
+    "@radiustechsystems/ai-agent-plugin-erc20": "workspace:*",
+    "@radiustechsystems/ai-agent-plugin-uniswap": "workspace:*",
+    "@radiustechsystems/ai-agent-wallet": "workspace:*"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
@@ -79,6 +79,17 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public",
-    "linkDirectory": false
+    "linkDirectory": false,
+    "dependencies": {
+      "@radiustechsystems/ai-agent-adapter-langchain": "1.0.2",
+      "@radiustechsystems/ai-agent-adapter-model-context-protocol": "1.0.2",
+      "@radiustechsystems/ai-agent-adapter-vercel-ai": "1.0.2",
+      "@radiustechsystems/ai-agent-core": "1.0.2",
+      "@radiustechsystems/ai-agent-plugin-contracts": "1.0.2",
+      "@radiustechsystems/ai-agent-plugin-crypto": "1.0.2",
+      "@radiustechsystems/ai-agent-plugin-erc20": "1.0.2",
+      "@radiustechsystems/ai-agent-plugin-uniswap": "1.0.2",
+      "@radiustechsystems/ai-agent-wallet": "1.0.2"
+    }
   }
 }
