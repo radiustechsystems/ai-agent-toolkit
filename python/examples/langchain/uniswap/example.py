@@ -1,7 +1,18 @@
 import os
 from dotenv import load_dotenv
-from typing import Dict
 from radius_plugins.erc20.token import USDC, Token
+from radius_plugins.erc20 import ERC20PluginOptions, erc20
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from web3 import Web3
+from web3.middleware.signing import construct_sign_and_send_raw_middleware
+from eth_account.signers.local import LocalAccount
+from eth_account import Account
+
+from radius_adapters.langchain import get_on_chain_tools
+from langchain.agents import AgentExecutor, create_tool_calling_agent
+from radius_plugins.uniswap import uniswap, UniswapPluginOptions
+from radius_wallets.web3 import Web3EVMWalletClient
 
 # Define RAD token for Radius testnet
 RAD: Token = {
@@ -15,19 +26,6 @@ RAD: Token = {
 
 # Update USDC address for Radius testnet
 USDC["chains"][1223953]["contractAddress"] = "0x51fCe89b9f6D4c530698f181167043e1bB4abf89"
-
-from radius_plugins.erc20 import ERC20PluginOptions, erc20
-from langchain_openai import ChatOpenAI
-from langchain.agents import AgentExecutor, create_tool_calling_agent
-from langchain_core.prompts import ChatPromptTemplate
-from web3 import Web3
-from web3.middleware.signing import construct_sign_and_send_raw_middleware
-from eth_account.signers.local import LocalAccount
-from eth_account import Account
-
-from radius_adapters.langchain import get_on_chain_tools
-from radius_plugins.uniswap import uniswap, UniswapPluginOptions
-from radius_wallets.web3 import Web3EVMWalletClient
 
 # Load environment variables
 load_dotenv()
@@ -126,9 +124,7 @@ Always use base units (wei) for amounts. For example:
     print("\nTest amounts:")
     print("- 0.01 RAD = 10000000000000000 wei")
     print("- 10 USDC = 10000000 units")
-    
-    # Uncomment to run interactive mode
-    """
+
     agent = create_tool_calling_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(agent=agent, tools=tools, handle_parsing_errors=True, verbose=True)
     
@@ -149,8 +145,6 @@ Always use base units (wei) for amounts. For example:
             print("\nAssistant:", response["output"])
         except Exception as e:
             print("\nError:", str(e))
-    """
-    print("\nExample successfully initialized and configured - it's ready to use!")
 
 
 if __name__ == "__main__":

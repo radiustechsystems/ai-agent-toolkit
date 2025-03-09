@@ -31,7 +31,7 @@ import {
   ConvertToBaseUnitParameters,
   GetTokenInfoBySymbolParameters,
 } from '../erc20.parameters';
-import { USDC, RAD } from '../token';
+import { RAD, USDC } from '../token';
 
 // Mock Tool decorator
 vi.mock('@radiustechsystems/ai-agent-core', () => ({
