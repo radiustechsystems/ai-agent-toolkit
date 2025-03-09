@@ -228,7 +228,7 @@ def test_simple_eth_transfer(mock_web3_wallet, mock_web3):
         result = mock_web3_wallet.send_transaction(transaction)
     
     # Verify result
-    assert result["hash"] == "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+    assert result["hash"] == "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
     assert result["status"] == "1"
     
     # Verify send_transaction was called
@@ -270,7 +270,7 @@ def test_contract_call(mock_web3_wallet, mock_web3):
         result = mock_web3_wallet.send_transaction(transaction)
     
     # Verify result
-    assert result["hash"] == "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+    assert result["hash"] == "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
     assert result["status"] == "1"
     
     # Verify contract was created
