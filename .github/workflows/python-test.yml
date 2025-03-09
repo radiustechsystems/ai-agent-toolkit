@@ -3,18 +3,29 @@ name: Python Test
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'python/**'
   pull_request:
     branches: [ main ]
-    paths:
-      - 'python/**'
 
 jobs:
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            python:
+              - 'python/**'
+
   test:
     name: Test
+    needs: changes
+    if: ${{ needs.changes.outputs.python == 'true' }}
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -82,3 +93,12 @@ jobs:
       - name: Run Web3 wallet tests
         working-directory: python/src/wallets/web3
         run: pytest tests/
+
+  skip:
+    name: Test Skipped
+    needs: changes
+    if: ${{ needs.changes.outputs.python != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip tests
+        run: echo "No Python changes detected. Skipping tests."

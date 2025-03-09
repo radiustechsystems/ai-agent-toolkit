@@ -3,18 +3,29 @@ name: Python Lint
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'python/**'
   pull_request:
     branches: [ main ]
-    paths:
-      - 'python/**'
 
 jobs:
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      python: ${{ steps.filter.outputs.python }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            python:
+              - 'python/**'
+
   lint:
     name: Lint
+    needs: changes
+    if: ${{ needs.changes.outputs.python == 'true' }}
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -32,3 +43,12 @@ jobs:
       - name: Run linters
         working-directory: python
         run: ruff check .
+
+  skip:
+    name: Lint Skipped
+    needs: changes
+    if: ${{ needs.changes.outputs.python != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip lint
+        run: echo "No Python changes detected. Skipping lint."

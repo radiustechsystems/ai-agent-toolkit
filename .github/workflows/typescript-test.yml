@@ -3,18 +3,29 @@ name: TypeScript Test
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'typescript/**'
   pull_request:
     branches: [ main ]
-    paths:
-      - 'typescript/**'
 
 jobs:
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      typescript: ${{ steps.filter.outputs.typescript }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            typescript:
+              - 'typescript/**'
+
   test:
     name: Test
+    needs: changes
+    if: ${{ needs.changes.outputs.typescript == 'true' }}
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       
@@ -39,3 +50,12 @@ jobs:
       - name: Run tests
         working-directory: typescript
         run: pnpm test
+        
+  skip:
+    name: Test Skipped
+    needs: changes
+    if: ${{ needs.changes.outputs.typescript != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip tests
+        run: echo "No TypeScript changes detected. Skipping tests."

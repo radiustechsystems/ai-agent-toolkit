@@ -3,18 +3,29 @@ name: TypeScript Lint
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'typescript/**'
   pull_request:
     branches: [ main ]
-    paths:
-      - 'typescript/**'
 
 jobs:
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      typescript: ${{ steps.filter.outputs.typescript }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            typescript:
+              - 'typescript/**'
+
   lint:
     name: Lint
+    needs: changes
+    if: ${{ needs.changes.outputs.typescript == 'true' }}
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -35,3 +46,12 @@ jobs:
       - name: Run lint
         working-directory: typescript
         run: pnpm lint
+        
+  skip:
+    name: Lint Skipped
+    needs: changes
+    if: ${{ needs.changes.outputs.typescript != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip lint
+        run: echo "No TypeScript changes detected. Skipping lint."
