@@ -1,6 +1,6 @@
 {
   "name": "@radiustechsystems/ai-agent-adapter-vercel-ai",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Vercel AI SDK adapter for the Radius AI Agent Toolkit",
 
   "main": "./dist/index.js",
