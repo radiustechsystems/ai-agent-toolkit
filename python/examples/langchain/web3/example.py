@@ -17,13 +17,13 @@ from radius_plugins.erc20 import erc20, ERC20PluginOptions
 from radius_wallets.evm import send_eth
 from radius_wallets.web3 import Web3EVMWalletClient
 
-# Define RAD token for Radius testnet
-RAD: Token = {
+# Define RADUSD token for Radius testnet
+RADUSD: Token = {
     "decimals": 18,
-    "symbol": "RAD",
+    "symbol": "RADUSD",
     "name": "Radius Token",
     "chains": {
-        1223953: {"contractAddress": "0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E"}
+        1223953: {"contractAddress": "0x9aeEa4f3025940dBdbf6863C7e16a23Ea95272a4"}
     },
 }
 
@@ -74,7 +74,7 @@ def main():
         wallet=wallet_client,
         plugins=[
             send_eth(),
-            erc20(options=ERC20PluginOptions(tokens=[USDC, RAD]))
+            erc20(options=ERC20PluginOptions(tokens=[USDC, RADUSD]))
         ],
     )
     

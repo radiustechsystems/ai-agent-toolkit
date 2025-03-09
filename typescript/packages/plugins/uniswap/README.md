@@ -121,9 +121,9 @@ Gets a quote for swapping tokens.
 ```typescript
 try {
   const quoteParams = {
-    tokenIn: "0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E", // RAD
+    tokenIn: "0x9aeEa4f3025940dBdbf6863C7e16a23Ea95272a4", // RADUSD
     tokenOut: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
-    amount: "1000000000000000000", // 1 RAD (18 decimals)
+    amount: "1000000000000000000", // 1 RADUSD (18 decimals)
     type: "EXACT_INPUT",
     protocols: ["V3"]
   };
@@ -154,9 +154,9 @@ Executes a token swap on Uniswap.
 ```typescript
 try {
   const swapParams = {
-    tokenIn: "0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E", // RAD
+    tokenIn: "0x9aeEa4f3025940dBdbf6863C7e16a23Ea95272a4", // RADUSD
     tokenOut: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC
-    amount: "1000000000000000000", // 1 RAD (18 decimals)
+    amount: "1000000000000000000", // 1 RADUSD (18 decimals)
     type: "EXACT_INPUT",
     protocols: ["V3"],
     slippageTolerance: 0.5

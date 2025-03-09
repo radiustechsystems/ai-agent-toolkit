@@ -59,11 +59,11 @@ const erc20Plugin = erc20({
     {
       // Custom token definition
       decimals: 18,
-      symbol: "RAD",
+      symbol: "RADUSD",
       name: "Radius Token",
       chains: {
         "1223953": { // Radius testnet chain ID
-          contractAddress: "0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E"
+          contractAddress: "0x9aeEa4f3025940dBdbf6863C7e16a23Ea95272a4"
         }
       }
     }
@@ -90,7 +90,7 @@ Creates a new ERC20 plugin instance.
 The package includes these predefined tokens:
 
 - `USDC`: USD Coin stablecoin
-- `RAD`: Radius Token
+- `RADUSD`: Radius Token
 
 ### Provided Tools
 
