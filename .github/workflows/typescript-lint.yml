@@ -3,35 +3,48 @@ name: TypeScript Lint
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'typescript/**'
   pull_request:
     branches: [ main ]
-    paths:
-      - 'typescript/**'
 
 jobs:
   lint:
-    name: Lint
+    name: TypeScript Lint
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
+      
+      # Check if typescript files changed
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            typescript:
+              - 'typescript/**'
 
+      # Run lint only if typescript files changed
       - name: Setup Node.js
+        if: steps.filter.outputs.typescript == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Setup pnpm
+        if: steps.filter.outputs.typescript == 'true'
         uses: pnpm/action-setup@v2
         with:
           version: '9'
 
       - name: Install dependencies
+        if: steps.filter.outputs.typescript == 'true'
         working-directory: typescript
         run: pnpm install
       
       - name: Run lint
+        if: steps.filter.outputs.typescript == 'true'
         working-directory: typescript
         run: pnpm lint
+        
+      # Skip message (not displayed as a separate job)
+      - name: Skip lint
+        if: steps.filter.outputs.typescript != 'true'
+        run: echo "No TypeScript changes detected. Skipping lint."
