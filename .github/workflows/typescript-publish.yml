@@ -72,6 +72,10 @@ jobs:
         working-directory: typescript
         run: pnpm build:all:prod
       
+      - name: Replace workspace references in all packages
+        working-directory: typescript
+        run: pnpm replace-workspace-refs:all
+      
       - name: Publish packages in order
         working-directory: typescript
         run: |
@@ -80,13 +84,6 @@ jobs:
             local pkg_dir=$1
             echo "Publishing package in $pkg_dir"
             cd "$pkg_dir"
-            
-            # If this is the umbrella package, run the replace-workspace-refs script for all packages
-            if [ "$pkg_dir" = "." ]; then
-              echo "Running replace-workspace-refs script for all packages in workspace"
-              pnpm replace-workspace-refs:all
-            fi
-            
             npm publish --provenance --access public
             cd - > /dev/null
           }
