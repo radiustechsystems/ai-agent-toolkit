@@ -90,7 +90,7 @@ Creates a new ERC20 plugin instance.
 The package includes these predefined tokens:
 
 - `USDC`: USD Coin stablecoin
-- `WETH`: Wrapped Ether
+- `RAD`: Radius Token
 
 ### Provided Tools
 

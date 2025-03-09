@@ -28,10 +28,10 @@ vi.mock('../erc20.service', () => ({
 // Now import the modules being tested
 import { ERC20Plugin, erc20 } from '../erc20.plugin';
 import { Erc20Service } from '../erc20.service';
-import { USDC, WETH } from '../token';
+import { USDC, RAD } from '../token';
 
 describe('ERC20Plugin', () => {
-  const testTokens = [USDC, WETH];
+  const testTokens = [USDC, RAD];
 
   test('should be properly instantiated', () => {
     const plugin = new ERC20Plugin({ tokens: testTokens });

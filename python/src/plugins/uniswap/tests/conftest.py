@@ -29,10 +29,10 @@ def plugin_options(api_key, base_url):
 def sample_token_addresses():
     """Fixture that provides sample token addresses for testing."""
     return {
-        "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",  # USDC on Ethereum
+        "usdc": "0x51fCe89b9f6D4c530698f181167043e1bB4abf89",  # USDC on Radius testnet
         "usdt": "0xdAC17F958D2ee523a2206206994597C13D831ec7",  # USDT on Ethereum
         "dai": "0x6B175474E89094C44Da98b954EedeAC495271d0F",  # DAI on Ethereum
-        "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",  # WETH on Ethereum
+        "rad": "0xB73AAc53149af16DADA10D7cC99a9c4Cb722e21E",   # RAD on Radius testnet
     }
 
 
