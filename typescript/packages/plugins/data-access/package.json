@@ -1,0 +1,65 @@
+{
+  "name": "@radiustechsystems/ai-agent-plugin-data-access",
+  "version": "1.0.0",
+  "description": "Data Access plugin for the Radius AI Agent Toolkit",
+
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+
+  "sideEffects": false,
+  "files": ["dist/**/*", "README.md", "package.json"],
+
+  "scripts": {
+    "build": "tsup",
+    "clean": "rimraf dist",
+    "test": "vitest run --passWithNoTests"
+  },
+
+  "dependencies": {
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "@radiustechsystems/ai-agent-wallet": "workspace:*",
+    "viem": "^2.5.0",
+    "zod": "^3.22.4"
+  },
+  "peerDependencies": {
+    "@radiustechsystems/ai-agent-core": "workspace:*",
+    "viem": "^2.5.0"
+  },
+
+  "engines": {
+    "node": ">=20.12.2 <23",
+    "pnpm": ">=9"
+  },
+
+  "keywords": [
+    "ai",
+    "agent",
+    "plugin",
+    "radius",
+    "data-access",
+    "token-gated",
+    "http402",
+    "erc1155"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
+  },
+  "homepage": "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/plugins/data-access#readme",
+  "bugs": {
+    "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
+  },
+  "license": "MIT",
+
+  "publishConfig": {
+    "access": "public"
+  }
+}
