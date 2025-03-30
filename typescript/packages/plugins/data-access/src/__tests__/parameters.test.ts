@@ -21,7 +21,8 @@ function testParameterClass(
       expect(schema.shape[field]).toBeDefined();
       // Test if the field is required by checking if it's not optional
       const fieldSchema = schema.shape[field] as z.ZodType;
-      expect(fieldSchema._def.typeName !== 'ZodOptional').toBe(true);
+      const isOptional = fieldSchema.isOptional();
+      expect(isOptional).toBe(false);
     }
   });
 
@@ -30,7 +31,8 @@ function testParameterClass(
       expect(schema.shape[field]).toBeDefined();
       // Test if the field is optional
       const fieldSchema = schema.shape[field] as z.ZodType;
-      expect(fieldSchema._def.typeName === 'ZodOptional').toBe(true);
+      const isOptional = fieldSchema.isOptional();
+      expect(isOptional).toBe(true);
     }
   });
 }

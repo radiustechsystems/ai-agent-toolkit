@@ -16,6 +16,7 @@ type RadiusWalletInterface = any;
 
 import { DataAccessService } from '../data-access.service';
 import { CheckDataAccessParameters, HandleHttp402ResponseParameters } from '../parameters';
+import { DataAccessOptions } from '../types';
 
 // Mock Tool decorator
 vi.mock('@radiustechsystems/ai-agent-core', () => ({
@@ -35,11 +36,13 @@ describe('DataAccessService', () => {
   let service: DataAccessService;
   let mockWalletClient: RadiusWalletInterface;
 
-  const testOptions = {
-    contractAddress: '0x123456789abcdef',
-    maxPrice: BigInt('50000000000000000'),
-    tierSelectionStrategy: 'cheapest',
-  };
+  type TierStrategy = "cheapest" | "longest" | "custom";
+
+const testOptions: DataAccessOptions = {
+  contractAddress: "0x1234...",
+  maxPrice: BigInt(1000),
+  tierSelectionStrategy: "cheapest" as TierStrategy
+};
 
   // Set up mock wallet client
   beforeEach(() => {
