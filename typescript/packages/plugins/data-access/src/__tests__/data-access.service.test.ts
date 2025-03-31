@@ -97,6 +97,8 @@ describe('DataAccessService', () => {
       expect(result).toHaveProperty('success', true);
       expect(result).toHaveProperty('receipt.transactionHash');
       expect(result).toHaveProperty('authHeaders');
+      expect(result.authHeaders).toHaveProperty('Authorization');
+      expect(result.authHeaders?.Authorization).toMatch(/^Bearer /);
       expect(result.jwt).toBeDefined();
 
       // Add type guard to ensure jwt is defined
