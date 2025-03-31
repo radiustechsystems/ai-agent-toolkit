@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { z } from 'zod';
+import type { z } from 'zod';
 import {
   CheckDataAccessParameters,
   GenerateAccessSignatureParameters,
@@ -9,6 +9,7 @@ import {
 
 // Helper function to test parameter classes
 function testParameterClass(
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   ParameterClass: any,
   requiredFields: string[],
   optionalFields: string[] = [],
@@ -51,6 +52,10 @@ describe('Parameter Classes', () => {
   });
 
   describe('HandleHttp402ResponseParameters', () => {
-    testParameterClass(HandleHttp402ResponseParameters, ['datasetId', 'price'], ['metadataURI', 'url']);
+    testParameterClass(
+      HandleHttp402ResponseParameters,
+      ['datasetId', 'price'],
+      ['metadataURI', 'url'],
+    );
   });
 });

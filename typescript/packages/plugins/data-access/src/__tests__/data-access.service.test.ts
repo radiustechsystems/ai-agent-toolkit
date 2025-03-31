@@ -16,7 +16,7 @@ type RadiusWalletInterface = any;
 
 import { DataAccessService } from '../data-access.service';
 import { CheckDataAccessParameters, HandleHttp402ResponseParameters } from '../parameters';
-import { DataAccessOptions } from '../types';
+import type { DataAccessOptions } from '../types';
 
 // Mock Tool decorator
 vi.mock('@radiustechsystems/ai-agent-core', () => ({
@@ -36,13 +36,14 @@ describe('DataAccessService', () => {
   let service: DataAccessService;
   let mockWalletClient: RadiusWalletInterface;
 
-  type TierStrategy = "cheapest" | "longest" | "custom";
+  type TierStrategy = 'cheapest' | 'longest' | 'custom';
 
-const testOptions: DataAccessOptions = {
-  contractAddress: "0x1234...",
-  maxPrice: BigInt(1000),
-  tierSelectionStrategy: "cheapest" as TierStrategy
-};
+  const testOptions: DataAccessOptions = {
+    contractAddress: '0x1234...',
+    // Increase maxPrice to allow for test transaction
+    maxPrice: BigInt('100000000000000000'), // 0.1 ETH
+    tierSelectionStrategy: 'cheapest' as TierStrategy,
+  };
 
   // Set up mock wallet client
   beforeEach(() => {
@@ -85,7 +86,7 @@ const testOptions: DataAccessOptions = {
     test('should reject if price exceeds maximum', async () => {
       const params = new HandleHttp402ResponseParameters();
       params.datasetId = '123';
-      params.price = '100000000000000000000'; // 100 ETH, which exceeds the max price
+      params.price = '200000000000000000'; // 0.2 ETH, which exceeds the max price of 0.1 ETH
 
       const result = await service.handleHttp402Response(mockWalletClient, params);
 

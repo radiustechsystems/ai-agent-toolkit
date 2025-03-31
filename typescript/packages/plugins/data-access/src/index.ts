@@ -1,9 +1,9 @@
 export { dataAccess } from './data-access.plugin';
 export type { DataAccessOptions, AccessTier, AccessResult } from './types';
 export { DataAccessService } from './data-access.service';
-export { 
-  CheckDataAccessParameters, 
+export {
+  CheckDataAccessParameters,
   PurchaseDataAccessParameters,
   GenerateAccessSignatureParameters,
-  HandleHttp402ResponseParameters 
+  HandleHttp402ResponseParameters,
 } from './parameters';

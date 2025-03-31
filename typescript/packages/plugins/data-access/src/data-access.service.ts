@@ -31,7 +31,7 @@ export class DataAccessService {
    * Helper method to get data access contract instance
    * This is a mock implementation until the SDK is available
    */
-  private getTokenGating(walletClient: RadiusWalletInterface) {
+  private getTokenGating(_walletClient: RadiusWalletInterface) {
     // Mock implementation for now - will be replaced with SDK call once available
     return {
       hasAccess: async (address: string, datasetId: string) => {
@@ -53,7 +53,8 @@ export class DataAccessService {
           },
         ];
       },
-      purchaseAccess: async (signer: any, datasetId: string, price: bigint) => {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      purchaseAccess: async (_signer: any, datasetId: string, price: bigint) => {
         console.log(`Purchasing access to ${datasetId} for ${price}`);
         return { txHash: { hex: () => '0x123' } };
       },
@@ -87,11 +88,12 @@ export class DataAccessService {
       case 'longest':
         return affordableTiers.reduce((a, b) => (a.ttl > b.ttl ? a : b));
 
+      // biome-ignore lint/suspicious/noFallthroughSwitchClause: <explanation>
       case 'custom':
         if (this.config.customTierSelector) {
           return this.config.customTierSelector(affordableTiers);
         }
-        // Fall through to default if custom selector not provided
+      // Fall through to default if custom selector not provided
 
       default:
         // Default to cheapest
@@ -113,7 +115,7 @@ export class DataAccessService {
       // Check if we have access in the cache first
       const cacheKey = `${walletAddress}:${parameters.datasetId}`;
       const cachedAccess = this.tokenCache.get(cacheKey);
-      
+
       if (cachedAccess && cachedAccess.expires > Date.now()) {
         return {
           hasAccess: true,
@@ -125,10 +127,7 @@ export class DataAccessService {
       const hasAccess = await tokenGating.hasAccess(walletAddress, parameters.datasetId);
 
       if (!hasAccess) {
-        const expiry = await tokenGating.getAccessExpiration(
-          walletAddress,
-          parameters.datasetId,
-        );
+        const expiry = await tokenGating.getAccessExpiration(walletAddress, parameters.datasetId);
 
         return {
           hasAccess: false,
@@ -171,9 +170,7 @@ export class DataAccessService {
           };
         }
 
-        const maxPrice = parameters.maxPrice
-          ? BigInt(parameters.maxPrice)
-          : this.config.maxPrice;
+        const maxPrice = parameters.maxPrice ? BigInt(parameters.maxPrice) : this.config.maxPrice;
 
         // Check if the price exceeds maximum allowed
         if (maxPrice && tier.price > maxPrice) {
@@ -218,60 +215,58 @@ export class DataAccessService {
             expiry: expiryTime,
           },
         };
-      } else {
-        // Select tier based on strategy
-        const tiers = await tokenGating.getAccessTiers(parameters.datasetId);
+      }
 
-        // Determine max price (parameter overrides config)
-        const maxPrice = parameters.maxPrice
-          ? BigInt(parameters.maxPrice)
-          : this.config.maxPrice;
+      // Select tier based on strategy
+      const tiers = await tokenGating.getAccessTiers(parameters.datasetId);
 
-        const selectedTier = await this.selectTier(tiers, maxPrice);
+      // Determine max price (parameter overrides config)
+      const maxPrice = parameters.maxPrice ? BigInt(parameters.maxPrice) : this.config.maxPrice;
 
-        if (!selectedTier) {
-          return {
-            success: false,
-            reason: 'No suitable access tier found',
-          };
-        }
+      const selectedTier = await this.selectTier(tiers, maxPrice);
 
-        // Purchase selected tier (we're mocking the signer for now)
-        const mockSigner = { signMessage: async (msg: string) => ({ signature: msg }) };
-        const receipt = await tokenGating.purchaseAccess(
-          mockSigner,
-          parameters.datasetId,
-          selectedTier.price,
-        );
-
-        // Generate access signature
-        const timestamp = Math.floor(Date.now() / 1000);
-        const message = await tokenGating.getAccessChallengeMessage(
-          parameters.datasetId,
-          walletAddress,
-          timestamp,
-        );
-        const signResult = await walletClient.signMessage(message);
-
-        // Store in cache
-        const expiryTime = Date.now() + Number(selectedTier.ttl) * 1000;
-        const jwt = Buffer.from(signResult.signature).toString('base64');
-        this.tokenCache.set(`${walletAddress}:${parameters.datasetId}`, {
-          jwt,
-          expires: expiryTime,
-        });
-
+      if (!selectedTier) {
         return {
-          success: true,
-          tierId: selectedTier.id,
-          jwt,
-          receipt: {
-            transactionHash: receipt.txHash.hex(),
-            price: selectedTier.price.toString(),
-            expiry: expiryTime,
-          },
+          success: false,
+          reason: 'No suitable access tier found',
         };
       }
+
+      // Purchase selected tier (we're mocking the signer for now)
+      const mockSigner = { signMessage: async (msg: string) => ({ signature: msg }) };
+      const receipt = await tokenGating.purchaseAccess(
+        mockSigner,
+        parameters.datasetId,
+        selectedTier.price,
+      );
+
+      // Generate access signature
+      const timestamp = Math.floor(Date.now() / 1000);
+      const message = await tokenGating.getAccessChallengeMessage(
+        parameters.datasetId,
+        walletAddress,
+        timestamp,
+      );
+      const signResult = await walletClient.signMessage(message);
+
+      // Store in cache
+      const expiryTime = Date.now() + Number(selectedTier.ttl) * 1000;
+      const jwt = Buffer.from(signResult.signature).toString('base64');
+      this.tokenCache.set(`${walletAddress}:${parameters.datasetId}`, {
+        jwt,
+        expires: expiryTime,
+      });
+
+      return {
+        success: true,
+        tierId: selectedTier.id,
+        jwt,
+        receipt: {
+          transactionHash: receipt.txHash.hex(),
+          price: selectedTier.price.toString(),
+          expiry: expiryTime,
+        },
+      };
     } catch (error) {
       throw new TransactionError(
         `Failed to purchase data access: ${error instanceof Error ? error.message : String(error)}`,
@@ -293,7 +288,7 @@ export class DataAccessService {
       // Check cache first
       const cacheKey = `${walletAddress}:${parameters.datasetId}`;
       const cachedAccess = this.tokenCache.get(cacheKey);
-      
+
       if (cachedAccess && cachedAccess.expires > Date.now()) {
         return {
           jwt: cachedAccess.jwt,
@@ -311,7 +306,7 @@ export class DataAccessService {
         walletAddress,
         timestamp,
       );
-      
+
       const signResult = await walletClient.signMessage(message);
       const jwt = Buffer.from(signResult.signature).toString('base64');
 

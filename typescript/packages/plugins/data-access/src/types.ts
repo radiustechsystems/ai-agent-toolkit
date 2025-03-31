@@ -12,10 +12,10 @@ export interface AccessTier {
  * Plugin configuration options
  */
 export interface DataAccessOptions {
-  contractAddress: string;                  // DataAccess contract address
-  defaultTierId?: number;                   // Optional default tier to purchase
-  autoRenew?: boolean;                      // Auto-renew expired tokens
-  maxPrice?: bigint;                        // Maximum price willing to pay
+  contractAddress: string; // DataAccess contract address
+  defaultTierId?: number; // Optional default tier to purchase
+  autoRenew?: boolean; // Auto-renew expired tokens
+  maxPrice?: bigint; // Maximum price willing to pay
   tierSelectionStrategy?: 'cheapest' | 'longest' | 'custom'; // How to choose tiers
   customTierSelector?: (tiers: AccessTier[]) => Promise<AccessTier | undefined>;
 }
@@ -27,6 +27,7 @@ export interface AccessResult {
   success: boolean;
   tierId?: number;
   jwt?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   receipt?: any;
   reason?: string;
 }
