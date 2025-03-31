@@ -40,22 +40,22 @@ function testParameterClass(
 
 describe('Parameter Classes', () => {
   describe('CheckDataAccessParameters', () => {
-    testParameterClass(CheckDataAccessParameters, ['datasetId']);
+    testParameterClass(CheckDataAccessParameters, ['resourceUrl'], ['tierId']);
   });
 
   describe('PurchaseDataAccessParameters', () => {
-    testParameterClass(PurchaseDataAccessParameters, ['datasetId'], ['tierId', 'maxPrice']);
+    testParameterClass(PurchaseDataAccessParameters, ['resourceUrl'], ['tierId', 'maxPrice']);
   });
 
   describe('GenerateAccessSignatureParameters', () => {
-    testParameterClass(GenerateAccessSignatureParameters, ['datasetId']);
+    testParameterClass(GenerateAccessSignatureParameters, ['resourceUrl'], ['challenge', 'tierId']);
   });
 
   describe('HandleHttp402ResponseParameters', () => {
     testParameterClass(
       HandleHttp402ResponseParameters,
-      ['datasetId', 'price'],
-      ['metadataURI', 'url'],
+      ['resourceUrl', 'paymentInfo'],
+      ['tierId', 'maxPrice'],
     );
   });
 });

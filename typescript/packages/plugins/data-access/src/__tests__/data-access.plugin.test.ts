@@ -32,6 +32,7 @@ import { DataAccessService } from '../data-access.service';
 describe('DataAccessPlugin', () => {
   const testOptions = {
     contractAddress: '0x123456789abcdef',
+    projectId: '0xabcdef123456', // Add required projectId
     maxPrice: BigInt('50000000000000000'),
   };
 

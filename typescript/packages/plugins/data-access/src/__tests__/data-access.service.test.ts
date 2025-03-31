@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock the wallet module
@@ -43,6 +44,7 @@ describe('DataAccessService', () => {
     // Increase maxPrice to allow for test transaction
     maxPrice: BigInt('100000000000000000'), // 0.1 ETH
     tierSelectionStrategy: 'cheapest' as TierStrategy,
+    projectId: '',
   };
 
   // Set up mock wallet client
@@ -62,7 +64,7 @@ describe('DataAccessService', () => {
   describe('checkDataAccess', () => {
     test('should check if user has access to a dataset', async () => {
       const params = new CheckDataAccessParameters();
-      params.datasetId = '123';
+      params.resourceUrl = 'http://localhost:3000/content/123';
 
       const result = await service.checkDataAccess(mockWalletClient, params);
 
@@ -73,20 +75,60 @@ describe('DataAccessService', () => {
   describe('handleHttp402Response', () => {
     test('should handle HTTP 402 response with payment details', async () => {
       const params = new HandleHttp402ResponseParameters();
-      params.datasetId = '123';
-      params.price = '10000000000000000'; // 0.01 ETH
+      params.resourceUrl = 'http://localhost:3000/content/123';
+      params.paymentInfo = {
+        contract: '0x1234...',
+        networks: [{ id: '1', name: 'Radius' }],
+        tiers: [
+          {
+            id: 1,
+            name: 'Basic',
+            description: 'Basic access tier',
+            domains: ['http://localhost:3000/content'],
+            price: 10000000000000000,
+            ttl: 3600,
+            active: true,
+          },
+        ],
+      };
 
       const result = await service.handleHttp402Response(mockWalletClient, params);
 
       expect(result).toHaveProperty('success', true);
-      expect(result).toHaveProperty('transactionHash');
+      expect(result).toHaveProperty('receipt.transactionHash');
       expect(result).toHaveProperty('authHeaders');
+      expect(result.jwt).toBeDefined();
+
+      // Add type guard to ensure jwt is defined
+      if (!result.jwt) {
+        throw new Error('JWT token is undefined');
+      }
+
+      // Now TypeScript knows result.jwt is definitely a string
+      const decoded = jwt.decode(result.jwt);
+      expect(decoded).toHaveProperty('tierId', 1);
+      expect(decoded).toHaveProperty('iat');
+      expect(decoded).toHaveProperty('exp');
     });
 
     test('should reject if price exceeds maximum', async () => {
       const params = new HandleHttp402ResponseParameters();
-      params.datasetId = '123';
-      params.price = '200000000000000000'; // 0.2 ETH, which exceeds the max price of 0.1 ETH
+      params.resourceUrl = 'http://localhost:3000/content/123';
+      params.paymentInfo = {
+        contract: '0x1234...',
+        networks: [{ id: '1', name: 'Radius' }],
+        tiers: [
+          {
+            id: 1,
+            name: 'Premium',
+            description: 'Premium access tier',
+            domains: ['http://localhost:3000/content'],
+            price: 200000000000000000, // 0.2 ETH as number (BigInt conversion in service)
+            ttl: 86400,
+            active: true,
+          },
+        ],
+      };
 
       const result = await service.handleHttp402Response(mockWalletClient, params);
 
