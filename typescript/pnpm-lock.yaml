@@ -221,11 +221,11 @@ importers:
   packages/plugins/data-access:
     dependencies:
       '@radiustechsystems/ai-agent-core':
-        specifier: workspace:*
-        version: link:../../core
+        specifier: ^1.0.4
+        version: 1.0.4(zod@3.23.8)
       '@radiustechsystems/ai-agent-wallet':
-        specifier: workspace:*
-        version: link:../../wallets
+        specifier: ^1.0.4
+        version: 1.0.4(@radiustechsystems/ai-agent-core@1.0.4(zod@3.23.8))
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -279,8 +279,8 @@ importers:
   packages/wallets:
     dependencies:
       '@radiustechsystems/ai-agent-core':
-        specifier: workspace:*
-        version: link:../core
+        specifier: ^1.0.4
+        version: 1.0.4(zod@3.23.8)
       '@radiustechsystems/sdk':
         specifier: ^1.0.0
         version: 1.0.0
@@ -809,6 +809,18 @@ packages:
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
+
+  '@radiustechsystems/ai-agent-core@1.0.4':
+    resolution: {integrity: sha512-8CgjPaVvHK7GPIqj1vit95r8PEsbvx5N3BKc0PAulTIZjXg7q4hEnp3al2WwX4P1EKFPktasNUu0fMRURFctpw==}
+    engines: {node: '>=20.12.2 <23', pnpm: '>=9'}
+    peerDependencies:
+      zod: ^3.22.4
+
+  '@radiustechsystems/ai-agent-wallet@1.0.4':
+    resolution: {integrity: sha512-7wu3AEJnwbviji1mEKJru6ShNhhRqYJOWJUsypveMijCYmfOnW+JqRZooo0eekn2PIImK5euNcNuQY9GhBR7oQ==}
+    engines: {node: '>=20.12.2 <23', pnpm: '>=9'}
+    peerDependencies:
+      '@radiustechsystems/ai-agent-core': 1.0.4
 
   '@radiustechsystems/sdk@1.0.0':
     resolution: {integrity: sha512-+Poe2zpg3Y3jhYwl/Yr05GhwKF5frlPBRd6By4FeJuAOHxbMuY96C0BYGZpqyhDoPA/SqY+wgj7ieV9esdPKEw==}
@@ -3087,6 +3099,20 @@ snapshots:
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
+
+  '@radiustechsystems/ai-agent-core@1.0.4(zod@3.23.8)':
+    dependencies:
+      reflect-metadata: 0.2.1
+      zod: 3.23.8
+
+  '@radiustechsystems/ai-agent-wallet@1.0.4(@radiustechsystems/ai-agent-core@1.0.4(zod@3.23.8))':
+    dependencies:
+      '@radiustechsystems/ai-agent-core': 1.0.4(zod@3.23.8)
+      '@radiustechsystems/sdk': 1.0.0
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   '@radiustechsystems/sdk@1.0.0':
     dependencies:
