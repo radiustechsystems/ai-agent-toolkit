@@ -38,9 +38,9 @@ export interface EIP712Domain {
  * Auth challenge for signature verification
  */
 export interface AuthChallenge {
-  user: string;  // Wallet address
-  id: string;    // Nonce
-  time: number;  // Timestamp
+  user: string; // Wallet address
+  id: string; // Nonce
+  time: number; // Timestamp
 }
 
 /**
@@ -79,15 +79,15 @@ export interface Network {
  */
 export interface DataAccessOptions {
   contractAddress: string;
-  projectId?: string;  // Optional now that PROJECT_ID can be fetched from contract
+  projectId?: string; // Optional now that PROJECT_ID can be fetched from contract
   defaultTierId?: number;
   maxPrice?: bigint;
   tierSelectionStrategy?: 'cheapest' | 'longest' | 'custom';
   customTierSelector?: (tiers: AccessTier[]) => Promise<AccessTier | undefined>;
   jwt?: JWTOptions;
   networks?: Network[];
-  domainName: string;  // Required for EIP-712 signing
-  chainId: string;     // Required for EIP-712 signing
+  domainName: string; // Required for EIP-712 signing
+  chainId: string; // Required for EIP-712 signing
 }
 
 /**

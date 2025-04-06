@@ -70,7 +70,11 @@ describe('Parameter Classes', () => {
   });
 
   describe('VerifySignatureParameters', () => {
-    testParameterClass(VerifySignatureParameters, ['resourceUrl', 'challenge', 'signature', 'tierId'], []);
+    testParameterClass(
+      VerifySignatureParameters,
+      ['resourceUrl', 'challenge', 'signature', 'tierId'],
+      [],
+    );
   });
 
   describe('GetBalanceParameters', () => {

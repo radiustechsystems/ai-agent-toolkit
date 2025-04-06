@@ -125,5 +125,5 @@ export const dataAccessABI = [
     outputs: [{ name: '', type: 'string' }],
     stateMutability: 'view',
     type: 'function',
-  }
+  },
 ];

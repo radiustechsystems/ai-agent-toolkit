@@ -27,7 +27,7 @@ export class DataAccessPlugin extends PluginBase<RadiusWalletInterface> {
     }
 
     // projectId is now optional since it can be retrieved from the contract
-    
+
     super('dataAccess', [new DataAccessService(options)]);
   }
 

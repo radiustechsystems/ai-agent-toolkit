@@ -40,30 +40,32 @@ export class GenerateAuthSignatureParameters extends createToolParameters(
 export class HandleHttp402ResponseParameters extends createToolParameters(
   z.object({
     resourceUrl: z.string().describe('The URL of the resource requiring payment'),
-    paymentInfo: z.object({
-      contract: z.string().describe('The contract address'),
-      networks: z.array(
-        z.object({
-          id: z.string(),
-          name: z.string(),
-        }),
-      ),
-      tiers: z.array(
-        z.object({
-          id: z.number(),
-          name: z.string(),
-          description: z.string(),
-          domains: z.array(z.string()),
-          price: z.number(),
-          ttl: z.number(),
-          active: z.boolean(),
-          // Additional fields from new contract
-          transferable: z.boolean().optional(),
-          burnable: z.boolean().optional(),
-          forSale: z.boolean().optional(),
-        }),
-      ),
-    }).describe('The payment information from the 402 response'),
+    paymentInfo: z
+      .object({
+        contract: z.string().describe('The contract address'),
+        networks: z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+          }),
+        ),
+        tiers: z.array(
+          z.object({
+            id: z.number(),
+            name: z.string(),
+            description: z.string(),
+            domains: z.array(z.string()),
+            price: z.number(),
+            ttl: z.number(),
+            active: z.boolean(),
+            // Additional fields from new contract
+            transferable: z.boolean().optional(),
+            burnable: z.boolean().optional(),
+            forSale: z.boolean().optional(),
+          }),
+        ),
+      })
+      .describe('The payment information from the 402 response'),
     tierId: z.number().optional().describe('Specific tier ID to purchase'),
     amount: z.number().optional().default(1).describe('Number of tokens to purchase'),
     maxPrice: z.string().optional().describe('Maximum price willing to pay in wei'),

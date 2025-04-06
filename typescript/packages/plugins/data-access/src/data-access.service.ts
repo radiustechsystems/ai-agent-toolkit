@@ -5,32 +5,32 @@ import {
   TransactionError,
 } from '@radiustechsystems/ai-agent-wallet';
 import jwt, { type Algorithm, type JsonWebTokenError } from 'jsonwebtoken';
+import type { StringValue } from 'ms';
 import { DataAccessContract } from './data-access.contract';
 import type {
   CheckDataAccessParameters,
   CreateAccessTokenParameters,
+  CreateChallengeParameters,
   GenerateAuthSignatureParameters,
+  GetBalanceDetailsParameters,
+  GetBalanceParameters,
   HandleHttp402ResponseParameters,
   PurchaseDataAccessParameters,
-  VerifySignatureParameters,
-  GetBalanceParameters,
-  GetBalanceDetailsParameters,
-  CreateChallengeParameters,
   RecoverSignerParameters,
+  VerifySignatureParameters,
 } from './parameters';
 import type {
   AccessResult,
   AccessTier,
-  TypedData,
   AuthChallenge,
+  BalanceGroup,
   Contract,
   DataAccessOptions,
   JWTOptions,
   Network,
-  BalanceGroup,
   SignatureResult,
+  TypedData,
 } from './types';
-import type { StringValue } from 'ms';
 
 /**
  * Service class for the DataAccess plugin
@@ -93,7 +93,9 @@ export class DataAccessService {
         getProjectId: async () => this.contract.projectId || '0x0',
         hasValidAccess: async () => true,
         balanceOf: async () => 1,
-        balanceDetails: async () => [{ balance: BigInt(1), expiresAt: BigInt(Date.now() + 3600000) }],
+        balanceDetails: async () => [
+          { balance: BigInt(1), expiresAt: BigInt(Date.now() + 3600000) },
+        ],
         balanceOfSigner: async () => 1,
         recoverSigner: async () => walletClient.getAddress(),
         getAvailableTiers: async () => [
@@ -190,7 +192,7 @@ export class DataAccessService {
         if (this.config.customTierSelector) {
           return this.config.customTierSelector(affordableTiers);
         }
-        // Fall through to default if custom selector not provided
+      // Fall through to default if custom selector not provided
 
       default:
         // Default to cheapest
@@ -201,13 +203,16 @@ export class DataAccessService {
   /**
    * Create a JWT token
    */
-  
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  private  createToken(payload: Record<string, any>, expiresIn: number | StringValue = '1h'): string {
+
+  private createToken(
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    payload: Record<string, any>,
+    expiresIn: number | StringValue = '1h',
+  ): string {
     // Create a new sign options object
-    const signOpts: jwt.SignOptions = { 
+    const signOpts: jwt.SignOptions = {
       ...this.jwt.signOpts,
-      expiresIn 
+      expiresIn,
     };
 
     return jwt.sign(payload, this.jwt.secret, signOpts);
@@ -221,7 +226,7 @@ export class DataAccessService {
     const nonce = Buffer.from(Math.random().toString(36) + Date.now().toString(36))
       .toString('hex')
       .substring(0, 32);
-    
+
     const timestamp = Math.floor(Date.now() / 1000);
 
     // Create the auth challenge message
@@ -567,7 +572,10 @@ export class DataAccessService {
   ): Promise<{ token: string; authHeaders: Record<string, string> }> {
     try {
       // Create the JWT access token
-      const token = this.generateAccessToken(parameters.tierId, parameters.expiresIn as number | StringValue);
+      const token = this.generateAccessToken(
+        parameters.tierId,
+        parameters.expiresIn as number | StringValue,
+      );
 
       return {
         token,
@@ -596,7 +604,7 @@ export class DataAccessService {
       const balance = await dataAccess.balanceOfSigner(
         parameters.challenge,
         parameters.signature,
-        parameters.tierId
+        parameters.tierId,
       );
 
       // Get signer address
@@ -681,7 +689,7 @@ export class DataAccessService {
     description: 'Create an authentication challenge',
   })
   async createChallenge(
-    walletClient: RadiusWalletInterface,
+    // walletClient: RadiusWalletInterface,
     parameters: CreateChallengeParameters,
   ): Promise<{ challenge: TypedData }> {
     try {

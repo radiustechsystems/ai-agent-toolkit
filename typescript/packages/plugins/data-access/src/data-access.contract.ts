@@ -31,7 +31,7 @@ export class DataAccessContract {
       });
 
       return result.value as string;
-    } catch (error) {
+    } catch {
       // If we can't get the project ID from the contract, use the one from constructor
       return this.projectId;
     }
@@ -94,7 +94,7 @@ export class DataAccessContract {
       }
 
       // Use proper typing for the contract response
-      return (result.value as RawBalanceGroup[]).map(item => ({
+      return (result.value as RawBalanceGroup[]).map((item) => ({
         balance: BigInt(item.balance.toString()),
         expiresAt: BigInt(item.expiresAt.toString()),
       }));
@@ -336,13 +336,13 @@ export class DataAccessContract {
       ]);
 
       // Construct tier metadata
-      // Note: Name, description, and domains would typically come from token URI 
+      // Note: Name, description, and domains would typically come from token URI
       // or an off-chain registry. For this implementation, we use placeholders.
       const tier: AccessTier = {
         id: tierId,
         name: `Tier ${tierId}`,
         description: `Access tier ${tierId}`,
-        domains: [],  // This would be populated from off-chain metadata
+        domains: [], // This would be populated from off-chain metadata
         price,
         ttl,
         active,
@@ -371,12 +371,12 @@ export class DataAccessContract {
   async getAvailableTiers(knownTierIds: number[] = [1, 2, 3]): Promise<AccessTier[]> {
     try {
       const tiers: AccessTier[] = [];
-      
+
       for (const tierId of knownTierIds) {
         try {
           const isActive = await this.isActive(tierId);
           const isForSale = await this.isForSale(tierId);
-          
+
           // Only include active tiers that are for sale
           if (isActive && isForSale) {
             const tier = await this.getTierMetadata(tierId);
@@ -387,7 +387,7 @@ export class DataAccessContract {
           console.warn(`Skipping tier ${tierId}: ${error}`);
         }
       }
-      
+
       return tiers;
     } catch (error) {
       console.error(`Error getting tiers: ${error}`);
@@ -428,11 +428,11 @@ export class DataAccessContract {
     try {
       // Use balanceDetails to get expiration information
       const details = await this.balanceDetails(walletAddress, tierId);
-      
+
       if (details.length === 0) {
         return 0; // No tokens, so no expiration
       }
-      
+
       // Find the latest expiration date
       let latestExpiry = 0n;
       for (const detail of details) {
@@ -440,7 +440,7 @@ export class DataAccessContract {
           latestExpiry = detail.expiresAt;
         }
       }
-      
+
       return Number(latestExpiry);
     } catch (error) {
       throw new ContractError(

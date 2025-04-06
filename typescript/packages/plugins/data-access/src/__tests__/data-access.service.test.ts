@@ -16,16 +16,16 @@ vi.mock('@radiustechsystems/ai-agent-wallet', () => ({
 type RadiusWalletInterface = any;
 
 import { DataAccessService } from '../data-access.service';
-import { 
+import {
   CheckDataAccessParameters,
   CreateAccessTokenParameters,
   CreateChallengeParameters,
-  GenerateAuthSignatureParameters, 
+  GenerateAuthSignatureParameters,
   GetBalanceDetailsParameters,
   GetBalanceParameters,
   HandleHttp402ResponseParameters,
   RecoverSignerParameters,
-  VerifySignatureParameters
+  VerifySignatureParameters,
 } from '../parameters';
 import type { DataAccessOptions } from '../types';
 
@@ -161,23 +161,23 @@ describe('DataAccessService', () => {
       const params = new GenerateAuthSignatureParameters();
       params.resourceUrl = 'http://localhost:3000/content/123';
       // tierId is optional, so we don't need to set it
-      
+
       const result = await service.generateAuthSignature(mockWalletClient, params);
-      
+
       expect(result).toHaveProperty('signature');
       expect(result).toHaveProperty('authHeaders');
       expect(result.authHeaders).toHaveProperty('Authorization');
       expect(result.authHeaders.Authorization).toMatch(/^Signature challenge=/);
     });
-    
+
     test('should use provided challenge if available', async () => {
       const params = new GenerateAuthSignatureParameters();
       params.resourceUrl = 'http://localhost:3000/content/123';
       // tierId is optional
       params.challenge = 'test-challenge';
-      
+
       const result = await service.generateAuthSignature(mockWalletClient, params);
-      
+
       expect(result).toHaveProperty('signature');
       expect(result.authHeaders.Authorization).toContain('challenge="test-challenge"');
     });
@@ -188,28 +188,28 @@ describe('DataAccessService', () => {
       const params = new CreateAccessTokenParameters();
       params.resourceUrl = 'http://localhost:3000/content/123';
       params.tierId = 1;
-      
+
       const result = await service.createAccessToken(mockWalletClient, params);
-      
+
       expect(result).toHaveProperty('token');
       expect(result).toHaveProperty('authHeaders');
       expect(result.authHeaders).toHaveProperty('Authorization');
       expect(result.authHeaders.Authorization).toMatch(/^Bearer /);
-      
+
       const decoded = jwt.decode(result.token);
       expect(decoded).toHaveProperty('tierId', 1);
       expect(decoded).toHaveProperty('iat');
     });
-    
+
     test('should respect custom expiration time', async () => {
       const params = new CreateAccessTokenParameters();
       params.resourceUrl = 'http://localhost:3000/content/123';
       params.tierId = 2;
       params.expiresIn = '2h';
-      
+
       const result = await service.createAccessToken(mockWalletClient, params);
       const decoded = jwt.decode(result.token) as { exp: number; iat: number };
-      
+
       // Check that expiration is roughly 2 hours after issuance
       expect(decoded.exp - decoded.iat).toBeCloseTo(7200, -2); // 2 hours in seconds, with tolerance
     });
@@ -222,9 +222,9 @@ describe('DataAccessService', () => {
       params.challenge = JSON.stringify({ message: 'test challenge' });
       params.signature = '0xsignature';
       params.tierId = 1;
-      
+
       const result = await service.verifySignature(mockWalletClient, params);
-      
+
       expect(result).toHaveProperty('verified');
       expect(result).toHaveProperty('balance');
       expect(result).toHaveProperty('signer');
@@ -237,9 +237,9 @@ describe('DataAccessService', () => {
       const params = new RecoverSignerParameters();
       params.challenge = JSON.stringify({ message: 'test challenge' });
       params.signature = '0xsignature';
-      
+
       const result = await service.recoverSigner(mockWalletClient, params);
-      
+
       expect(result).toHaveProperty('signer');
       expect(result.signer).toBe('0xmockaddress');
     });
@@ -249,20 +249,20 @@ describe('DataAccessService', () => {
     test('should get token balance for tier', async () => {
       const params = new GetBalanceParameters();
       params.tierId = 1;
-      
+
       const result = await service.getBalance(mockWalletClient, params);
-      
+
       expect(result).toHaveProperty('balance');
       expect(typeof result.balance).toBe('number');
     });
-    
+
     test('should accept custom address parameter', async () => {
       const params = new GetBalanceParameters();
       params.tierId = 1;
       params.address = '0xcustomaddress';
-      
+
       const result = await service.getBalance(mockWalletClient, params);
-      
+
       expect(result).toHaveProperty('balance');
     });
   });
@@ -271,12 +271,12 @@ describe('DataAccessService', () => {
     test('should get detailed balance information', async () => {
       const params = new GetBalanceDetailsParameters();
       params.tierId = 1;
-      
+
       const result = await service.getBalanceDetails(mockWalletClient, params);
-      
+
       expect(result).toHaveProperty('balanceGroups');
       expect(Array.isArray(result.balanceGroups)).toBe(true);
-      
+
       if (result.balanceGroups.length > 0) {
         expect(result.balanceGroups[0]).toHaveProperty('balance');
         expect(result.balanceGroups[0]).toHaveProperty('expiresAt');
@@ -288,9 +288,9 @@ describe('DataAccessService', () => {
     test('should create an authentication challenge', async () => {
       const params = new CreateChallengeParameters();
       params.address = '0xmockaddress';
-      
+
       const result = await service.createChallenge(mockWalletClient, params);
-      
+
       expect(result).toHaveProperty('challenge');
       expect(result.challenge).toHaveProperty('types');
       expect(result.challenge).toHaveProperty('primaryType', 'Auth');
