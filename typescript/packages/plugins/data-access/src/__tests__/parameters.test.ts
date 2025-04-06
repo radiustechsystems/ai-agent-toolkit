@@ -2,9 +2,15 @@ import { describe, expect, test } from 'vitest';
 import type { z } from 'zod';
 import {
   CheckDataAccessParameters,
-  GenerateAccessSignatureParameters,
+  CreateAccessTokenParameters,
+  CreateChallengeParameters,
+  GenerateAuthSignatureParameters,
+  GetBalanceDetailsParameters,
+  GetBalanceParameters,
   HandleHttp402ResponseParameters,
   PurchaseDataAccessParameters,
+  RecoverSignerParameters,
+  VerifySignatureParameters,
 } from '../parameters';
 
 // Helper function to test parameter classes
@@ -47,15 +53,39 @@ describe('Parameter Classes', () => {
     testParameterClass(PurchaseDataAccessParameters, ['resourceUrl'], ['tierId', 'maxPrice']);
   });
 
-  describe('GenerateAccessSignatureParameters', () => {
-    testParameterClass(GenerateAccessSignatureParameters, ['resourceUrl'], ['challenge', 'tierId']);
+  describe('GenerateAuthSignatureParameters', () => {
+    testParameterClass(GenerateAuthSignatureParameters, ['resourceUrl'], ['challenge', 'tierId']);
   });
 
   describe('HandleHttp402ResponseParameters', () => {
     testParameterClass(
       HandleHttp402ResponseParameters,
       ['resourceUrl', 'paymentInfo'],
-      ['tierId', 'maxPrice'],
+      ['tierId', 'maxPrice', 'amount'],
     );
+  });
+
+  describe('CreateAccessTokenParameters', () => {
+    testParameterClass(CreateAccessTokenParameters, ['resourceUrl', 'tierId'], ['expiresIn']);
+  });
+
+  describe('VerifySignatureParameters', () => {
+    testParameterClass(VerifySignatureParameters, ['resourceUrl', 'challenge', 'signature', 'tierId'], []);
+  });
+
+  describe('GetBalanceParameters', () => {
+    testParameterClass(GetBalanceParameters, ['tierId'], ['address']);
+  });
+
+  describe('GetBalanceDetailsParameters', () => {
+    testParameterClass(GetBalanceDetailsParameters, ['tierId'], ['address']);
+  });
+
+  describe('CreateChallengeParameters', () => {
+    testParameterClass(CreateChallengeParameters, ['address'], []);
+  });
+
+  describe('RecoverSignerParameters', () => {
+    testParameterClass(RecoverSignerParameters, ['challenge', 'signature'], []);
   });
 });

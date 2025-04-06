@@ -1,7 +1,7 @@
 import type { Secret, SignOptions, VerifyOptions } from 'jsonwebtoken';
 
 /**
- * Access tier information from the DataAccess contract
+ * Access tier metadata from the DataAccess contract
  */
 export interface AccessTier {
   id: number;
@@ -11,40 +11,49 @@ export interface AccessTier {
   price: bigint;
   ttl: bigint;
   active: boolean;
+  transferable: boolean;
+  burnable: boolean;
+  forSale: boolean;
 }
 
 /**
- * Challenge for signed message verification
+ * Token balance group with expiration
  */
-export interface Challenge {
+export interface BalanceGroup {
+  balance: bigint;
+  expiresAt: bigint;
+}
+
+/**
+ * EIP-712 domain for typed data signing
+ */
+export interface EIP712Domain {
+  name: string;
+  version: string;
+  chainId: number | string;
+  verifyingContract: string;
+}
+
+/**
+ * Auth challenge for signature verification
+ */
+export interface AuthChallenge {
+  user: string;  // Wallet address
+  id: string;    // Nonce
+  time: number;  // Timestamp
+}
+
+/**
+ * Complete EIP-712 typed data structure
+ */
+export interface TypedData {
   types: {
-    EIP712Domain: { name: string; type: string }[];
-    AccessVerification: { name: string; type: string }[];
+    EIP712Domain: Array<{ name: string; type: string }>;
+    Auth: Array<{ name: string; type: string }>;
   };
   primaryType: string;
-  domain: {
-    name: string;
-    version: string;
-    verifyingContract: string;
-  };
-  message: ChallengeToken;
-}
-
-/**
- * Challenge token payload
- */
-export interface ChallengeToken {
-  projectId: string;
-  tierId: number;
-  jwt: string;
-}
-
-/**
- * Contract configuration
- */
-export interface Contract {
-  address: string;
-  projectId: string;
+  domain: EIP712Domain;
+  message: AuthChallenge;
 }
 
 /**
@@ -57,33 +66,28 @@ export interface JWTOptions {
 }
 
 /**
- * Payment network information
+ * Network information
  */
-export interface PaymentNetwork {
+export interface Network {
   id: string;
   name: string;
-  verifier: PaymentVerifier;
+  rpcUrl?: string;
 }
 
 /**
- * Payment verification function
- */
-export type PaymentVerifier = (tierID: number, challenge: string, sig: string) => Promise<boolean>;
-
-/**
- * Plugin configuration options
+ * Plugin configuration
  */
 export interface DataAccessOptions {
-  contractAddress: string; // DataAccess contract address
-  projectId: string; // Project identifier
-  defaultTierId?: number; // Optional default tier to purchase
-  autoRenew?: boolean; // Auto-renew expired tokens
-  maxPrice?: bigint; // Maximum price willing to pay
-  tierSelectionStrategy?: 'cheapest' | 'longest' | 'custom'; // How to choose tiers
+  contractAddress: string;
+  projectId?: string;  // Optional now that PROJECT_ID can be fetched from contract
+  defaultTierId?: number;
+  maxPrice?: bigint;
+  tierSelectionStrategy?: 'cheapest' | 'longest' | 'custom';
   customTierSelector?: (tiers: AccessTier[]) => Promise<AccessTier | undefined>;
-  jwt?: JWTOptions; // JWT configuration
-  networks?: PaymentNetwork[]; // Supported payment networks
-  domainName?: string; // Domain name for EIP-712 signatures
+  jwt?: JWTOptions;
+  networks?: Network[];
+  domainName: string;  // Required for EIP-712 signing
+  chainId: string;     // Required for EIP-712 signing
 }
 
 /**
@@ -92,6 +96,7 @@ export interface DataAccessOptions {
 export interface AccessResult {
   success: boolean;
   tierId?: number;
+  balance?: number;
   jwt?: string;
   receipt?: {
     transactionHash: string;
@@ -106,7 +111,45 @@ export interface AccessResult {
  * HTTP 402 Payment Required response
  */
 export interface PaymentRequiredResponse {
+  status: number;
+  message: string;
   contract: string;
-  networks: PaymentNetwork[];
-  tiers: AccessTier[];
+  networks: Network[];
+  tiers: Array<{
+    id: number;
+    name: string;
+    description: string;
+    domains: string[];
+    price: number;
+    ttl: number;
+    active: boolean;
+  }>;
+}
+
+/**
+ * Signature verification result
+ */
+export interface SignatureResult {
+  verified: boolean;
+  balance: number;
+  signer: string;
+  tierId?: number;
+}
+
+/**
+ * Challenge creation parameters
+ */
+export interface ChallengeParams {
+  address: string;
+  nonce?: string;
+  timestamp?: number;
+}
+
+/**
+ * Contract configuration
+ * Simple interface to store contract address and project ID
+ */
+export interface Contract {
+  address: string;
+  projectId: string;
 }

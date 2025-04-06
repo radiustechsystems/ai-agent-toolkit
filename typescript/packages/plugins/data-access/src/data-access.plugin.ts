@@ -7,19 +7,27 @@ import type { DataAccessOptions } from './types';
  * DataAccessPlugin for token-gated API access
  *
  * This plugin provides tools for interacting with token-gated APIs that implement
- * the HTTP 402 Payment Required flow using ERC-1155 tokens for access control.
+ * the HTTP 402 Payment Required flow using the Radius ERC-1155 contract for access control.
+ * Updated to work with the latest contract implementation.
  */
 export class DataAccessPlugin extends PluginBase<RadiusWalletInterface> {
   constructor(options: DataAccessOptions) {
-    // Ensure required options are provided
+    // Validate required options
     if (!options.contractAddress) {
       throw new Error('DataAccessPlugin requires contractAddress option');
     }
 
-    if (!options.projectId) {
-      throw new Error('DataAccessPlugin requires projectId option');
+    // Validate EIP-712 signature requirements
+    if (!options.domainName) {
+      throw new Error('DataAccessPlugin requires domainName option for EIP-712 signing');
     }
 
+    if (!options.chainId) {
+      throw new Error('DataAccessPlugin requires chainId option for EIP-712 signing');
+    }
+
+    // projectId is now optional since it can be retrieved from the contract
+    
     super('dataAccess', [new DataAccessService(options)]);
   }
 
@@ -36,10 +44,11 @@ export class DataAccessPlugin extends PluginBase<RadiusWalletInterface> {
  *
  * const dataAccessPlugin = dataAccess({
  *   contractAddress: '0x1234...',
- *   projectId: '0xabcd...',
+ *   domainName: 'Radius Data Access',
+ *   chainId: '0x12ad11', // Radius chain ID
+ *   projectId: '0xabcd...', // Optional, can be auto-detected from contract
  *   maxPrice: BigInt('1000000000000000000'), // 1 ETH max
- *   tierSelectionStrategy: 'cheapest',
- *   domainName: 'My Data Service'
+ *   tierSelectionStrategy: 'cheapest'
  * });
  *
  * const agent = createAgent({

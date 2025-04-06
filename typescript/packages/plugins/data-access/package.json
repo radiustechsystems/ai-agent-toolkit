@@ -27,12 +27,14 @@
     "@radiustechsystems/ai-agent-core": "^1.0.4",
     "@radiustechsystems/ai-agent-wallet": "^1.0.4",
     "jsonwebtoken": "^9.0.2",
+    "ms": "2.1.3",
     "node-fetch": "^3.3.2",
     "viem": "^2.5.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/ms": "^2.1.0",
     "@types/node-fetch": "^2.6.12"
   },
   "peerDependencies": {

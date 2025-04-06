@@ -1,20 +1,7 @@
 /**
- * ABI for the DataAccess contract
- * This defines the interface for interacting with the contract
+ * ABI for the Radius DataAccess contract
  */
 export const dataAccessABI = [
-  // Check if an address has valid access to a tier
-  {
-    inputs: [
-      { name: 'address', type: 'address' },
-      { name: 'tierId', type: 'uint256' },
-    ],
-    name: 'isValid',
-    outputs: [{ name: '', type: 'bool' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  // Get token balance for a specific tier
   {
     inputs: [
       { name: 'account', type: 'address' },
@@ -25,33 +12,50 @@ export const dataAccessABI = [
     stateMutability: 'view',
     type: 'function',
   },
-  // Get all available tiers for a project
   {
-    inputs: [{ name: 'projectId', type: 'string' }],
-    name: 'getTiers',
+    inputs: [
+      { name: 'account', type: 'address' },
+      { name: 'id', type: 'uint256' },
+    ],
+    name: 'balanceDetails',
     outputs: [
       {
-        components: [
-          { name: 'id', type: 'uint256' },
-          { name: 'name', type: 'string' },
-          { name: 'description', type: 'string' },
-          { name: 'domains', type: 'string[]' },
-          { name: 'price', type: 'uint256' },
-          { name: 'ttl', type: 'uint256' },
-          { name: 'active', type: 'bool' },
-        ],
         name: '',
         type: 'tuple[]',
+        components: [
+          { name: 'balance', type: 'uint256' },
+          { name: 'expiresAt', type: 'uint256' },
+        ],
       },
     ],
     stateMutability: 'view',
     type: 'function',
   },
-  // Purchase access to a tier
   {
     inputs: [
-      { name: 'projectId', type: 'string' },
-      { name: 'tierId', type: 'uint256' },
+      { name: 'challenge', type: 'string' },
+      { name: 'signature', type: 'bytes' },
+      { name: 'id', type: 'uint256' },
+    ],
+    name: 'balanceOfSigner',
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'challenge', type: 'string' },
+      { name: 'signature', type: 'bytes' },
+    ],
+    name: 'recoverSigner',
+    outputs: [{ name: '', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'account', type: 'address' },
+      { name: 'id', type: 'uint256' },
       { name: 'amount', type: 'uint256' },
     ],
     name: 'purchase',
@@ -59,29 +63,67 @@ export const dataAccessABI = [
     stateMutability: 'payable',
     type: 'function',
   },
-  // Verify a challenge signature
   {
-    inputs: [
-      { name: 'projectId', type: 'string' },
-      { name: 'tierId', type: 'uint256' },
-      { name: 'challenge', type: 'string' },
-      { name: 'signature', type: 'bytes' },
-    ],
-    name: 'verifyChallenge',
-    outputs: [{ name: '', type: 'bool' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  // Get expiration time for a token
-  {
-    inputs: [
-      { name: 'address', type: 'address' },
-      { name: 'projectId', type: 'string' },
-      { name: 'tierId', type: 'uint256' },
-    ],
-    name: 'expiresAt',
+    inputs: [{ name: 'id', type: 'uint256' }],
+    name: 'priceOf',
     outputs: [{ name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
+  {
+    inputs: [{ name: 'ids', type: 'uint256[]' }],
+    name: 'priceOfBatch',
+    outputs: [{ name: 'result', type: 'uint256[]' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'id', type: 'uint256' }],
+    name: 'ttl',
+    outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'id', type: 'uint256' }],
+    name: 'active',
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'id', type: 'uint256' }],
+    name: 'transferable',
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'id', type: 'uint256' }],
+    name: 'burnable',
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: 'id', type: 'uint256' }],
+    name: 'forSale',
+    outputs: [{ name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'PROJECT_ID',
+    outputs: [{ name: '', type: 'bytes32' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ name: '', type: 'uint256' }],
+    name: 'uri',
+    outputs: [{ name: '', type: 'string' }],
+    stateMutability: 'view',
+    type: 'function',
+  }
 ];

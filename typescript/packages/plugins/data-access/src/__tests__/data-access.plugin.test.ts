@@ -32,7 +32,8 @@ import { DataAccessService } from '../data-access.service';
 describe('DataAccessPlugin', () => {
   const testOptions = {
     contractAddress: '0x123456789abcdef',
-    projectId: '0xabcdef123456', // Add required projectId
+    domainName: 'Radius Data Access', // Required for EIP-712 signing
+    chainId: '0x12ad11', // Required for EIP-712 signing
     maxPrice: BigInt('50000000000000000'),
   };
 

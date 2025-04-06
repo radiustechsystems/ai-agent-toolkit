@@ -1,11 +1,42 @@
+// Export main plugin factory function
 export { dataAccess } from './data-access.plugin';
-export type { DataAccessOptions, AccessTier, AccessResult } from './types';
+
+// Export types
+export type {
+  // Core types
+  DataAccessOptions,
+  AccessTier,
+  AccessResult,
+  // New types for the updated contract
+  BalanceGroup,
+  SignatureResult,
+  TypedData,
+  AuthChallenge,
+  // Configuration types
+  Contract,
+  Network,
+  JWTOptions,
+} from './types';
+
+// Export service and contract classes
 export { DataAccessService } from './data-access.service';
 export { DataAccessContract } from './data-access.contract';
+
+// Export ABI definition
 export { dataAccessABI } from './abi';
+
+// Export parameter classes for tools
 export {
+  // Original parameters
   CheckDataAccessParameters,
   PurchaseDataAccessParameters,
-  GenerateAccessSignatureParameters,
   HandleHttp402ResponseParameters,
+  CreateAccessTokenParameters,
+  // New parameters for updated contract functionality
+  GenerateAuthSignatureParameters,
+  VerifySignatureParameters,
+  GetBalanceParameters,
+  GetBalanceDetailsParameters,
+  CreateChallengeParameters,
+  RecoverSignerParameters,
 } from './parameters';
