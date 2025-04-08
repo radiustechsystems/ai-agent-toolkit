@@ -1,7 +1,7 @@
 {
-  "name": "@radiustechsystems/ai-agent-wallet",
-  "version": "1.0.4",
-  "description": "Wallet management and transaction capabilities for the Radius AI Agent Toolkit",
+  "name": "@radiustechsystems/ai-agent-plugin-data-access",
+  "version": "1.0.0",
+  "description": "Data Access plugin for the Radius AI Agent Toolkit",
 
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -25,23 +25,43 @@
 
   "dependencies": {
     "@radiustechsystems/ai-agent-core": "^1.0.4",
-    "@radiustechsystems/sdk": "^1.0.0",
+    "@radiustechsystems/ai-agent-wallet": "^1.0.4",
+    "jsonwebtoken": "^9.0.2",
+    "ms": "2.1.3",
+    "node-fetch": "^3.3.2",
+    "viem": "^2.5.0",
     "zod": "^3.22.4"
   },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/ms": "^2.1.0",
+    "@types/node-fetch": "^2.6.12"
+  },
   "peerDependencies": {
-    "@radiustechsystems/ai-agent-core": "^1.0.4"
+    "@radiustechsystems/ai-agent-core": "^1.0.4",
+    "viem": "^2.5.0"
   },
 
   "engines": {
     "node": ">=20.12.2 <23",
     "pnpm": ">=9"
   },
-  "keywords": ["ai", "agent", "wallet", "radius", "ethereum", "transactions", "web3", "crypto"],
+
+  "keywords": [
+    "ai",
+    "agent",
+    "plugin",
+    "radius",
+    "data-access",
+    "token-gated",
+    "http402",
+    "erc1155"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/radiustechsystems/ai-agent-toolkit.git"
   },
-  "homepage": "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/wallets#readme",
+  "homepage": "https://github.com/radiustechsystems/ai-agent-toolkit/tree/main/typescript/packages/plugins/data-access#readme",
   "bugs": {
     "url": "https://github.com/radiustechsystems/ai-agent-toolkit/issues"
   },
