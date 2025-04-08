@@ -12,6 +12,10 @@ export type {
   SignatureResult,
   TypedData,
   AuthChallenge,
+  // Batch operation result types
+  BatchBalanceResult,
+  BalanceDetailResult,
+  BatchBalanceDetailsResult,
   // Configuration types
   Contract,
   Network,
@@ -37,6 +41,8 @@ export {
   VerifySignatureParameters,
   GetBalanceParameters,
   GetBalanceDetailsParameters,
-  CreateChallengeParameters,
   RecoverSignerParameters,
+  // New batch operation parameters
+  GetBalanceBatchParameters,
+  GetBalanceDetailsBatchParameters,
 } from './parameters';

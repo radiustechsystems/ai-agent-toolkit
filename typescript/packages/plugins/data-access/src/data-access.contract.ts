@@ -5,7 +5,7 @@ import type { AccessTier, BalanceGroup } from './types';
 
 /**
  * DataAccessContract provides a wrapper around the DataAccess smart contract
- * Updated to work with the new contract ABI
+ * Updated to work with the new contract ABI including batch operations
  */
 export class DataAccessContract {
   private contractAddress: string;
@@ -54,6 +54,22 @@ export class DataAccessContract {
   }
 
   /**
+   * Check if multiple addresses have balances > 0 for multiple tiers
+   */
+  async hasValidAccessBatch(addresses: string[], tierIds: number[]): Promise<boolean[]> {
+    try {
+      const balances = await this.balanceOfBatch(addresses, tierIds);
+      return balances.map((balance) => balance > 0);
+    } catch (error) {
+      throw new ContractError(
+        `Failed to check batch access validity: ${error instanceof Error ? error.message : String(error)}`,
+        this.contractAddress,
+        'balanceOfBatch',
+      );
+    }
+  }
+
+  /**
    * Get token balance for an address and tier
    */
   async balanceOf(address: string, tierId: number): Promise<number> {
@@ -71,6 +87,33 @@ export class DataAccessContract {
         `Failed to get token balance: ${error instanceof Error ? error.message : String(error)}`,
         this.contractAddress,
         'balanceOf',
+      );
+    }
+  }
+
+  /**
+   * Get token balances for multiple address and tier combinations in a single call
+   */
+  async balanceOfBatch(addresses: string[], tierIds: number[]): Promise<number[]> {
+    try {
+      if (addresses.length !== tierIds.length) {
+        throw new Error('Addresses and tier IDs arrays must have the same length');
+      }
+
+      const result = await this.wallet.read({
+        address: this.contractAddress,
+        abi: dataAccessABI,
+        functionName: 'balanceOfBatch',
+        args: [addresses, tierIds],
+      });
+
+      // Convert all values to numbers
+      return (result.value as (string | number | bigint)[]).map((value) => Number(value));
+    } catch (error) {
+      throw new ContractError(
+        `Failed to get batch token balances: ${error instanceof Error ? error.message : String(error)}`,
+        this.contractAddress,
+        'balanceOfBatch',
       );
     }
   }
@@ -103,6 +146,44 @@ export class DataAccessContract {
         `Failed to get balance details: ${error instanceof Error ? error.message : String(error)}`,
         this.contractAddress,
         'balanceDetails',
+      );
+    }
+  }
+
+  /**
+   * Get detailed balance information for multiple address and tier combinations in a single call
+   */
+  async balanceDetailsBatch(addresses: string[], tierIds: number[]): Promise<BalanceGroup[][]> {
+    try {
+      if (addresses.length !== tierIds.length) {
+        throw new Error('Addresses and tier IDs arrays must have the same length');
+      }
+
+      const result = await this.wallet.read({
+        address: this.contractAddress,
+        abi: dataAccessABI,
+        functionName: 'balanceDetailsBatch',
+        args: [addresses, tierIds],
+      });
+
+      // Define a type for the raw contract response
+      interface RawBalanceGroup {
+        balance: string | number | bigint;
+        expiresAt: string | number | bigint;
+      }
+
+      // Process the nested array result
+      return (result.value as RawBalanceGroup[][]).map((groupArray) =>
+        groupArray.map((item) => ({
+          balance: BigInt(item.balance.toString()),
+          expiresAt: BigInt(item.expiresAt.toString()),
+        })),
+      );
+    } catch (error) {
+      throw new ContractError(
+        `Failed to get batch balance details: ${error instanceof Error ? error.message : String(error)}`,
+        this.contractAddress,
+        'balanceDetailsBatch',
       );
     }
   }

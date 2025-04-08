@@ -19,8 +19,9 @@ import { DataAccessService } from '../data-access.service';
 import {
   CheckDataAccessParameters,
   CreateAccessTokenParameters,
-  CreateChallengeParameters,
   GenerateAuthSignatureParameters,
+  GetBalanceBatchParameters,
+  GetBalanceDetailsBatchParameters,
   GetBalanceDetailsParameters,
   GetBalanceParameters,
   HandleHttp402ResponseParameters,
@@ -284,21 +285,92 @@ describe('DataAccessService', () => {
     });
   });
 
-  describe('createChallenge', () => {
-    test('should create an authentication challenge', async () => {
-      const params = new CreateChallengeParameters();
-      params.address = '0xmockaddress';
+  describe('getBalanceBatch', () => {
+    test('should get token balances for multiple tiers', async () => {
+      const params = new GetBalanceBatchParameters();
+      params.tierIds = [1, 2, 3];
 
-      const result = await service.createChallenge(mockWalletClient, params);
+      const result = await service.getBalanceBatch(mockWalletClient, params);
 
-      expect(result).toHaveProperty('challenge');
-      expect(result.challenge).toHaveProperty('types');
-      expect(result.challenge).toHaveProperty('primaryType', 'Auth');
-      expect(result.challenge).toHaveProperty('domain');
-      expect(result.challenge).toHaveProperty('message');
-      expect(result.challenge.message).toHaveProperty('user', '0xmockaddress');
-      expect(result.challenge.message).toHaveProperty('id');
-      expect(result.challenge.message).toHaveProperty('time');
+      expect(result).toHaveProperty('balances');
+      expect(result).toHaveProperty('tierIds');
+      expect(result).toHaveProperty('addresses');
+      expect(Array.isArray(result.balances)).toBe(true);
+      expect(result.balances.length).toBe(3);
+      expect(result.tierIds).toEqual([1, 2, 3]);
+      expect(result.addresses.length).toBe(3);
+      expect(result.addresses.every((addr) => addr === mockWalletClient.getAddress())).toBe(true);
+    });
+
+    test('should accept custom addresses parameter', async () => {
+      const params = new GetBalanceBatchParameters();
+      params.tierIds = [1, 2];
+      params.addresses = ['0xcustomaddress1', '0xcustomaddress2'];
+
+      const result = await service.getBalanceBatch(mockWalletClient, params);
+
+      expect(result.balances.length).toBe(2);
+      expect(result.addresses).toEqual(['0xcustomaddress1', '0xcustomaddress2']);
+    });
+
+    test('should throw error if addresses and tierIds have different lengths', async () => {
+      const params = new GetBalanceBatchParameters();
+      params.tierIds = [1, 2, 3];
+      params.addresses = ['0xcustomaddress1'];
+
+      await expect(service.getBalanceBatch(mockWalletClient, params)).rejects.toThrow(
+        'Addresses and tier IDs arrays must have the same length',
+      );
     });
   });
+
+  describe('getBalanceDetailsBatch', () => {
+    test('should get detailed balance information for multiple tiers', async () => {
+      const params = new GetBalanceDetailsBatchParameters();
+      params.tierIds = [1, 2];
+
+      const result = await service.getBalanceDetailsBatch(mockWalletClient, params);
+
+      expect(result).toHaveProperty('results');
+      expect(Array.isArray(result.results)).toBe(true);
+      expect(result.results.length).toBe(2);
+
+      // Check properties of each result
+      result.results.forEach((item, index) => {
+        expect(item).toHaveProperty('address', mockWalletClient.getAddress());
+        expect(item).toHaveProperty('tierId', params.tierIds[index]);
+        expect(item).toHaveProperty('balanceGroups');
+        expect(Array.isArray(item.balanceGroups)).toBe(true);
+
+        if (item.balanceGroups.length > 0) {
+          expect(item.balanceGroups[0]).toHaveProperty('balance');
+          expect(item.balanceGroups[0]).toHaveProperty('expiresAt');
+        }
+      });
+    });
+
+    test('should accept custom addresses parameter', async () => {
+      const params = new GetBalanceDetailsBatchParameters();
+      params.tierIds = [1, 2];
+      params.addresses = ['0xcustomaddress1', '0xcustomaddress2'];
+
+      const result = await service.getBalanceDetailsBatch(mockWalletClient, params);
+
+      expect(result.results.length).toBe(2);
+      expect(result.results[0].address).toBe('0xcustomaddress1');
+      expect(result.results[1].address).toBe('0xcustomaddress2');
+    });
+
+    test('should throw error if addresses and tierIds have different lengths', async () => {
+      const params = new GetBalanceDetailsBatchParameters();
+      params.tierIds = [1, 2];
+      params.addresses = ['0xcustomaddress1', '0xcustomaddress2', '0xcustomaddress3'];
+
+      await expect(service.getBalanceDetailsBatch(mockWalletClient, params)).rejects.toThrow(
+        'Addresses and tier IDs arrays must have the same length',
+      );
+    });
+  });
+
+  // Challenge creation tests removed - should be handled by server
 });

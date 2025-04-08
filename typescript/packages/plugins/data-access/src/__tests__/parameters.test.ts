@@ -3,8 +3,9 @@ import type { z } from 'zod';
 import {
   CheckDataAccessParameters,
   CreateAccessTokenParameters,
-  CreateChallengeParameters,
   GenerateAuthSignatureParameters,
+  GetBalanceBatchParameters,
+  GetBalanceDetailsBatchParameters,
   GetBalanceDetailsParameters,
   GetBalanceParameters,
   HandleHttp402ResponseParameters,
@@ -85,11 +86,17 @@ describe('Parameter Classes', () => {
     testParameterClass(GetBalanceDetailsParameters, ['tierId'], ['address']);
   });
 
-  describe('CreateChallengeParameters', () => {
-    testParameterClass(CreateChallengeParameters, ['address'], []);
-  });
+  // Challenge creation parameter tests removed - should be handled by server
 
   describe('RecoverSignerParameters', () => {
     testParameterClass(RecoverSignerParameters, ['challenge', 'signature'], []);
+  });
+
+  describe('GetBalanceBatchParameters', () => {
+    testParameterClass(GetBalanceBatchParameters, ['tierIds'], ['addresses']);
+  });
+
+  describe('GetBalanceDetailsBatchParameters', () => {
+    testParameterClass(GetBalanceDetailsBatchParameters, ['tierIds'], ['addresses']);
   });
 });

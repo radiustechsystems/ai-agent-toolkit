@@ -115,6 +115,32 @@ export class GetBalanceDetailsParameters extends createToolParameters(
 ) {}
 
 /**
+ * Parameters for getting token balances in batch
+ */
+export class GetBalanceBatchParameters extends createToolParameters(
+  z.object({
+    tierIds: z.array(z.number()).describe('Array of tier IDs to check balances for'),
+    addresses: z
+      .array(z.string())
+      .optional()
+      .describe('Optional array of addresses to check (defaults to agent wallet)'),
+  }),
+) {}
+
+/**
+ * Parameters for getting balance details in batch
+ */
+export class GetBalanceDetailsBatchParameters extends createToolParameters(
+  z.object({
+    tierIds: z.array(z.number()).describe('Array of tier IDs to check balance details for'),
+    addresses: z
+      .array(z.string())
+      .optional()
+      .describe('Optional array of addresses to check (defaults to agent wallet)'),
+  }),
+) {}
+
+/**
  * Parameters for creating a JWT access token
  */
 export class CreateAccessTokenParameters extends createToolParameters(
@@ -125,11 +151,4 @@ export class CreateAccessTokenParameters extends createToolParameters(
   }),
 ) {}
 
-/**
- * Parameters for creating an authentication challenge
- */
-export class CreateChallengeParameters extends createToolParameters(
-  z.object({
-    address: z.string().describe('The address to create a challenge for'),
-  }),
-) {}
+// Challenge creation parameter class removed - should be handled by server

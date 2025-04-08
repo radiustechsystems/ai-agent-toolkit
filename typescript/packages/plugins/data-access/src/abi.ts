@@ -1,7 +1,10 @@
 /**
  * ABI for the Radius DataAccess contract
+ * Contains only methods needed for AI agents to handle data access functionality
+ * Administrative/management functions are intentionally excluded
  */
 export const dataAccessABI = [
+  // Core balance and access functions
   {
     inputs: [
       { name: 'account', type: 'address' },
@@ -9,6 +12,16 @@ export const dataAccessABI = [
     ],
     name: 'balanceOf',
     outputs: [{ name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      { name: 'accounts', type: 'address[]' },
+      { name: 'ids', type: 'uint256[]' },
+    ],
+    name: 'balanceOfBatch',
+    outputs: [{ name: '', type: 'uint256[]' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -33,6 +46,27 @@ export const dataAccessABI = [
   },
   {
     inputs: [
+      { name: 'accounts', type: 'address[]' },
+      { name: 'ids', type: 'uint256[]' },
+    ],
+    name: 'balanceDetailsBatch',
+    outputs: [
+      {
+        name: 'result',
+        type: 'tuple[][]',
+        components: [
+          { name: 'balance', type: 'uint256' },
+          { name: 'expiresAt', type: 'uint256' },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+
+  // Authentication functions
+  {
+    inputs: [
       { name: 'challenge', type: 'string' },
       { name: 'signature', type: 'bytes' },
       { name: 'id', type: 'uint256' },
@@ -52,6 +86,8 @@ export const dataAccessABI = [
     stateMutability: 'view',
     type: 'function',
   },
+
+  // Purchase function
   {
     inputs: [
       { name: 'account', type: 'address' },
@@ -63,6 +99,8 @@ export const dataAccessABI = [
     stateMutability: 'payable',
     type: 'function',
   },
+
+  // Pricing functions
   {
     inputs: [{ name: 'id', type: 'uint256' }],
     name: 'priceOf',
@@ -77,6 +115,8 @@ export const dataAccessABI = [
     stateMutability: 'view',
     type: 'function',
   },
+
+  // Token property functions
   {
     inputs: [{ name: 'id', type: 'uint256' }],
     name: 'ttl',
@@ -112,6 +152,8 @@ export const dataAccessABI = [
     stateMutability: 'view',
     type: 'function',
   },
+
+  // Metadata functions
   {
     inputs: [],
     name: 'PROJECT_ID',

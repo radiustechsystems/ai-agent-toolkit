@@ -137,6 +137,31 @@ export interface SignatureResult {
 }
 
 /**
+ * Batch balance check result
+ */
+export interface BatchBalanceResult {
+  balances: number[];
+  tierIds: number[];
+  addresses: string[];
+}
+
+/**
+ * Balance details for a specific address and tier
+ */
+export interface BalanceDetailResult {
+  address: string;
+  tierId: number;
+  balanceGroups: BalanceGroup[];
+}
+
+/**
+ * Batch balance details result
+ */
+export interface BatchBalanceDetailsResult {
+  results: BalanceDetailResult[];
+}
+
+/**
  * Challenge creation parameters
  */
 export interface ChallengeParams {

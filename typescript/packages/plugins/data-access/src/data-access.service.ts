@@ -10,8 +10,9 @@ import { DataAccessContract } from './data-access.contract';
 import type {
   CheckDataAccessParameters,
   CreateAccessTokenParameters,
-  CreateChallengeParameters,
   GenerateAuthSignatureParameters,
+  GetBalanceBatchParameters,
+  GetBalanceDetailsBatchParameters,
   GetBalanceDetailsParameters,
   GetBalanceParameters,
   HandleHttp402ResponseParameters,
@@ -24,6 +25,8 @@ import type {
   AccessTier,
   AuthChallenge,
   BalanceGroup,
+  BatchBalanceDetailsResult,
+  BatchBalanceResult,
   Contract,
   DataAccessOptions,
   JWTOptions,
@@ -88,14 +91,19 @@ export class DataAccessService {
     // Check if we're in a test environment
     if (process.env.NODE_ENV === 'test' || !walletClient.sendTransaction) {
       // Return a mock implementation for testing
-      // This would be updated to match the new contract interface
+      // Updated to include batch operations
       return {
         getProjectId: async () => this.contract.projectId || '0x0',
         hasValidAccess: async () => true,
+        hasValidAccessBatch: async (addresses: string[], _tierIds: number[]) =>
+          addresses.map(() => true),
         balanceOf: async () => 1,
+        balanceOfBatch: async (addresses: string[], _tierIds: number[]) => addresses.map(() => 1),
         balanceDetails: async () => [
           { balance: BigInt(1), expiresAt: BigInt(Date.now() + 3600000) },
         ],
+        balanceDetailsBatch: async (addresses: string[], _tierIds: number[]) =>
+          addresses.map(() => [{ balance: BigInt(1), expiresAt: BigInt(Date.now() + 3600000) }]),
         balanceOfSigner: async () => 1,
         recoverSigner: async () => walletClient.getAddress(),
         getAvailableTiers: async () => [
@@ -666,6 +674,38 @@ export class DataAccessService {
   }
 
   @Tool({
+    description: 'Get token balances for multiple tiers and addresses in a single call',
+  })
+  async getBalanceBatch(
+    walletClient: RadiusWalletInterface,
+    parameters: GetBalanceBatchParameters,
+  ): Promise<BatchBalanceResult> {
+    try {
+      const dataAccess = this.getDataAccessContract(walletClient);
+      const walletAddress = walletClient.getAddress();
+
+      // Use provided addresses or duplicate wallet address for each tier
+      const addresses = parameters.addresses || parameters.tierIds.map(() => walletAddress);
+
+      if (addresses.length !== parameters.tierIds.length) {
+        throw new Error('Addresses and tier IDs arrays must have the same length');
+      }
+
+      const balances = await dataAccess.balanceOfBatch(addresses, parameters.tierIds);
+
+      return {
+        balances,
+        tierIds: parameters.tierIds,
+        addresses,
+      };
+    } catch (error) {
+      throw new Error(
+        `Failed to get batch balances: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  @Tool({
     description: 'Get detailed balance information including expiration',
   })
   async getBalanceDetails(
@@ -686,21 +726,42 @@ export class DataAccessService {
   }
 
   @Tool({
-    description: 'Create an authentication challenge',
+    description:
+      'Get detailed balance information for multiple tiers and addresses in a single call',
   })
-  async createChallenge(
-    // walletClient: RadiusWalletInterface,
-    parameters: CreateChallengeParameters,
-  ): Promise<{ challenge: TypedData }> {
+  async getBalanceDetailsBatch(
+    walletClient: RadiusWalletInterface,
+    parameters: GetBalanceDetailsBatchParameters,
+  ): Promise<BatchBalanceDetailsResult> {
     try {
-      const challenge = this.createAuthChallenge(parameters.address);
-      return { challenge };
+      const dataAccess = this.getDataAccessContract(walletClient);
+      const walletAddress = walletClient.getAddress();
+
+      // Use provided addresses or duplicate wallet address for each tier
+      const addresses = parameters.addresses || parameters.tierIds.map(() => walletAddress);
+
+      if (addresses.length !== parameters.tierIds.length) {
+        throw new Error('Addresses and tier IDs arrays must have the same length');
+      }
+
+      const batchResults = await dataAccess.balanceDetailsBatch(addresses, parameters.tierIds);
+
+      // Format the results for easier consumption
+      const results = addresses.map((address, index) => ({
+        address,
+        tierId: parameters.tierIds[index],
+        balanceGroups: batchResults[index],
+      }));
+
+      return { results };
     } catch (error) {
       throw new Error(
-        `Failed to create challenge: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to get batch balance details: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
+
+  // Challenge creation removed - should be handled by the server, not the agent
 
   @Tool({
     description: 'Handle HTTP 402 Payment Required responses from token-gated APIs',
