@@ -14,7 +14,7 @@ This example demonstrates how to integrate LangChain agents with Web3.py using t
 
 - Python >=3.10
 - An OpenAI API key for LLM access
-- A Radius wallet with ETH (obtain from the [Radius faucet](https://testnet.tryradi.us/dashboard/faucet))
+- A Radius wallet with ETH (obtain from the [Radius faucet](https://testnet.radiustech.xyz/dashboard/faucet))
 - Radius RPC endpoint URL
 
 ## Installation
@@ -82,7 +82,7 @@ tools = get_on_chain_tools(
 
 ## Learn More
 
-- [Radius Documentation](https://docs.tryradi.us)
+- [Radius Documentation](https://docs.radiustech.xyz)
 - [AI Agent Toolkit](https://github.com/radiustechsystems/ai-agent-toolkit)
 - [LangChain Documentation](https://python.langchain.com/docs/get_started)
 - [Web3.py Documentation](https://web3py.readthedocs.io/)

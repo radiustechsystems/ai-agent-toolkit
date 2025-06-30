@@ -14,7 +14,7 @@ This example demonstrates how to build AI agents that can interact with the Unis
 
 - Python >=3.10
 - An OpenAI API key for LLM access
-- A Radius wallet with ETH (obtain from the [Radius faucet](https://testnet.tryradi.us/dashboard/faucet))
+- A Radius wallet with ETH (obtain from the [Radius faucet](https://testnet.radiustech.xyz/dashboard/faucet))
 - Uniswap API key
 - Radius RPC endpoint URL
 
@@ -90,7 +90,7 @@ tools = get_on_chain_tools(
 
 ## Learn More
 
-- [Radius Documentation](https://docs.tryradi.us)
+- [Radius Documentation](https://docs.radiustech.xyz)
 - [AI Agent Toolkit](https://github.com/radiustechsystems/ai-agent-toolkit)
 - [Uniswap Documentation](https://docs.uniswap.org/)
 - [LangChain Documentation](https://python.langchain.com/docs/get_started)

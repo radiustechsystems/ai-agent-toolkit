@@ -15,7 +15,7 @@ This example demonstrates a real-time AI content generation platform with instan
 ### Prerequisites
 
 1. Node.js (v18+) and pnpm installed
-2. A Radius wallet with some ETH (obtain from the [Radius faucet](https://testnet.tryradi.us/dashboard/faucet))
+2. A Radius wallet with some ETH (obtain from the [Radius faucet](https://testnet.radiustech.xyz/dashboard/faucet))
 3. Anthropic API key for Claude models
 
 ### Setup
@@ -60,7 +60,7 @@ This example shows how Radius enables new business models for AI:
 
 ## Learn More
 
-- [Radius Documentation](https://docs.tryradi.us)
+- [Radius Documentation](https://docs.radiustech.xyz)
 - [AI Agent Toolkit](https://github.com/radiustechsystems/ai-agent-toolkit)
 - [Anthropic Claude API](https://docs.anthropic.com/claude/reference/getting-started-with-the-api)
 - [Vercel AI SDK](https://sdk.vercel.ai/docs)
