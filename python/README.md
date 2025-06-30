@@ -144,7 +144,7 @@ WALLET_PRIVATE_KEY=your_wallet_private_key_here
 
 Note:
 - Get an OpenAI API key from: https://platform.openai.com/api-keys
-- RPC provider URL from Radius testnet: https://testnet.tryradi.us/dashboard/rpc-endpoints
+- RPC provider URL from Radius testnet: https://testnet.radiustech.xyz/dashboard/rpc-endpoints
 - The wallet private key should be from an EVM-compatible wallet
 
 #### 5. Run the Example

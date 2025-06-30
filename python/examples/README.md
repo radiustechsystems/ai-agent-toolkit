@@ -22,7 +22,7 @@ Each example is a self-contained package with its own README, setup instructions
 
 All examples require:
 - Python >=3.10
-- A Radius wallet with ETH (obtain from the [Radius faucet](https://testnet.tryradi.us/dashboard/faucet))
+- A Radius wallet with ETH (obtain from the [Radius faucet](https://testnet.radiustech.xyz/dashboard/faucet))
 - API keys for specific services (OpenAI, Uniswap, etc.)
 
 ## Learning Path
@@ -35,7 +35,7 @@ If you're new to the Radius AI Agent SDK:
 
 ## Resources
 
-- [Radius Documentation](https://docs.tryradi.us)
+- [Radius Documentation](https://docs.radiustech.xyz)
 - [AI Agent Toolkit](https://github.com/radiustechsystems/ai-agent-toolkit)
 - [Website](https://radiustech.xyz/)
 - [Testnet Access](https://docs.radiustech.xyz/radius-testnet-access)
